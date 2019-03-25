@@ -8,6 +8,8 @@ DELETE
 FROM dishes;
 DELETE
 FROM restaurants;
+DELETE
+FROM votes;
 ALTER SEQUENCE global_seq RESTART WITH 100000;
 
 INSERT INTO users (name, email, password)
@@ -50,3 +52,9 @@ VALUES (100004, '2019-03-20', 1000),
        (100013, '2019-03-21', 9900),
        (100014, '2019-03-21', 4560),
        (100015, '2019-03-21', 1000);
+
+INSERT INTO votes (user_id, restaurant_id, date_time)
+VALUES (100000, 100002, '2019-03-20 10:00:00'),
+       (100001, 100002, '2019-03-20 09:00:00'),
+       (100000, 100003, '2019-03-21 08:00:00'),
+       (100001, 100003, '2019-03-21 09:30:00');

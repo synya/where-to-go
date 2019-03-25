@@ -73,7 +73,7 @@ public class RestaurantTestData {
     }
 
     public static MenuItem getCreatedMenuItem() {
-        return new MenuItem(RESTAURANTS_MENU_ITEMS_ID + 12, RESTAURANT_ATEOTU_DISH4,
+        return new MenuItem(RESTAURANTS_MENU_ITEMS_ID + 16, RESTAURANT_ATEOTU_DISH4,
                 LocalDate.of(2019, Month.MARCH, 25), 2000);
     }
 

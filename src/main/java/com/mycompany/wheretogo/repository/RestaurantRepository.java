@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface RestaurantRepository extends JpaRepository<Restaurant, Integer> {
-
     @Override
     @Transactional
     Restaurant save(Restaurant restaurant);
@@ -21,5 +20,4 @@ public interface RestaurantRepository extends JpaRepository<Restaurant, Integer>
 
     @Query("SELECT r FROM Restaurant r ORDER BY r.name ASC")
     List<Restaurant> findAll(Sort sort);
-
 }
