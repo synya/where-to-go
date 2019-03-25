@@ -22,6 +22,8 @@ public interface RestaurantService {
 
     List<Dish> getAllDishes(Integer restaurantId);
 
+    MenuItem addMenuItem(Integer dishId, LocalDate date, Integer price);
+
     List<MenuItem> getAllMenuItemsBetween(LocalDate startDate, LocalDate endDate);
 
 }

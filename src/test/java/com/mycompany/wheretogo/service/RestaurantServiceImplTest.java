@@ -1,6 +1,7 @@
 package com.mycompany.wheretogo.service;
 
 import com.mycompany.wheretogo.model.Dish;
+import com.mycompany.wheretogo.model.MenuItem;
 import com.mycompany.wheretogo.model.Restaurant;
 import com.mycompany.wheretogo.util.exception.NotFoundException;
 import org.junit.Test;
@@ -83,6 +84,15 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
                 .hasSize(6)
                 .isEqualTo(List.of(RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
                         RESTAURANT_ATEOTU_DISH1, RESTAURANT_ATEOTU_DISH5, RESTAURANT_ATEOTU_DISH2));
+    }
+
+    @Test
+    public void addMenuItem() throws Exception {
+        MenuItem menuItem = getCreatedMenuItem();
+        restaurantService.addMenuItem(menuItem.getDish().getId(), menuItem.getDate(), menuItem.getPrice());
+        assertThat(restaurantService.getAllMenuItemsBetween(menuItem.getDate(), menuItem.getDate()))
+                .hasSize(1)
+                .isEqualTo(List.of(menuItem));
     }
 
     @Test

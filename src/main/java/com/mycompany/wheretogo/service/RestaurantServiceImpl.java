@@ -66,6 +66,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public MenuItem addMenuItem(Integer dishId, LocalDate date, Integer price) {
+        return menuItemRepository.save(new MenuItem(dishRepository.getOne(dishId), date, price));
+    }
+
+    @Override
     public List<MenuItem> getAllMenuItemsBetween(LocalDate startDate, LocalDate endDate) {
         return menuItemRepository.findAllBetween(startDate, endDate);
     }
