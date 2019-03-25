@@ -4,10 +4,8 @@ package com.mycompany.wheretogo.service;
 import com.mycompany.wheretogo.model.Role;
 import com.mycompany.wheretogo.model.User;
 import com.mycompany.wheretogo.util.exception.NotFoundException;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
 
 import javax.validation.ConstraintViolationException;
