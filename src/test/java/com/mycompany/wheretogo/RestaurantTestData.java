@@ -72,6 +72,10 @@ public class RestaurantTestData {
         return new Dish("The Brand New Mega Hamburger", BURGER_KING);
     }
 
+    public static Dish getUpdatedDish() {
+        return new Dish(BURGER_KING_DISH_ID, "Updated Burger Name", BURGER_KING);
+    }
+
     public static MenuItem getCreatedMenuItem() {
         return new MenuItem(RESTAURANTS_MENU_ITEMS_ID + 16, RESTAURANT_ATEOTU_DISH4,
                 LocalDate.of(2019, Month.MARCH, 25), 2000);

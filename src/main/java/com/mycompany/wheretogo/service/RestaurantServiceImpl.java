@@ -36,6 +36,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant add(Restaurant restaurant) {
+        Assert.notNull(restaurant, "restaurant must not be null");
         return restaurantRepository.save(restaurant);
     }
 
@@ -57,7 +58,19 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Dish addDish(Dish dish) {
+        Assert.notNull(dish, "dish must not be null");
         return dishRepository.save(dish);
+    }
+
+    @Override
+    public Dish getDish(Integer dishId) throws NotFoundException {
+        return checkNotFoundWithId(dishRepository.findById(dishId).orElse(null), dishId);
+    }
+
+    @Override
+    public Dish updateDish(Dish dish) {
+        Assert.notNull(dish, "dish must not be null");
+        return checkNotFoundWithId(dishRepository.save(dish), dish.getId());
     }
 
     @Override

@@ -67,6 +67,23 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     }
 
     @Test
+    public void getDish() throws Exception {
+        assertThat(restaurantService.getDish(BURGER_KING_DISH_ID)).isEqualTo(BURGER_KING_DISH1);
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void getDishNotFound() throws Exception {
+        restaurantService.getDish(1);
+    }
+
+    @Test
+    public void updateDish() throws Exception {
+        Dish updated = getUpdatedDish();
+        restaurantService.updateDish(updated);
+        assertThat(restaurantService.getDish(updated.getId())).isEqualTo(updated);
+    }
+
+    @Test
     public void addExistedDish() throws Exception {
         Dish newDish = BURGER_KING_DISH1;
         Dish created = restaurantService.addDish(newDish);
