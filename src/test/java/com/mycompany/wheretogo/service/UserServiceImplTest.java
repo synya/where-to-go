@@ -9,9 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 
 import javax.validation.ConstraintViolationException;
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
 
 import static com.mycompany.wheretogo.UserTestData.*;
@@ -22,12 +19,12 @@ public class UserServiceImplTest extends AbstractServiceTest {
     protected UserService userService;
 
     @Test
-    public void create() throws Exception {
-        User newUser = new User(null, "New", "new@gmail.com", "newPass", false, LocalDateTime.now(), Collections.singleton(Role.ROLE_USER));
-        User created = userService.create(newUser);
-        newUser.setId(created.getId());
+    public void add() throws Exception {
+        User newUser = getNew();
+        User added = userService.add(newUser);
+        newUser.setId(added.getId());
         assertThat(newUser)
-                .isEqualToIgnoringGivenFields(created, "registered");
+                .isEqualToIgnoringGivenFields(added, "registered");
         assertThat(userService.getAll())
                 .usingElementComparatorIgnoringFields("registered")
                 .isEqualTo(List.of(ADMIN, newUser, USER));
@@ -35,7 +32,7 @@ public class UserServiceImplTest extends AbstractServiceTest {
 
     @Test(expected = DataAccessException.class)
     public void duplicateMailCreate() throws Exception {
-        userService.create(new User(null, "Duplicate", "user@gmail.com", "newPass", Role.ROLE_USER));
+        userService.add(getWithDuplicateEmail());
     }
 
     @Test
@@ -72,13 +69,9 @@ public class UserServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void update() throws Exception {
-        User updated = new User(USER);
-        updated.setName("UpdatedName");
-        updated.setPassword("UpdatedPassword");
-        updated.setRoles(EnumSet.of(Role.ROLE_USER, Role.ROLE_ADMIN));
-        userService.update(updated);
+        userService.update(getUpdated());
         assertThat(userService.get(USER_ID))
-                .isEqualToIgnoringGivenFields(updated, "registered");
+                .isEqualToIgnoringGivenFields(getUpdated(), "registered");
     }
 
     @Test
@@ -90,8 +83,8 @@ public class UserServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void testValidation() throws Exception {
-        validateRootCause(() -> userService.create(new User(null, "  ", "mail@yandex.ru", "password", Role.ROLE_USER)), ConstraintViolationException.class);
-        validateRootCause(() -> userService.create(new User(null, "User", "  ", "password", Role.ROLE_USER)), ConstraintViolationException.class);
-        validateRootCause(() -> userService.create(new User(null, "User", "mail@yandex.ru", "  ", Role.ROLE_USER)), ConstraintViolationException.class);
+        validateRootCause(() -> userService.add(new User(null, "  ", "mail@yandex.ru", "password", Role.ROLE_USER)), ConstraintViolationException.class);
+        validateRootCause(() -> userService.add(new User(null, "User", "  ", "password", Role.ROLE_USER)), ConstraintViolationException.class);
+        validateRootCause(() -> userService.add(new User(null, "User", "mail@yandex.ru", "  ", Role.ROLE_USER)), ConstraintViolationException.class);
     }
 }

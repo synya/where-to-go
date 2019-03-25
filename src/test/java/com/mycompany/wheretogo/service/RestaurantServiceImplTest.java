@@ -31,13 +31,13 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void add() throws Exception {
-        Restaurant newRestaurant = getCreated();
-        Restaurant created = restaurantService.add(newRestaurant);
-        newRestaurant.setId(created.getId());
-        assertThat(newRestaurant).isEqualTo(created);
+        Restaurant newRestaurant = getNew();
+        Restaurant added = restaurantService.add(newRestaurant);
+        newRestaurant.setId(added.getId());
+        assertThat(newRestaurant).isEqualTo(added);
         assertThat(restaurantService.getAll())
                 .hasSize(3)
-                .isEqualTo(List.of(BURGER_KING, created, RESTAURANT_ATEOTU));
+                .isEqualTo(List.of(BURGER_KING, added, RESTAURANT_ATEOTU));
     }
 
     @Test
@@ -56,14 +56,14 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void addDish() throws Exception {
-        Dish newDish = getCreatedDish();
-        Dish created = restaurantService.addDish(newDish);
-        newDish.setId(created.getId());
-        assertThat(newDish).isEqualTo(created);
+        Dish newDish = getNewDish();
+        Dish addedDish = restaurantService.addDish(newDish);
+        newDish.setId(addedDish.getId());
+        assertThat(newDish).isEqualTo(addedDish);
         assertThat(restaurantService.getAllDishes(BURGER_KING_ID))
                 .hasSize(7)
                 .isEqualTo(List.of(BURGER_KING_DISH1, BURGER_KING_DISH4, BURGER_KING_DISH2,
-                        BURGER_KING_DISH6, BURGER_KING_DISH5, BURGER_KING_DISH3, created));
+                        BURGER_KING_DISH6, BURGER_KING_DISH5, BURGER_KING_DISH3, addedDish));
     }
 
     @Test
@@ -86,9 +86,9 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     @Test
     public void addExistedDish() throws Exception {
         Dish newDish = BURGER_KING_DISH1;
-        Dish created = restaurantService.addDish(newDish);
-        newDish.setId(created.getId());
-        assertThat(newDish).isEqualTo(created);
+        Dish addedDish = restaurantService.addDish(newDish);
+        newDish.setId(addedDish.getId());
+        assertThat(newDish).isEqualTo(addedDish);
         assertThat(restaurantService.getAllDishes(BURGER_KING_ID))
                 .hasSize(6)
                 .isEqualTo(List.of(BURGER_KING_DISH1, BURGER_KING_DISH4, BURGER_KING_DISH2,
@@ -105,7 +105,7 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void addMenuItem() throws Exception {
-        MenuItem menuItem = getCreatedMenuItem();
+        MenuItem menuItem = getNewMenuItem();
         restaurantService.addMenuItem(menuItem.getDish().getId(), menuItem.getDate(), menuItem.getPrice());
         assertThat(restaurantService.getAllMenuItemsBetween(menuItem.getDate(), menuItem.getDate()))
                 .hasSize(1)

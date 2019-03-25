@@ -60,7 +60,7 @@ public class RestaurantTestData {
     public static final MenuItem MENU_ITEM12 = new MenuItem(RESTAURANTS_MENU_ITEMS_ID + 11, RESTAURANT_ATEOTU_DISH6,
             LocalDate.of(2019, Month.MARCH, 21), 1000);
 
-    public static Restaurant getCreated() {
+    public static Restaurant getNew() {
         return new Restaurant("KFC");
     }
 
@@ -68,7 +68,7 @@ public class RestaurantTestData {
         return new Restaurant(BURGER_KING_ID, "Rebranded Burger King");
     }
 
-    public static Dish getCreatedDish() {
+    public static Dish getNewDish() {
         return new Dish("The Brand New Mega Hamburger", BURGER_KING);
     }
 
@@ -76,7 +76,7 @@ public class RestaurantTestData {
         return new Dish(BURGER_KING_DISH_ID, "Updated Burger Name", BURGER_KING);
     }
 
-    public static MenuItem getCreatedMenuItem() {
+    public static MenuItem getNewMenuItem() {
         return new MenuItem(RESTAURANTS_MENU_ITEMS_ID + 16, RESTAURANT_ATEOTU_DISH4,
                 LocalDate.of(2019, Month.MARCH, 25), 2000);
     }
