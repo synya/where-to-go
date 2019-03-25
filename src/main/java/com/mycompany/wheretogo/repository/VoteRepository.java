@@ -10,6 +10,10 @@ import java.util.List;
 
 @Transactional(readOnly = true)
 public interface VoteRepository extends JpaRepository<Vote, Integer> {
+    @Override
+    @Transactional
+    Vote save(Vote vote);
+
     @Query("SELECT v FROM Vote v WHERE v.user.id=:userId ORDER BY v.dateTime DESC")
-    List<Vote> findAll(@Param("userId") int userId);
+    List<Vote> findAll(@Param("userId") Integer userId);
 }

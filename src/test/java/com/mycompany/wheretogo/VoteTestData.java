@@ -19,4 +19,8 @@ public class VoteTestData {
             LocalDateTime.of(2019, Month.MARCH, 21, 8, 0, 0));
     public static final Vote ADMIN_VOTE2 = new Vote(VOTE_START_ID + 4, RESTAURANT_ATEOTU,
             LocalDateTime.of(2019, Month.MARCH, 21, 9, 30, 0));
+
+    public static Vote getNewVote() {
+        return new Vote(RESTAURANT_ATEOTU, LocalDateTime.now());
+    }
 }

@@ -10,6 +10,7 @@ import com.mycompany.wheretogo.util.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
@@ -48,6 +49,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Restaurant get(Integer restaurantId) throws NotFoundException {
+        Assert.notNull(restaurantId, "restaurantId must not be null");
         return checkNotFoundWithId(restaurantRepository.findById(restaurantId).orElse(null), restaurantId);
     }
 
@@ -64,6 +66,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public Dish getDish(Integer dishId) throws NotFoundException {
+        Assert.notNull(dishId, "dishId must not be null");
         return checkNotFoundWithId(dishRepository.findById(dishId).orElse(null), dishId);
     }
 
@@ -75,16 +78,23 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public List<Dish> getAllDishes(Integer restaurantId) {
+        Assert.notNull(restaurantId, "restaurantId must not be null");
         return dishRepository.findAll(restaurantId);
     }
 
     @Override
+    @Transactional
     public MenuItem addMenuItem(Integer dishId, LocalDate date, Integer price) {
+        Assert.notNull(dishId, "dishId must not be null");
+        Assert.notNull(date, "date must not be null");
+        Assert.notNull(date, "price must not be null");
         return menuItemRepository.save(new MenuItem(dishRepository.getOne(dishId), date, price));
     }
 
     @Override
     public List<MenuItem> getAllMenuItemsBetween(LocalDate startDate, LocalDate endDate) {
+        Assert.notNull(startDate, "startDate must not be null");
+        Assert.notNull(endDate, "endDate must not be null");
         return menuItemRepository.findAllBetween(startDate, endDate);
     }
 }
