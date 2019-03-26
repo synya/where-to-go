@@ -21,7 +21,7 @@ public interface RestaurantService {
 
     Dish getDish(Integer dishId) throws NotFoundException;
 
-    Dish updateDish(Dish dish) throws NotFoundException;
+    void updateDish(Dish dish) throws NotFoundException;
 
     List<Dish> getAllDishes(Integer restaurantId);
 
