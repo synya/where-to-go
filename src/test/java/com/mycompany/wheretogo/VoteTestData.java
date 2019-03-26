@@ -1,6 +1,7 @@
 package com.mycompany.wheretogo;
 
 import com.mycompany.wheretogo.model.Vote;
+import com.mycompany.wheretogo.to.VoteTo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -22,21 +23,23 @@ public class VoteTestData {
     public static final Vote ADMIN_VOTE2 = new Vote(VOTE_START_ID + 3, RESTAURANT_ATEOTU,
             LocalDateTime.of(2019, Month.MARCH, 21, 9, 30, 0));
 
+    public static VoteTo getNewVoteTo() {
+        return new VoteTo(null, RESTAURANT_ATEOTU_ID, LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 45)));
+    }
+
     public static Vote getNewVote() {
-        Vote vote = new Vote();
-        vote.setDateTime(LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 45)));
-        return vote;
+        return new Vote(null, RESTAURANT_ATEOTU, LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 45)));
     }
 
-    public static Vote getUpdatedVote() {
-        Vote vote = new Vote();
-        vote.setDateTime(LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 30)));
-        return vote;
+    public static VoteTo getUpdatedVoteTo() {
+        return new VoteTo(null, BURGER_KING_ID, LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 30)));
     }
 
-    public static Vote getOutdatedVote() {
-        Vote vote = new Vote();
-        vote.setDateTime(LocalDateTime.of(LocalDate.now(), LocalTime.of(11, 1)));
-        return vote;
+    public static VoteTo getTodayTooLateVoteTo() {
+        return new VoteTo(null, BURGER_KING_ID, LocalDateTime.of(LocalDate.now(), LocalTime.of(11, 1)));
+    }
+
+    public static VoteTo getOutdatedVoteTo() {
+        return new VoteTo(null, BURGER_KING_ID, LocalDateTime.of(2019, Month.MARCH, 1, 0, 0, 0));
     }
 }

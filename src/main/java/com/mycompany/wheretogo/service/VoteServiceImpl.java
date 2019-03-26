@@ -4,6 +4,7 @@ import com.mycompany.wheretogo.model.Vote;
 import com.mycompany.wheretogo.repository.RestaurantRepository;
 import com.mycompany.wheretogo.repository.UserRepository;
 import com.mycompany.wheretogo.repository.VoteRepository;
+import com.mycompany.wheretogo.to.VoteTo;
 import com.mycompany.wheretogo.util.exception.NotFoundException;
 import com.mycompany.wheretogo.util.exception.OutOfDateTimeException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +38,8 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     @Transactional
-    public Vote add(Vote vote, Integer restaurantId, Integer userId) {
-        Assert.notNull(vote, "vote must not be null");
-        Assert.notNull(restaurantId, "restaurantId must not be null");
-        Assert.notNull(userId, "userId must not be null");
-        if (!vote.getDateTime().toLocalDate().equals(LocalDate.now())) {
-            throw new OutOfDateTimeException("Operation is not allowed - only today's votes applicable");
-        }
-        vote.setRestaurant(restaurantRepository.getOne(restaurantId));
-        return saveUserVote(vote, userId);
+    public Vote add(VoteTo voteTo, Integer userId) {
+        return saveUserVote(voteTo, userId);
     }
 
     @Override
@@ -57,14 +51,8 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     @Transactional
-    public void update(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException, NotFoundException {
-        Assert.notNull(vote, "vote must not be null");
-        Assert.notNull(userId, "userId must not be null");
-        if (vote.getDateTime().compareTo(LocalDateTime.of(LocalDate.now(), ALLOWED_UPDATE_TIME_THRESHOLD)) >= 0) {
-            throw new OutOfDateTimeException("Operation is not allowed - it's too late to change the vote");
-        }
-        vote.setRestaurant(restaurantRepository.getOne(restaurantId));
-        saveUserVote(vote, userId);
+    public void update(VoteTo voteTo, Integer userId) throws OutOfDateTimeException, NotFoundException {
+        saveUserVote(voteTo, userId);
     }
 
     @Override
@@ -77,7 +65,16 @@ public class VoteServiceImpl implements VoteService {
         return voteRepository.findById(id).filter(vote -> userId.equals(vote.getUser().getId())).orElse(null);
     }
 
-    private Vote saveUserVote(Vote vote, Integer userId) {
+    private Vote saveUserVote(VoteTo voteTo, Integer userId) {
+        Assert.notNull(voteTo, "voteTo must not be null");
+        Assert.notNull(userId, "userId must not be null");
+        if (!voteTo.getDateTime().toLocalDate().equals(LocalDate.now())) {
+            throw new OutOfDateTimeException("Operation is not allowed - only today's votes applicable");
+        }
+        if (voteTo.getDateTime().compareTo(LocalDateTime.of(LocalDate.now(), ALLOWED_UPDATE_TIME_THRESHOLD)) >= 0) {
+            throw new OutOfDateTimeException("Operation is not allowed - it's too late to change the vote");
+        }
+        Vote vote = new Vote(voteTo.getId(), restaurantRepository.getOne(voteTo.getRestaurantId()), voteTo.getDateTime());
         if (!vote.isNew() && getUserVote(vote.getId(), userId) == null) {
             return null;
         }

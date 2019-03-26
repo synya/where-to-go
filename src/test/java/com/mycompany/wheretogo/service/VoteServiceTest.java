@@ -6,8 +6,6 @@ import com.mycompany.wheretogo.util.exception.OutOfDateTimeException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.time.LocalDateTime;
-import java.time.Month;
 import java.util.List;
 
 import static com.mycompany.wheretogo.RestaurantTestData.*;
@@ -22,9 +20,9 @@ public class VoteServiceTest extends AbstractServiceTest {
 
     @Test
     public void add() throws Exception {
-        Vote newVote = getNewVote();
-        Integer addedId = voteService.add(getNewVote(), RESTAURANT_ATEOTU_ID, USER_ID).getId();
+        Integer addedId = voteService.add(getNewVoteTo(), USER_ID).getId();
         Vote addedVote = voteService.get(addedId, USER_ID);
+        Vote newVote = getNewVote();
         newVote.setId(addedVote.getId());
         newVote.setRestaurant(RESTAURANT_ATEOTU);
         assertThat(newVote).isEqualTo(addedVote);
@@ -35,25 +33,23 @@ public class VoteServiceTest extends AbstractServiceTest {
 
     @Test
     public void update() throws Exception {
-        Vote newVote = getNewVote();
-        Integer addedId = voteService.add(getNewVote(), RESTAURANT_ATEOTU_ID, USER_ID).getId();
-        voteService.update(getUpdatedVote(), BURGER_KING_ID, USER_ID);
+        Integer addedId = voteService.add(getNewVoteTo(), USER_ID).getId();
+        voteService.update(getUpdatedVoteTo(), USER_ID);
         Vote updatedVote = voteService.get(addedId, USER_ID);
+        Vote newVote = getNewVote();
         newVote.setId(updatedVote.getId());
         assertThat(newVote).isEqualTo(updatedVote);
     }
 
     @Test(expected = OutOfDateTimeException.class)
     public void updateOutdated() throws Exception {
-        voteService.add(getNewVote(), RESTAURANT_ATEOTU_ID, USER_ID);
-        voteService.update(getOutdatedVote(), BURGER_KING_ID, USER_ID);
+        voteService.add(getNewVoteTo(), USER_ID);
+        voteService.update(getTodayTooLateVoteTo(), USER_ID);
     }
 
     @Test(expected = OutOfDateTimeException.class)
     public void addOutdated() throws Exception {
-        Vote newVote = getNewVote();
-        newVote.setDateTime(LocalDateTime.of(2019, Month.MARCH, 1, 0, 0, 0));
-        voteService.add(newVote, BURGER_KING_ID, USER_ID);
+        voteService.add(getOutdatedVoteTo(), USER_ID);
     }
 
     @Test
