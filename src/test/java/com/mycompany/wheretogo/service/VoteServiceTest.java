@@ -22,23 +22,23 @@ public class VoteServiceTest extends AbstractServiceTest {
     public void add() throws Exception {
         Integer addedId = voteService.add(getNewVoteTo(), USER_ID).getId();
         Vote addedVote = voteService.get(addedId, USER_ID);
-        Vote newVote = getNewVote();
-        newVote.setId(addedVote.getId());
-        newVote.setRestaurant(RESTAURANT_ATEOTU);
-        assertThat(newVote).isEqualTo(addedVote);
+        Vote vote = getNewVote();
+        vote.setId(addedVote.getId());
+        vote.setRestaurant(RESTAURANT_ATEOTU);
+        assertThat(vote).isEqualToIgnoringGivenFields(addedVote, "user");
         assertThat(voteService.getAll(USER_ID))
                 .usingElementComparatorIgnoringFields("user")
-                .isEqualTo(List.of(newVote, USER_VOTE2, USER_VOTE1));
+                .isEqualTo(List.of(vote, USER_VOTE2, USER_VOTE1));
     }
 
     @Test
     public void update() throws Exception {
         Integer addedId = voteService.add(getNewVoteTo(), USER_ID).getId();
-        voteService.update(getUpdatedVoteTo(), USER_ID);
+        voteService.update(getUpdatedVoteTo(addedId), USER_ID);
         Vote updatedVote = voteService.get(addedId, USER_ID);
-        Vote newVote = getNewVote();
-        newVote.setId(updatedVote.getId());
-        assertThat(newVote).isEqualTo(updatedVote);
+        Vote vote = getUpdatedVote();
+        vote.setId(updatedVote.getId());
+        assertThat(vote).isEqualToIgnoringGivenFields(updatedVote, "user");
     }
 
     @Test(expected = OutOfDateTimeException.class)
@@ -54,8 +54,7 @@ public class VoteServiceTest extends AbstractServiceTest {
 
     @Test
     public void get() throws Exception {
-        assertThat(voteService.get(VOTE_START_ID, USER_ID))
-                .isEqualTo(USER_VOTE1);
+        assertThat(voteService.get(VOTE_START_ID, USER_ID)).isEqualToIgnoringGivenFields(USER_VOTE1, "user");
     }
 
     @Test(expected = NotFoundException.class)

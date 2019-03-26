@@ -31,8 +31,12 @@ public class VoteTestData {
         return new Vote(null, RESTAURANT_ATEOTU, LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 45)));
     }
 
-    public static VoteTo getUpdatedVoteTo() {
-        return new VoteTo(null, BURGER_KING_ID, LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 30)));
+    public static VoteTo getUpdatedVoteTo(Integer id) {
+        return new VoteTo(id, BURGER_KING_ID, LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 30)));
+    }
+
+    public static Vote getUpdatedVote() {
+        return new Vote(null, BURGER_KING, LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 30)));
     }
 
     public static VoteTo getTodayTooLateVoteTo() {

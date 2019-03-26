@@ -20,14 +20,13 @@ public class UserServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void add() throws Exception {
-        User newUser = getNew();
-        User added = userService.add(newUser);
-        newUser.setId(added.getId());
-        assertThat(newUser)
-                .isEqualToIgnoringGivenFields(added, "registered");
+        User user = getNew();
+        User addedUser = userService.add(user);
+        user.setId(addedUser.getId());
+        assertThat(user).isEqualToIgnoringGivenFields(addedUser, "registered");
         assertThat(userService.getAll())
                 .usingElementComparatorIgnoringFields("registered")
-                .isEqualTo(List.of(ADMIN, newUser, USER));
+                .isEqualTo(List.of(ADMIN, user, USER));
     }
 
     @Test(expected = DataAccessException.class)
@@ -37,9 +36,7 @@ public class UserServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void get() throws Exception {
-        User user = userService.get(USER_ID);
-        assertThat(user)
-                .isEqualToIgnoringGivenFields(USER, "registered");
+        assertThat(userService.get(USER_ID)).isEqualToIgnoringGivenFields(USER, "registered");
     }
 
     @Test(expected = NotFoundException.class)
@@ -49,16 +46,13 @@ public class UserServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void getByEmail() throws Exception {
-        User admin = userService.getByEmail("admin@gmail.com");
-        assertThat(admin)
-                .isEqualToIgnoringGivenFields(ADMIN, "registered");
+        assertThat(userService.getByEmail("admin@gmail.com")).isEqualToIgnoringGivenFields(ADMIN, "registered");
     }
 
     @Test
     public void update() throws Exception {
         userService.update(getUpdated());
-        assertThat(userService.get(USER_ID))
-                .isEqualToIgnoringGivenFields(getUpdated(), "registered");
+        assertThat(userService.get(USER_ID)).isEqualToIgnoringGivenFields(getUpdated(), "registered");
     }
 
     @Test

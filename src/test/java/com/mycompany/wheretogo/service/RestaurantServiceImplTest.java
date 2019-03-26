@@ -31,20 +31,20 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void add() throws Exception {
-        Restaurant newRestaurant = getNew();
-        Restaurant added = restaurantService.add(newRestaurant);
-        newRestaurant.setId(added.getId());
-        assertThat(newRestaurant).isEqualTo(added);
+        Restaurant restaurant = getNew();
+        Restaurant addedRestaurant = restaurantService.add(restaurant);
+        restaurant.setId(addedRestaurant.getId());
+        assertThat(restaurant).isEqualTo(addedRestaurant);
         assertThat(restaurantService.getAll())
                 .hasSize(3)
-                .isEqualTo(List.of(BURGER_KING, added, RESTAURANT_ATEOTU));
+                .isEqualTo(List.of(BURGER_KING, addedRestaurant, RESTAURANT_ATEOTU));
     }
 
     @Test
     public void update() throws Exception {
-        Restaurant updated = getUpdated();
-        restaurantService.update(updated);
-        assertThat(restaurantService.get(updated.getId())).isEqualTo(updated);
+        Restaurant restaurant = getUpdated();
+        restaurantService.update(restaurant);
+        assertThat(restaurantService.get(restaurant.getId())).isEqualTo(restaurant);
     }
 
     @Test
@@ -56,10 +56,10 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void addDish() throws Exception {
-        Dish newDish = getNewDish();
-        Dish addedDish = restaurantService.addDish(newDish);
-        newDish.setId(addedDish.getId());
-        assertThat(newDish).isEqualTo(addedDish);
+        Dish dish = getNewDish();
+        Dish addedDish = restaurantService.addDish(dish);
+        dish.setId(addedDish.getId());
+        assertThat(dish).isEqualTo(addedDish);
         assertThat(restaurantService.getAllDishes(BURGER_KING_ID))
                 .hasSize(7)
                 .isEqualTo(List.of(BURGER_KING_DISH1, BURGER_KING_DISH4, BURGER_KING_DISH2,
@@ -78,17 +78,17 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void updateDish() throws Exception {
-        Dish updated = getUpdatedDish();
-        restaurantService.updateDish(updated);
-        assertThat(restaurantService.getDish(updated.getId())).isEqualTo(updated);
+        Dish dish = getUpdatedDish();
+        restaurantService.updateDish(dish);
+        assertThat(restaurantService.getDish(dish.getId())).isEqualTo(dish);
     }
 
     @Test
     public void addExistedDish() throws Exception {
-        Dish newDish = BURGER_KING_DISH1;
-        Dish addedDish = restaurantService.addDish(newDish);
-        newDish.setId(addedDish.getId());
-        assertThat(newDish).isEqualTo(addedDish);
+        Dish dish = BURGER_KING_DISH1;
+        Dish addedDish = restaurantService.addDish(dish);
+        dish.setId(addedDish.getId());
+        assertThat(dish).isEqualTo(addedDish);
         assertThat(restaurantService.getAllDishes(BURGER_KING_ID))
                 .hasSize(6)
                 .isEqualTo(List.of(BURGER_KING_DISH1, BURGER_KING_DISH4, BURGER_KING_DISH2,
