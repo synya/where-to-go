@@ -7,11 +7,18 @@ public class VoteTo {
 
     private final Integer restaurantId;
 
+    private final String restaurantName;
+
     private final LocalDateTime dateTime;
 
     public VoteTo(Integer id, Integer restaurantId, LocalDateTime dateTime) {
+        this(id, restaurantId, null, dateTime);
+    }
+
+    public VoteTo(Integer id, Integer restaurantId, String restaurantName, LocalDateTime dateTime) {
         this.id = id;
         this.restaurantId = restaurantId;
+        this.restaurantName = restaurantName;
         this.dateTime = dateTime;
     }
 
@@ -23,6 +30,10 @@ public class VoteTo {
         return restaurantId;
     }
 
+    public String getRestaurantName() {
+        return restaurantName;
+    }
+
     public LocalDateTime getDateTime() {
         return dateTime;
     }
@@ -32,6 +43,7 @@ public class VoteTo {
         return "VoteTo{" +
                 "id=" + id +
                 ", restaurantId=" + restaurantId +
+                ", restaurantName='" + restaurantName + '\'' +
                 ", dateTime=" + dateTime +
                 '}';
     }

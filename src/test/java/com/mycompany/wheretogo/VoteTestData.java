@@ -23,6 +23,15 @@ public class VoteTestData {
     public static final Vote ADMIN_VOTE2 = new Vote(VOTE_START_ID + 3, RESTAURANT_ATEOTU,
             LocalDateTime.of(2019, Month.MARCH, 21, 9, 30, 0));
 
+    public static final VoteTo USER_VOTE_TO1 = new VoteTo(VOTE_START_ID, BURGER_KING_ID, BURGER_KING.getName(),
+            LocalDateTime.of(2019, Month.MARCH, 20, 10, 0, 0));
+    public static final VoteTo ADMIN_VOTE_TO1 = new VoteTo(VOTE_START_ID + 1, BURGER_KING_ID, BURGER_KING.getName(),
+            LocalDateTime.of(2019, Month.MARCH, 20, 9, 0, 0));
+    public static final VoteTo USER_VOTE_TO2 = new VoteTo(VOTE_START_ID + 2, RESTAURANT_ATEOTU_ID, RESTAURANT_ATEOTU.getName(),
+            LocalDateTime.of(2019, Month.MARCH, 21, 8, 0, 0));
+    public static final VoteTo ADMIN_VOTE_TO2 = new VoteTo(VOTE_START_ID + 3, RESTAURANT_ATEOTU_ID, RESTAURANT_ATEOTU.getName(),
+            LocalDateTime.of(2019, Month.MARCH, 21, 9, 30, 0));
+
     public static VoteTo getNewVoteTo() {
         return new VoteTo(null, RESTAURANT_ATEOTU_ID, LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 45)));
     }

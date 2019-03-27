@@ -16,6 +16,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.mycompany.wheretogo.util.ValidationUtil.checkNotFoundWithId;
 
@@ -56,9 +57,21 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    public List<Vote> getAll(Integer userId) {
+    public List<VoteTo> getAll(Integer userId) {
         Assert.notNull(userId, "userId must not be null");
-        return voteRepository.findAll(userId);
+        return voteRepository.findAll(userId).stream()
+                .map((v -> new VoteTo(v.getId(), v.getRestaurant().getId(), v.getRestaurant().getName(), v.getDateTime())))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<VoteTo> getAllBetween(LocalDate startDate, LocalDate endDate, Integer userId) {
+        Assert.notNull(startDate, "startDate must not be null");
+        Assert.notNull(endDate, "endDate must not be null");
+        Assert.notNull(userId, "userId must not be null");
+        return voteRepository.findAllBetween(LocalDateTime.of(startDate, LocalTime.MIN), LocalDateTime.of(endDate, LocalTime.MAX), userId).stream()
+                .map((v -> new VoteTo(v.getId(), v.getRestaurant().getId(), v.getRestaurant().getName(), v.getDateTime())))
+                .collect(Collectors.toList());
     }
 
     private Vote getUserVote(Integer id, Integer userId) {

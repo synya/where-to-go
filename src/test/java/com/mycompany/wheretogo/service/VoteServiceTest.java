@@ -1,6 +1,7 @@
 package com.mycompany.wheretogo.service;
 
 import com.mycompany.wheretogo.model.Vote;
+import com.mycompany.wheretogo.to.VoteTo;
 import com.mycompany.wheretogo.util.exception.NotFoundException;
 import com.mycompany.wheretogo.util.exception.OutOfDateTimeException;
 import org.junit.Test;
@@ -28,7 +29,8 @@ public class VoteServiceTest extends AbstractServiceTest {
         assertThat(vote).isEqualToIgnoringGivenFields(addedVote, "user");
         assertThat(voteService.getAll(USER_ID))
                 .usingElementComparatorIgnoringFields("user")
-                .isEqualTo(List.of(vote, USER_VOTE2, USER_VOTE1));
+                .isEqualTo(List.of(new VoteTo(vote.getId(), vote.getRestaurant().getId(), vote.getRestaurant().getName(), vote.getDateTime()),
+                        USER_VOTE_TO2, USER_VOTE_TO1));
     }
 
     @Test
@@ -66,6 +68,6 @@ public class VoteServiceTest extends AbstractServiceTest {
     public void getAll() throws Exception {
         assertThat(voteService.getAll(USER_ID))
                 .usingElementComparatorIgnoringFields("user")
-                .isEqualTo(List.of(USER_VOTE2, USER_VOTE1));
+                .isEqualTo(List.of(USER_VOTE_TO2, USER_VOTE_TO1));
     }
 }
