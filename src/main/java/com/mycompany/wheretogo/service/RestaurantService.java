@@ -11,15 +11,11 @@ import java.util.List;
 public interface RestaurantService {
     Restaurant add(Restaurant restaurant);
 
-    Restaurant get(Integer restaurantId) throws NotFoundException;
-
     void update(Restaurant restaurant) throws NotFoundException;
 
     List<Restaurant> getAll();
 
     Dish addDish(Dish dish);
-
-    Dish getDish(Integer dishId) throws NotFoundException;
 
     void updateDish(Dish dish) throws NotFoundException;
 
@@ -27,5 +23,7 @@ public interface RestaurantService {
 
     MenuItem addMenuItem(Integer dishId, LocalDate date, Integer price);
 
-    List<MenuItem> getAllMenuItemsBetween(LocalDate startDate, LocalDate endDate);
+    List<MenuItem> getAllMenuItemsByDate(LocalDate date);
+
+    List<MenuItem> getAllMenuItemsBetweenDates(LocalDate startDate, LocalDate endDate);
 }

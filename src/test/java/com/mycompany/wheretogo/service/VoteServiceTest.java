@@ -1,16 +1,17 @@
 package com.mycompany.wheretogo.service;
 
 import com.mycompany.wheretogo.model.Vote;
-import com.mycompany.wheretogo.to.VoteTo;
-import com.mycompany.wheretogo.util.exception.NotFoundException;
 import com.mycompany.wheretogo.util.exception.OutOfDateTimeException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
 import java.util.List;
 
 import static com.mycompany.wheretogo.RestaurantTestData.*;
-import static com.mycompany.wheretogo.UserTestData.ADMIN_ID;
 import static com.mycompany.wheretogo.UserTestData.USER_ID;
 import static com.mycompany.wheretogo.VoteTestData.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -21,53 +22,46 @@ public class VoteServiceTest extends AbstractServiceTest {
 
     @Test
     public void add() throws Exception {
-        Integer addedId = voteService.add(getNewVoteTo(), USER_ID).getId();
-        Vote addedVote = voteService.get(addedId, USER_ID);
-        Vote vote = getNewVote();
-        vote.setId(addedVote.getId());
-        vote.setRestaurant(RESTAURANT_ATEOTU);
-        assertThat(vote).isEqualToIgnoringGivenFields(addedVote, "user");
-        assertThat(voteService.getAll(USER_ID))
+        Vote newVote = getNewVote();
+        voteService.add(getNewVote(), RESTAURANT_ATEOTU_ID, USER_ID);
+        List<Vote> votes = voteService.getAllBetweenDates(LocalDate.of(2019, Month.JANUARY, 1), LocalDate.now(), USER_ID);
+        newVote.setId(votes.get(0).getId());
+        newVote.setRestaurant(RESTAURANT_ATEOTU);
+        assertThat(newVote).isEqualTo(votes.get(0));
+        assertThat(votes)
                 .usingElementComparatorIgnoringFields("user")
-                .isEqualTo(List.of(new VoteTo(vote.getId(), vote.getRestaurant().getId(), vote.getRestaurant().getName(), vote.getDateTime()),
-                        USER_VOTE_TO2, USER_VOTE_TO1));
+                .isEqualTo(List.of(newVote, USER_VOTE2, USER_VOTE1));
     }
 
     @Test
     public void update() throws Exception {
-        Integer addedId = voteService.add(getNewVoteTo(), USER_ID).getId();
-        voteService.update(getUpdatedVoteTo(addedId), USER_ID);
-        Vote updatedVote = voteService.get(addedId, USER_ID);
-        Vote vote = getUpdatedVote();
-        vote.setId(updatedVote.getId());
-        assertThat(vote).isEqualToIgnoringGivenFields(updatedVote, "user");
+        Vote newVote = getNewVote();
+        voteService.add(getNewVote(), RESTAURANT_ATEOTU_ID, USER_ID);
+        voteService.update(getUpdatedVote(), BURGER_KING_ID, USER_ID);
+        Vote updatedVote = voteService.getAllBetweenDates(LocalDate.now(), LocalDate.now(), USER_ID).get(0);
+        newVote.setId(updatedVote.getId());
+        assertThat(newVote).isEqualTo(updatedVote);
     }
 
     @Test(expected = OutOfDateTimeException.class)
     public void updateOutdated() throws Exception {
-        voteService.add(getNewVoteTo(), USER_ID);
-        voteService.update(getTodayTooLateVoteTo(), USER_ID);
+        voteService.add(getNewVote(), RESTAURANT_ATEOTU_ID, USER_ID);
+        Vote vote = getNewVote();
+        vote.setDateTime(LocalDateTime.of(LocalDate.now(), LocalTime.of(11, 1)));
+        voteService.update(vote, BURGER_KING_ID, USER_ID);
     }
 
     @Test(expected = OutOfDateTimeException.class)
     public void addOutdated() throws Exception {
-        voteService.add(getOutdatedVoteTo(), USER_ID);
-    }
-
-    @Test
-    public void get() throws Exception {
-        assertThat(voteService.get(VOTE_START_ID, USER_ID)).isEqualToIgnoringGivenFields(USER_VOTE1, "user");
-    }
-
-    @Test(expected = NotFoundException.class)
-    public void getNotFound() throws Exception {
-        voteService.get(VOTE_START_ID, ADMIN_ID);
+        Vote vote = getNewVote();
+        vote.setDateTime(LocalDateTime.of(LocalDate.of(2019, Month.MARCH, 19), LocalTime.now()));
+        voteService.add(vote, BURGER_KING_ID, USER_ID);
     }
 
     @Test
     public void getAll() throws Exception {
-        assertThat(voteService.getAll(USER_ID))
+        assertThat(voteService.getAllBetweenDates(LocalDate.of(2019, Month.JANUARY, 1), LocalDate.now(), USER_ID))
                 .usingElementComparatorIgnoringFields("user")
-                .isEqualTo(List.of(USER_VOTE_TO2, USER_VOTE_TO1));
+                .isEqualTo(List.of(USER_VOTE2, USER_VOTE1));
     }
 }

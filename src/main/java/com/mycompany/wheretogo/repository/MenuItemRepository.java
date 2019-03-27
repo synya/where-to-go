@@ -15,6 +15,9 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Integer> {
     @Transactional
     MenuItem save(MenuItem menuItem);
 
+    @Query("SELECT mi from MenuItem mi WHERE mi.date=:date ORDER BY mi.date DESC, mi.dish.restaurant.name, mi.dish.name ASC")
+    List<MenuItem> findAllByDate(@Param("date") LocalDate date);
+
     @Query("SELECT mi from MenuItem mi WHERE mi.date BETWEEN :startDate AND :endDate ORDER BY mi.date DESC, mi.dish.restaurant.name, mi.dish.name ASC")
-    List<MenuItem> findAllBetween(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    List<MenuItem> findAllBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 }

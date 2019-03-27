@@ -48,12 +48,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant get(Integer restaurantId) throws NotFoundException {
-        Assert.notNull(restaurantId, "restaurantId must not be null");
-        return checkNotFoundWithId(restaurantRepository.findById(restaurantId).orElse(null), restaurantId);
-    }
-
-    @Override
     public List<Restaurant> getAll() {
         return restaurantRepository.findAll(SORT_NAME);
     }
@@ -62,12 +56,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     public Dish addDish(Dish dish) {
         Assert.notNull(dish, "dish must not be null");
         return dishRepository.save(dish);
-    }
-
-    @Override
-    public Dish getDish(Integer dishId) throws NotFoundException {
-        Assert.notNull(dishId, "dishId must not be null");
-        return checkNotFoundWithId(dishRepository.findById(dishId).orElse(null), dishId);
     }
 
     @Override
@@ -92,9 +80,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public List<MenuItem> getAllMenuItemsBetween(LocalDate startDate, LocalDate endDate) {
-        Assert.notNull(startDate, "startDate must not be null");
-        Assert.notNull(endDate, "endDate must not be null");
-        return menuItemRepository.findAllBetween(startDate, endDate);
+    public List<MenuItem> getAllMenuItemsByDate(LocalDate date) {
+        return menuItemRepository.findAllByDate(date);
+    }
+
+    @Override
+    public List<MenuItem> getAllMenuItemsBetweenDates(LocalDate startDate, LocalDate endDate) {
+        return menuItemRepository.findAllBetweenDates(startDate, endDate);
     }
 }

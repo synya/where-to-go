@@ -14,6 +14,7 @@ public class RestaurantTestData {
     public static final int RESTAURANT_ATEOTU_ID = START_SEQ + 3;
 
     public static final Restaurant BURGER_KING = new Restaurant(BURGER_KING_ID, "Burger King");
+    public static final Restaurant BURGER_KING_UPDATED = new Restaurant(BURGER_KING_ID, "Rebranded Burger King");
     public static final Restaurant RESTAURANT_ATEOTU = new Restaurant(RESTAURANT_ATEOTU_ID, "The Restaurant at the End of the Universe");
 
     public static final int BURGER_KING_DISH_ID = START_SEQ + 4;
@@ -64,16 +65,8 @@ public class RestaurantTestData {
         return new Restaurant("KFC");
     }
 
-    public static Restaurant getUpdated() {
-        return new Restaurant(BURGER_KING_ID, "Rebranded Burger King");
-    }
-
     public static Dish getNewDish() {
         return new Dish("The Brand New Mega Hamburger", BURGER_KING);
-    }
-
-    public static Dish getUpdatedDish() {
-        return new Dish(BURGER_KING_DISH_ID, "Updated Burger Name", BURGER_KING);
     }
 
     public static MenuItem getNewMenuItem() {

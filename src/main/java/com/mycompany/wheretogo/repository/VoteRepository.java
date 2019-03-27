@@ -19,9 +19,6 @@ public interface VoteRepository extends JpaRepository<Vote, Integer> {
     @Override
     Optional<Vote> findById(Integer id);
 
-    @Query("SELECT v FROM Vote v WHERE v.user.id=:userId ORDER BY v.dateTime DESC")
-    List<Vote> findAll(@Param("userId") Integer userId);
-
-    @Query("SELECT v from Vote v WHERE v.user.id=:userId AND v.dateTime BETWEEN :startDate AND :endDate ORDER BY v.dateTime DESC")
-    List<Vote> findAllBetween(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate, @Param("userId") int userId);
+    @Query("SELECT v from Vote v WHERE v.user.id=:userId AND v.dateTime BETWEEN :startDateTime AND :endDateTime ORDER BY v.dateTime DESC")
+    List<Vote> findAllBetweenDateTimes(@Param("startDateTime") LocalDateTime startDateTime, @Param("endDateTime") LocalDateTime endDateTime, @Param("userId") int userId);
 }

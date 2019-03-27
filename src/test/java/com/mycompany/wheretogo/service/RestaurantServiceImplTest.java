@@ -3,7 +3,6 @@ package com.mycompany.wheretogo.service;
 import com.mycompany.wheretogo.model.Dish;
 import com.mycompany.wheretogo.model.MenuItem;
 import com.mycompany.wheretogo.model.Restaurant;
-import com.mycompany.wheretogo.util.exception.NotFoundException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,16 +19,6 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     protected RestaurantService restaurantService;
 
     @Test
-    public void get() throws Exception {
-        assertThat(restaurantService.get(RESTAURANT_ATEOTU_ID)).isEqualTo(RESTAURANT_ATEOTU);
-    }
-
-    @Test(expected = NotFoundException.class)
-    public void getNotFound() throws Exception {
-        restaurantService.get(1);
-    }
-
-    @Test
     public void add() throws Exception {
         Restaurant restaurant = getNew();
         Restaurant addedRestaurant = restaurantService.add(restaurant);
@@ -42,9 +31,10 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void update() throws Exception {
-        Restaurant restaurant = getUpdated();
-        restaurantService.update(restaurant);
-        assertThat(restaurantService.get(restaurant.getId())).isEqualTo(restaurant);
+        restaurantService.update(BURGER_KING_UPDATED);
+        assertThat(restaurantService.getAll())
+                .hasSize(2)
+                .isEqualTo(List.of(BURGER_KING_UPDATED, RESTAURANT_ATEOTU));
     }
 
     @Test
@@ -67,20 +57,14 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     }
 
     @Test
-    public void getDish() throws Exception {
-        assertThat(restaurantService.getDish(BURGER_KING_DISH_ID)).isEqualTo(BURGER_KING_DISH1);
-    }
-
-    @Test(expected = NotFoundException.class)
-    public void getDishNotFound() throws Exception {
-        restaurantService.getDish(1);
-    }
-
-    @Test
     public void updateDish() throws Exception {
-        Dish dish = getUpdatedDish();
+        Dish dish = BURGER_KING_DISH1;
+        dish.setName("Updated Burger Name");
         restaurantService.updateDish(dish);
-        assertThat(restaurantService.getDish(dish.getId())).isEqualTo(dish);
+        assertThat(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID))
+                .hasSize(6)
+                .isEqualTo(List.of(RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
+                        RESTAURANT_ATEOTU_DISH1, RESTAURANT_ATEOTU_DISH5, RESTAURANT_ATEOTU_DISH2));
     }
 
     @Test
@@ -107,15 +91,14 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     public void addMenuItem() throws Exception {
         MenuItem menuItem = getNewMenuItem();
         restaurantService.addMenuItem(menuItem.getDish().getId(), menuItem.getDate(), menuItem.getPrice());
-        assertThat(restaurantService.getAllMenuItemsBetween(menuItem.getDate(), menuItem.getDate()))
+        assertThat(restaurantService.getAllMenuItemsByDate(menuItem.getDate()))
                 .hasSize(1)
                 .isEqualTo(List.of(menuItem));
     }
 
     @Test
     public void getAllMenuItemsBetween() throws Exception {
-        assertThat(restaurantService.getAllMenuItemsBetween(LocalDate.of(2019, Month.MARCH, 20),
-                LocalDate.of(2019, Month.MARCH, 20)))
+        assertThat(restaurantService.getAllMenuItemsByDate(LocalDate.of(2019, Month.MARCH, 20)))
                 .hasSize(6)
                 .isEqualTo(List.of(MENU_ITEM1, MENU_ITEM2, MENU_ITEM3, MENU_ITEM6, MENU_ITEM4, MENU_ITEM5));
     }

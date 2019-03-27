@@ -16,43 +16,14 @@ public class VoteTestData {
 
     public static final Vote USER_VOTE1 = new Vote(VOTE_START_ID, BURGER_KING,
             LocalDateTime.of(2019, Month.MARCH, 20, 10, 0, 0));
-    public static final Vote ADMIN_VOTE1 = new Vote(VOTE_START_ID + 1, BURGER_KING,
-            LocalDateTime.of(2019, Month.MARCH, 20, 9, 0, 0));
     public static final Vote USER_VOTE2 = new Vote(VOTE_START_ID + 2, RESTAURANT_ATEOTU,
             LocalDateTime.of(2019, Month.MARCH, 21, 8, 0, 0));
-    public static final Vote ADMIN_VOTE2 = new Vote(VOTE_START_ID + 3, RESTAURANT_ATEOTU,
-            LocalDateTime.of(2019, Month.MARCH, 21, 9, 30, 0));
-
-    public static final VoteTo USER_VOTE_TO1 = new VoteTo(VOTE_START_ID, BURGER_KING_ID, BURGER_KING.getName(),
-            LocalDateTime.of(2019, Month.MARCH, 20, 10, 0, 0));
-    public static final VoteTo ADMIN_VOTE_TO1 = new VoteTo(VOTE_START_ID + 1, BURGER_KING_ID, BURGER_KING.getName(),
-            LocalDateTime.of(2019, Month.MARCH, 20, 9, 0, 0));
-    public static final VoteTo USER_VOTE_TO2 = new VoteTo(VOTE_START_ID + 2, RESTAURANT_ATEOTU_ID, RESTAURANT_ATEOTU.getName(),
-            LocalDateTime.of(2019, Month.MARCH, 21, 8, 0, 0));
-    public static final VoteTo ADMIN_VOTE_TO2 = new VoteTo(VOTE_START_ID + 3, RESTAURANT_ATEOTU_ID, RESTAURANT_ATEOTU.getName(),
-            LocalDateTime.of(2019, Month.MARCH, 21, 9, 30, 0));
-
-    public static VoteTo getNewVoteTo() {
-        return new VoteTo(null, RESTAURANT_ATEOTU_ID, LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 45)));
-    }
 
     public static Vote getNewVote() {
         return new Vote(null, RESTAURANT_ATEOTU, LocalDateTime.of(LocalDate.now(), LocalTime.of(9, 45)));
     }
 
-    public static VoteTo getUpdatedVoteTo(Integer id) {
-        return new VoteTo(id, BURGER_KING_ID, LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 30)));
-    }
-
     public static Vote getUpdatedVote() {
         return new Vote(null, BURGER_KING, LocalDateTime.of(LocalDate.now(), LocalTime.of(10, 30)));
-    }
-
-    public static VoteTo getTodayTooLateVoteTo() {
-        return new VoteTo(null, BURGER_KING_ID, LocalDateTime.of(LocalDate.now(), LocalTime.of(11, 1)));
-    }
-
-    public static VoteTo getOutdatedVoteTo() {
-        return new VoteTo(null, BURGER_KING_ID, LocalDateTime.of(2019, Month.MARCH, 1, 0, 0, 0));
     }
 }
