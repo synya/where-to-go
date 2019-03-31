@@ -5,7 +5,6 @@ import com.mycompany.wheretogo.util.exception.OutOfDateTimeException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;

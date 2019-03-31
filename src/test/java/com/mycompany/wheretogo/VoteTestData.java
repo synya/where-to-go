@@ -1,7 +1,6 @@
 package com.mycompany.wheretogo;
 
 import com.mycompany.wheretogo.model.Vote;
-import com.mycompany.wheretogo.to.VoteTo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
