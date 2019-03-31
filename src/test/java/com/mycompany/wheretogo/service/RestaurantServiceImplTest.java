@@ -3,9 +3,12 @@ package com.mycompany.wheretogo.service;
 import com.mycompany.wheretogo.model.Dish;
 import com.mycompany.wheretogo.model.MenuItem;
 import com.mycompany.wheretogo.model.Restaurant;
+import com.mycompany.wheretogo.util.JpaUtil;
 import com.mycompany.wheretogo.util.exception.NotFoundException;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
@@ -19,8 +22,21 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     @Autowired
     private RestaurantService restaurantService;
 
+    @Autowired
+    private CacheManager cacheManager;
+
+    @Autowired
+    private JpaUtil jpaUtil;
+
+    @Before
+    public void setUp() throws Exception {
+        cacheManager.getCache("menuItems").clear();
+        cacheManager.getCache("dishes").clear();
+        jpaUtil.clear2ndLevelHibernateCache();
+    }
+
     @Test
-    public void add() throws Exception {
+    public void testAddRestaurant() throws Exception {
         Restaurant restaurant = getNew();
         Restaurant addedRestaurant = restaurantService.add(restaurant);
         restaurant.setId(addedRestaurant.getId());
@@ -31,19 +47,19 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     }
 
     @Test
-    public void get() throws Exception {
+    public void testGetRestaurant() throws Exception {
         assertThat(restaurantService.get(RESTAURANT_ATEOTU_ID))
                 .isEqualTo(RESTAURANT_ATEOTU);
     }
 
 
     @Test(expected = NotFoundException.class)
-    public void getNotFound() throws Exception {
+    public void testGetRestaurantNotFound() throws Exception {
         restaurantService.get(1);
     }
 
     @Test
-    public void update() throws Exception {
+    public void testUpdateRestaurant() throws Exception {
         Restaurant updatedRestaurant = BURGER_KING;
         updatedRestaurant.setName("Rebranded Burger King");
         restaurantService.update(updatedRestaurant);
@@ -53,7 +69,7 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     }
 
     @Test
-    public void delete() throws Exception {
+    public void testDeleteRestaurant() throws Exception {
         restaurantService.delete(BURGER_KING_ID);
         assertThat(restaurantService.getAll())
                 .hasSize(1)
@@ -61,19 +77,19 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void deleteNotFound() throws Exception {
+    public void testDeleteRestaurantNotFound() throws Exception {
         restaurantService.delete(1);
     }
 
     @Test
-    public void getAll() throws Exception {
+    public void testGetAllRestaurants() throws Exception {
         assertThat(restaurantService.getAll())
                 .hasSize(2)
                 .isEqualTo(List.of(BURGER_KING, RESTAURANT_ATEOTU));
     }
 
     @Test
-    public void addDish() throws Exception {
+    public void testAddDish() throws Exception {
         Dish dish = getNewDish();
         Dish addedDish = restaurantService.addDish(dish);
         dish.setId(addedDish.getId());
@@ -85,18 +101,18 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     }
 
     @Test
-    public void getDish() throws Exception {
+    public void testGetDish() throws Exception {
         assertThat(restaurantService.getDish(RESTAURANT_ATEOTU_DISH_ID))
                 .isEqualTo(RESTAURANT_ATEOTU_DISH1);
     }
 
     @Test(expected = NotFoundException.class)
-    public void getDishNotFound() throws Exception {
+    public void testGetDishNotFound() throws Exception {
         restaurantService.getDish(1);
     }
 
     @Test
-    public void updateDish() throws Exception {
+    public void testUpdateDish() throws Exception {
         Dish updatedDish = RESTAURANT_ATEOTU_DISH2;
         updatedDish.setName("The Pan Galactic Gargle Blaster Updated");
         restaurantService.updateDish(updatedDish);
@@ -107,7 +123,7 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     }
 
     @Test
-    public void deleteDish() throws Exception {
+    public void testDeleteDish() throws Exception {
         restaurantService.deleteDish(RESTAURANT_ATEOTU_DISH_ID);
         assertThat(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID))
                 .hasSize(5)
@@ -116,12 +132,12 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void deleteDishNotFound() throws Exception {
+    public void testDeleteDishNotFound() throws Exception {
         restaurantService.deleteDish(1);
     }
 
     @Test
-    public void getAllDishes() throws Exception {
+    public void testGetAllDishes() throws Exception {
         assertThat(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID))
                 .hasSize(6)
                 .isEqualTo(List.of(RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
@@ -129,50 +145,58 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     }
 
     @Test
-    public void addMenuItem() throws Exception {
+    public void testAddMenuItem() throws Exception {
         MenuItem menuItem = getNewMenuItem();
         restaurantService.addMenuItem(menuItem.getDish().getId(), menuItem.getDate(), menuItem.getPrice());
-        assertThat(restaurantService.getAllMenuItemsByDate(menuItem.getDate()))
+        assertThat(restaurantService.getAllMenuItemsBetweenDates(menuItem.getDate(), menuItem.getDate()))
                 .hasSize(1)
                 .isEqualTo(List.of(menuItem));
     }
 
     @Test
-    public void getMenuItem() throws Exception {
+    public void testGetMenuItem() throws Exception {
         assertThat(restaurantService.getMenuItem(RESTAURANTS_MENU_ITEMS_ID)).isEqualTo(MENU_ITEM1);
     }
 
     @Test(expected = NotFoundException.class)
-    public void getMenuItemNotFound() throws Exception {
+    public void testGetMenuItemNotFound() throws Exception {
         restaurantService.getMenuItem(1);
     }
 
     @Test
-    public void updateMenuItem() throws Exception {
-        MenuItem updatedMenuItem = MENU_ITEM1;
+    public void testUpdateMenuItem() throws Exception {
+        MenuItem updatedMenuItem = TODAY_MENU_ITEM1;
         updatedMenuItem.setPrice(200_000);
         restaurantService.updateMenuItem(updatedMenuItem);
-        assertThat(restaurantService.getAllMenuItemsByDate(LocalDate.of(2019, Month.MARCH, 20)))
+        assertThat(restaurantService.getAllTodayMenuItems())
                 .hasSize(6)
-                .isEqualTo(List.of(updatedMenuItem, MENU_ITEM2, MENU_ITEM3, MENU_ITEM6, MENU_ITEM4, MENU_ITEM5));
+                .isEqualTo(List.of(TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5));
     }
 
     @Test
-    public void deleteMenuItem() throws Exception {
-        restaurantService.deleteMenuItem(RESTAURANTS_MENU_ITEMS_ID);
-        assertThat(restaurantService.getAllMenuItemsByDate(LocalDate.of(2019, Month.MARCH, 20)))
+    public void testDeleteMenuItem() throws Exception {
+        restaurantService.deleteMenuItem(TODAY_MENU_ITEM2.getId());
+        assertThat(restaurantService.getAllTodayMenuItems())
                 .hasSize(5)
-                .isEqualTo(List.of(MENU_ITEM2, MENU_ITEM3, MENU_ITEM6, MENU_ITEM4, MENU_ITEM5));
+                .isEqualTo(List.of(TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5));
     }
 
     @Test(expected = NotFoundException.class)
-    public void deleteMenuItemNotFound() throws Exception {
+    public void testDeleteMenuItemNotFound() throws Exception {
         restaurantService.deleteMenuItem(1);
     }
 
     @Test
-    public void getAllMenuItemsBetween() throws Exception {
-        assertThat(restaurantService.getAllMenuItemsByDate(LocalDate.of(2019, Month.MARCH, 20)))
+    public void testGetAllTodayMenuItems() throws Exception {
+        assertThat(restaurantService.getAllTodayMenuItems())
+                .hasSize(6)
+                .isEqualTo(List.of(TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5));
+    }
+
+    @Test
+    public void testGetAllMenuItemsBetweenDates() throws Exception {
+        LocalDate localDate = LocalDate.of(2019, Month.MARCH, 20);
+        assertThat(restaurantService.getAllMenuItemsBetweenDates(localDate, localDate))
                 .hasSize(6)
                 .isEqualTo(List.of(MENU_ITEM1, MENU_ITEM2, MENU_ITEM3, MENU_ITEM6, MENU_ITEM4, MENU_ITEM5));
     }
@@ -183,4 +207,5 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
         validateRootCause(() -> restaurantService.add(new Restaurant(null, null)), ConstraintViolationException.class);
         validateRootCause(() -> restaurantService.addDish(new Dish(null, null, null)), ConstraintViolationException.class);
     }
+
 }

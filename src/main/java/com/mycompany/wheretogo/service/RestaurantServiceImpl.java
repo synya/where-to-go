@@ -124,8 +124,8 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Cacheable("menuItems")
     @Override
-    public List<MenuItem> getAllMenuItemsByDate(LocalDate date) {
-        return menuItemRepository.findAllByDate(date);
+    public List<MenuItem> getAllTodayMenuItems() {
+        return menuItemRepository.findAllByDate(LocalDate.now());
     }
 
     @Cacheable("menuItems")

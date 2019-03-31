@@ -34,7 +34,7 @@ public class UserServiceImplTest extends AbstractServiceTest {
     }
 
     @Test
-    public void add() throws Exception {
+    public void testAddUser() throws Exception {
         User user = getNew();
         User addedUser = userService.add(user);
         user.setId(addedUser.getId());
@@ -45,33 +45,33 @@ public class UserServiceImplTest extends AbstractServiceTest {
     }
 
     @Test(expected = DataAccessException.class)
-    public void duplicateMailCreate() throws Exception {
+    public void testAddUserWithDuplicateEmail() throws Exception {
         userService.add(getWithDuplicateEmail());
     }
 
     @Test
-    public void get() throws Exception {
+    public void testGetUser() throws Exception {
         assertThat(userService.get(USER_ID)).isEqualToIgnoringGivenFields(USER, "registered");
     }
 
     @Test(expected = NotFoundException.class)
-    public void getNotFound() throws Exception {
+    public void testGetUserNotFound() throws Exception {
         userService.get(1);
     }
 
     @Test
-    public void getByEmail() throws Exception {
+    public void testGetUserByEmail() throws Exception {
         assertThat(userService.getByEmail("admin@gmail.com")).isEqualToIgnoringGivenFields(ADMIN, "registered");
     }
 
     @Test
-    public void update() throws Exception {
+    public void testUpdateUser() throws Exception {
         userService.update(getUpdated());
         assertThat(userService.get(USER_ID)).isEqualToIgnoringGivenFields(getUpdated(), "registered");
     }
 
     @Test
-    public void delete() throws Exception {
+    public void testDeleteUser() throws Exception {
         userService.delete(USER_ID);
         assertThat(userService.getAll())
                 .usingElementComparatorIgnoringFields("registered")
@@ -79,12 +79,12 @@ public class UserServiceImplTest extends AbstractServiceTest {
     }
 
     @Test(expected = NotFoundException.class)
-    public void deleteNotFound() throws Exception {
+    public void testDeleteUserNotFound() throws Exception {
         userService.delete(1);
     }
 
     @Test
-    public void getAll() throws Exception {
+    public void testGetAllUsers() throws Exception {
         assertThat(userService.getAll())
                 .usingElementComparatorIgnoringFields("registered")
                 .isEqualTo(List.of(ADMIN, USER));
