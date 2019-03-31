@@ -14,7 +14,6 @@ public class RestaurantTestData {
     public static final int RESTAURANT_ATEOTU_ID = START_SEQ + 3;
 
     public static final Restaurant BURGER_KING = new Restaurant(BURGER_KING_ID, "Burger King");
-    public static final Restaurant BURGER_KING_UPDATED = new Restaurant(BURGER_KING_ID, "Rebranded Burger King");
     public static final Restaurant RESTAURANT_ATEOTU = new Restaurant(RESTAURANT_ATEOTU_ID, "The Restaurant at the End of the Universe");
 
     public static final int BURGER_KING_DISH_ID = START_SEQ + 4;

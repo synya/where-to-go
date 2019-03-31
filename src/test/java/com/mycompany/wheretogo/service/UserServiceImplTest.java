@@ -56,6 +56,19 @@ public class UserServiceImplTest extends AbstractServiceTest {
     }
 
     @Test
+    public void delete() throws Exception {
+        userService.delete(USER_ID);
+        assertThat(userService.getAll())
+                .usingElementComparatorIgnoringFields("registered")
+                .isEqualTo(List.of(ADMIN));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void deleteNotFound() throws Exception {
+        userService.delete(1);
+    }
+
+    @Test
     public void getAll() throws Exception {
         assertThat(userService.getAll())
                 .usingElementComparatorIgnoringFields("registered")

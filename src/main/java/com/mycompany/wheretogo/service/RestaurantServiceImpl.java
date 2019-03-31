@@ -42,9 +42,19 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public Restaurant get(Integer id) throws NotFoundException {
+        return checkNotFoundWithId(restaurantRepository.findById(id).orElse(null), id);
+    }
+
+    @Override
     public void update(Restaurant restaurant) throws NotFoundException {
         Assert.notNull(restaurant, "restaurant must not be null");
         checkNotFoundWithId(restaurantRepository.save(restaurant), restaurant.getId());
+    }
+
+    @Override
+    public void delete(int id) throws NotFoundException {
+        checkNotFoundWithId(restaurantRepository.delete(id) != 0, id);
     }
 
     @Override
@@ -59,9 +69,19 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public Dish getDish(Integer id) throws NotFoundException {
+        return checkNotFoundWithId(dishRepository.findById(id).orElse(null), id);
+    }
+
+    @Override
     public void updateDish(Dish dish) {
         Assert.notNull(dish, "dish must not be null");
         checkNotFoundWithId(dishRepository.save(dish), dish.getId());
+    }
+
+    @Override
+    public void deleteDish(int id) throws NotFoundException {
+        checkNotFoundWithId(dishRepository.delete(id) != 0, id);
     }
 
     @Override
@@ -77,6 +97,22 @@ public class RestaurantServiceImpl implements RestaurantService {
         Assert.notNull(date, "date must not be null");
         Assert.notNull(date, "price must not be null");
         return menuItemRepository.save(new MenuItem(dishRepository.getOne(dishId), date, price));
+    }
+
+    @Override
+    public MenuItem getMenuItem(Integer id) throws NotFoundException {
+        return checkNotFoundWithId(menuItemRepository.findById(id).orElse(null), id);
+    }
+
+    @Override
+    public void updateMenuItem(MenuItem menuItem) throws NotFoundException {
+        Assert.notNull(menuItem, "menuItem must not be null");
+        checkNotFoundWithId(menuItemRepository.save(menuItem), menuItem.getId());
+    }
+
+    @Override
+    public void deleteMenuItem(int id) throws NotFoundException {
+        checkNotFoundWithId(menuItemRepository.delete(id) != 0, id);
     }
 
     @Override
