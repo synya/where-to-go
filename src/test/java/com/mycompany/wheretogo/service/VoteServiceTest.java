@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class VoteServiceTest extends AbstractServiceTest {
     @Autowired
-    protected VoteService voteService;
+    private VoteService voteService;
 
     @Test
     public void add() throws Exception {

@@ -8,6 +8,8 @@ import com.mycompany.wheretogo.repository.MenuItemRepository;
 import com.mycompany.wheretogo.repository.RestaurantRepository;
 import com.mycompany.wheretogo.util.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,17 +75,20 @@ public class RestaurantServiceImpl implements RestaurantService {
         return checkNotFoundWithId(dishRepository.findById(id).orElse(null), id);
     }
 
+    @CacheEvict(value = "dishes", allEntries = true)
     @Override
     public void updateDish(Dish dish) {
         Assert.notNull(dish, "dish must not be null");
         checkNotFoundWithId(dishRepository.save(dish), dish.getId());
     }
 
+    @CacheEvict(value = "dishes", allEntries = true)
     @Override
     public void deleteDish(int id) throws NotFoundException {
         checkNotFoundWithId(dishRepository.delete(id) != 0, id);
     }
 
+    @Cacheable("dishes")
     @Override
     public List<Dish> getAllDishes(Integer restaurantId) {
         Assert.notNull(restaurantId, "restaurantId must not be null");
@@ -104,22 +109,26 @@ public class RestaurantServiceImpl implements RestaurantService {
         return checkNotFoundWithId(menuItemRepository.findById(id).orElse(null), id);
     }
 
+    @CacheEvict(value = "menuItems", allEntries = true)
     @Override
     public void updateMenuItem(MenuItem menuItem) throws NotFoundException {
         Assert.notNull(menuItem, "menuItem must not be null");
         checkNotFoundWithId(menuItemRepository.save(menuItem), menuItem.getId());
     }
 
+    @CacheEvict(value = "menuItems", allEntries = true)
     @Override
     public void deleteMenuItem(int id) throws NotFoundException {
         checkNotFoundWithId(menuItemRepository.delete(id) != 0, id);
     }
 
+    @Cacheable("menuItems")
     @Override
     public List<MenuItem> getAllMenuItemsByDate(LocalDate date) {
         return menuItemRepository.findAllByDate(date);
     }
 
+    @Cacheable("menuItems")
     @Override
     public List<MenuItem> getAllMenuItemsBetweenDates(LocalDate startDate, LocalDate endDate) {
         return menuItemRepository.findAllBetweenDates(startDate, endDate);

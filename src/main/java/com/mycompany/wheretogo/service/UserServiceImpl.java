@@ -4,6 +4,8 @@ import com.mycompany.wheretogo.model.User;
 import com.mycompany.wheretogo.repository.UserRepository;
 import com.mycompany.wheretogo.util.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -25,6 +27,7 @@ public class UserServiceImpl implements UserService {
         this.userRepository = userRepository;
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @Override
     public User add(User user) {
         Assert.notNull(user, "user must not be null");
@@ -42,17 +45,20 @@ public class UserServiceImpl implements UserService {
         return checkNotFound(userRepository.findByEmail(email), "email=" + email);
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @Override
     public void update(User user) {
         Assert.notNull(user, "user must not be null");
         checkNotFoundWithId(userRepository.save(user), user.getId());
     }
 
+    @CacheEvict(value = "users", allEntries = true)
     @Override
     public void delete(int id) throws NotFoundException {
         checkNotFoundWithId(userRepository.delete(id) != 0, id);
     }
 
+    @Cacheable("users")
     @Override
     public List<User> getAll() {
         return userRepository.findAll(SORT_NAME_EMAIL);

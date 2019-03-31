@@ -1,5 +1,7 @@
 package com.mycompany.wheretogo.model;
 
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
@@ -8,9 +10,11 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 @Table(name = "menus", uniqueConstraints = {@UniqueConstraint(columnNames = {"dish_id", "date"}, name = "menus_unique_dish_date_idx")})
 public class MenuItem extends AbstractBaseEntity {
+    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dish_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

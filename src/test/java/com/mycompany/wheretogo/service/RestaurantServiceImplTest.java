@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class RestaurantServiceImplTest extends AbstractServiceTest {
     @Autowired
-    protected RestaurantService restaurantService;
+    private RestaurantService restaurantService;
 
     @Test
     public void add() throws Exception {
