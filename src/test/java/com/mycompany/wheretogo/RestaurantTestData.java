@@ -1,6 +1,5 @@
 package com.mycompany.wheretogo;
 
-import com.mycompany.wheretogo.model.Dish;
 import com.mycompany.wheretogo.model.Restaurant;
 
 import java.util.List;

@@ -2,11 +2,9 @@ package com.mycompany.wheretogo;
 
 import com.mycompany.wheretogo.model.Role;
 import com.mycompany.wheretogo.model.User;
-import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
-import java.util.EnumSet;
 import java.util.List;
 
 import static com.mycompany.wheretogo.model.AbstractBaseEntity.START_SEQ;

@@ -2,9 +2,7 @@ package com.mycompany.wheretogo;
 
 import com.mycompany.wheretogo.model.Vote;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.Month;
 import java.util.List;
 

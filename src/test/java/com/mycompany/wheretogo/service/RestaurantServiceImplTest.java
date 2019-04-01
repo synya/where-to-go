@@ -44,13 +44,13 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
         Restaurant restaurant = new Restaurant("KFC");
         Restaurant addedRestaurant = restaurantService.add(restaurant);
         restaurant.setId(addedRestaurant.getId());
-        RestaurantTestData.assertMatch(restaurant, addedRestaurant);
-        RestaurantTestData.assertMatch(restaurantService.getAll(), BURGER_KING, addedRestaurant, RESTAURANT_ATEOTU);
+        assertMatch(restaurant, addedRestaurant);
+        assertMatch(restaurantService.getAll(), BURGER_KING, addedRestaurant, RESTAURANT_ATEOTU);
     }
 
     @Test
     public void testGetRestaurant() throws Exception {
-        RestaurantTestData.assertMatch(restaurantService.get(RESTAURANT_ATEOTU_ID), RESTAURANT_ATEOTU);
+        assertMatch(restaurantService.get(RESTAURANT_ATEOTU_ID), RESTAURANT_ATEOTU);
     }
 
 
@@ -64,13 +64,13 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
         Restaurant updatedRestaurant = restaurantService.get(BURGER_KING_ID);
         updatedRestaurant.setName("Rebranded Burger King");
         restaurantService.update(updatedRestaurant);
-        RestaurantTestData.assertMatch(restaurantService.getAll(), updatedRestaurant, RESTAURANT_ATEOTU);
+        assertMatch(restaurantService.getAll(), updatedRestaurant, RESTAURANT_ATEOTU);
     }
 
     @Test
     public void testDeleteRestaurant() throws Exception {
         restaurantService.delete(BURGER_KING_ID);
-        RestaurantTestData.assertMatch(restaurantService.getAll(), RESTAURANT_ATEOTU);
+        assertMatch(restaurantService.getAll(), RESTAURANT_ATEOTU);
     }
 
     @Test(expected = NotFoundException.class)
@@ -80,7 +80,7 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void testGetAllRestaurants() throws Exception {
-        RestaurantTestData.assertMatch(restaurantService.getAll(), BURGER_KING, RESTAURANT_ATEOTU);
+        assertMatch(restaurantService.getAll(), BURGER_KING, RESTAURANT_ATEOTU);
     }
 
     @Test
@@ -88,15 +88,15 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
         Dish dish = new Dish("The Brand New Mega Hamburger", BURGER_KING);
         Dish addedDish = restaurantService.addDish(dish);
         dish.setId(addedDish.getId());
-        DishTestData.assertMatch(dish, addedDish);
-        DishTestData.assertMatch(restaurantService.getAllDishes(BURGER_KING_ID),
+        assertMatch(dish, addedDish);
+        assertMatch(restaurantService.getAllDishes(BURGER_KING_ID),
                 BURGER_KING_DISH1, BURGER_KING_DISH4, BURGER_KING_DISH2,
                 BURGER_KING_DISH6, BURGER_KING_DISH5, BURGER_KING_DISH3, addedDish);
     }
 
     @Test
     public void testGetDish() throws Exception {
-        DishTestData.assertMatch(restaurantService.getDish(RESTAURANT_ATEOTU_DISH_ID), RESTAURANT_ATEOTU_DISH1);
+        assertMatch(restaurantService.getDish(RESTAURANT_ATEOTU_DISH_ID), RESTAURANT_ATEOTU_DISH1);
     }
 
     @Test(expected = NotFoundException.class)
@@ -109,7 +109,7 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
         Dish updatedDish = restaurantService.getDish(RESTAURANT_ATEOTU_DISH_ID + 1);
         updatedDish.setName("The Pan Galactic Gargle Blaster Updated");
         restaurantService.updateDish(updatedDish);
-        DishTestData.assertMatch(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID),
+        assertMatch(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID),
                 RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
                 RESTAURANT_ATEOTU_DISH1, RESTAURANT_ATEOTU_DISH5, updatedDish);
     }
@@ -117,7 +117,7 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     @Test
     public void testDeleteDish() throws Exception {
         restaurantService.deleteDish(RESTAURANT_ATEOTU_DISH_ID);
-        DishTestData.assertMatch(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID),
+        assertMatch(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID),
                 RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
                 RESTAURANT_ATEOTU_DISH5, RESTAURANT_ATEOTU_DISH2);
     }
@@ -129,7 +129,7 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void testGetAllDishes() throws Exception {
-        DishTestData.assertMatch(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID),
+        assertMatch(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID),
                 RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
                 RESTAURANT_ATEOTU_DISH1, RESTAURANT_ATEOTU_DISH5, RESTAURANT_ATEOTU_DISH2);
     }
@@ -139,13 +139,13 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
         MenuItem menuItem = new MenuItem(RESTAURANT_ATEOTU_DISH4, LocalDate.of(2019, Month.MARCH, 25), 2000);
         MenuItem addedMenuItem = restaurantService.addMenuItem(menuItem.getDish().getId(), menuItem.getDate(), menuItem.getPrice());
         menuItem.setId(addedMenuItem.getId());
-        MenuItemTestData.assertMatch(restaurantService.getAllMenuItemsBetweenDates(menuItem.getDate(), menuItem.getDate()),
+        assertMatch(restaurantService.getAllMenuItemsBetweenDates(menuItem.getDate(), menuItem.getDate()),
                 List.of(menuItem));
     }
 
     @Test
     public void testGetMenuItem() throws Exception {
-        MenuItemTestData.assertMatch(restaurantService.getMenuItem(RESTAURANTS_MENU_ITEMS_ID), MENU_ITEM1);
+        assertMatch(restaurantService.getMenuItem(RESTAURANTS_MENU_ITEMS_ID), MENU_ITEM1);
     }
 
     @Test(expected = NotFoundException.class)
@@ -158,14 +158,14 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
         MenuItem updatedMenuItem = TODAY_MENU_ITEM1;
         updatedMenuItem.setPrice(200_000);
         restaurantService.updateMenuItem(updatedMenuItem);
-        MenuItemTestData.assertMatch(restaurantService.getAllTodayMenuItems(),
+        assertMatch(restaurantService.getAllTodayMenuItems(),
                 TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5);
     }
 
     @Test
     public void testDeleteMenuItem() throws Exception {
         restaurantService.deleteMenuItem(TODAY_MENU_ITEM2.getId());
-        MenuItemTestData.assertMatch(restaurantService.getAllTodayMenuItems(),
+        assertMatch(restaurantService.getAllTodayMenuItems(),
                 TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5);
 
     }
@@ -177,14 +177,14 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void testGetAllTodayMenuItems() throws Exception {
-        MenuItemTestData.assertMatch(restaurantService.getAllTodayMenuItems(),
+        assertMatch(restaurantService.getAllTodayMenuItems(),
                 TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5);
     }
 
     @Test
     public void testGetAllMenuItemsBetweenDates() throws Exception {
         LocalDate localDate = LocalDate.of(2019, Month.MARCH, 20);
-        MenuItemTestData.assertMatch(restaurantService.getAllMenuItemsBetweenDates(localDate, localDate),
+        assertMatch(restaurantService.getAllMenuItemsBetweenDates(localDate, localDate),
                 MENU_ITEM1, MENU_ITEM2, MENU_ITEM3, MENU_ITEM6, MENU_ITEM4, MENU_ITEM5);
     }
 
