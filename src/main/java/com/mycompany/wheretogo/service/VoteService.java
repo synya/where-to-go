@@ -12,5 +12,7 @@ public interface VoteService {
 
     void update(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException, NotFoundException;
 
+    List<Vote> getAll(Integer userId);
+
     List<Vote> getAllBetweenDates(LocalDate startDate, LocalDate endDate, Integer userId);
 }

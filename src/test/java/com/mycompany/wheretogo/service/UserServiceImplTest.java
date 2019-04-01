@@ -12,10 +12,9 @@ import org.springframework.cache.CacheManager;
 import org.springframework.dao.DataAccessException;
 
 import javax.validation.ConstraintViolationException;
-import java.util.List;
+import java.util.EnumSet;
 
 import static com.mycompany.wheretogo.UserTestData.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class UserServiceImplTest extends AbstractServiceTest {
     @Autowired
@@ -38,10 +37,8 @@ public class UserServiceImplTest extends AbstractServiceTest {
         User user = getNew();
         User addedUser = userService.add(user);
         user.setId(addedUser.getId());
-        assertThat(user).isEqualToIgnoringGivenFields(addedUser, "registered");
-        assertThat(userService.getAll())
-                .usingElementComparatorIgnoringFields("registered")
-                .isEqualTo(List.of(ADMIN, user, USER));
+        assertMatch(user, addedUser);
+        assertMatch(userService.getAll(), ADMIN, user, USER);
     }
 
     @Test(expected = DataAccessException.class)
@@ -51,43 +48,43 @@ public class UserServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void testGetUser() throws Exception {
-        assertThat(userService.get(USER_ID)).isEqualToIgnoringGivenFields(USER, "registered");
+        assertMatch(userService.get(USER_ID), USER);
     }
 
     @Test(expected = NotFoundException.class)
     public void testGetUserNotFound() throws Exception {
-        userService.get(1);
+        userService.get(ENTITY_NOT_FOUND_ID);
     }
 
     @Test
     public void testGetUserByEmail() throws Exception {
-        assertThat(userService.getByEmail("admin@gmail.com")).isEqualToIgnoringGivenFields(ADMIN, "registered");
+        assertMatch(userService.getByEmail("admin@gmail.com"), ADMIN);
     }
 
     @Test
     public void testUpdateUser() throws Exception {
-        userService.update(getUpdated());
-        assertThat(userService.get(USER_ID)).isEqualToIgnoringGivenFields(getUpdated(), "registered");
+        User updatedUser = userService.get(USER_ID);
+        updatedUser.setName("UpdatedName");
+        updatedUser.setPassword("UpdatedPassword");
+        updatedUser.setRoles(EnumSet.of(Role.ROLE_USER, Role.ROLE_ADMIN));
+        userService.update(updatedUser);
+        assertMatch(userService.get(USER_ID), updatedUser);
     }
 
     @Test
     public void testDeleteUser() throws Exception {
         userService.delete(USER_ID);
-        assertThat(userService.getAll())
-                .usingElementComparatorIgnoringFields("registered")
-                .isEqualTo(List.of(ADMIN));
+        assertMatch(userService.getAll(), ADMIN);
     }
 
     @Test(expected = NotFoundException.class)
     public void testDeleteUserNotFound() throws Exception {
-        userService.delete(1);
+        userService.delete(ENTITY_NOT_FOUND_ID);
     }
 
     @Test
     public void testGetAllUsers() throws Exception {
-        assertThat(userService.getAll())
-                .usingElementComparatorIgnoringFields("registered")
-                .isEqualTo(List.of(ADMIN, USER));
+        assertMatch(userService.getAll(), ADMIN, USER);
     }
 
     @Test

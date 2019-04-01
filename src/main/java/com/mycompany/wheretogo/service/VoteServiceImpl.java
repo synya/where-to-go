@@ -57,6 +57,12 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
+    public List<Vote> getAll(Integer userId) {
+        Assert.notNull(userId, "userId must not be null");
+        return voteRepository.findAll(userId);
+    }
+
+    @Override
     public List<Vote> getAllBetweenDates(LocalDate startDate, LocalDate endDate, Integer userId) {
         Assert.notNull(startDate, "startDate must not be null");
         Assert.notNull(endDate, "endDate must not be null");

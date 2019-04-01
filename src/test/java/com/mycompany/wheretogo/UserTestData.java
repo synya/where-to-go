@@ -2,10 +2,12 @@ package com.mycompany.wheretogo;
 
 import com.mycompany.wheretogo.model.Role;
 import com.mycompany.wheretogo.model.User;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 import static com.mycompany.wheretogo.model.AbstractBaseEntity.START_SEQ;
 
@@ -24,11 +26,15 @@ public class UserTestData {
         return new User(null, "Duplicate", "user@gmail.com", "newPass", Role.ROLE_USER);
     }
 
-    public static User getUpdated() {
-        User updated = new User(USER);
-        updated.setName("UpdatedName");
-        updated.setPassword("UpdatedPassword");
-        updated.setRoles(EnumSet.of(Role.ROLE_USER, Role.ROLE_ADMIN));
-        return updated;
+    public static void assertMatch(User actual, User expected) {
+        TestUtil.assertMatch(actual, expected, "registered");
+    }
+
+    public static void assertMatch(Iterable<User> actual, User... expected) {
+        assertMatch(actual, List.of(expected));
+    }
+
+    public static void assertMatch(Iterable<User> actual, Iterable<User> expected) {
+        TestUtil.assertMatch(actual, expected, "registered");
     }
 }
