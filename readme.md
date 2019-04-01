@@ -3,7 +3,7 @@
 
 ## Where To Go
 
-### A voting system for deciding where to have lunch.
+### A voting system for deciding where to have lunch
 
 #### curl commands to test rest API
 
@@ -12,8 +12,8 @@
 #### Restaurants and voting
 
 ------------------------------------------------------
-##### Get all restaurants for voting:
+##### Get all restaurants for voting
 
 The request returns restaurant id, restaurant name, menu of the day which consists from list of dish names and their prices. Pay attention, that all prices are presented in cents of USD.  
  
- * `curl -X GET http://localhost:8080/where-to-go/rest/api-v1/restaurants`
+*   `curl -X GET http://localhost:8080/where-to-go/rest/api-v1/restaurants`
