@@ -1,8 +1,5 @@
 package com.mycompany.wheretogo.service;
 
-import com.mycompany.wheretogo.DishTestData;
-import com.mycompany.wheretogo.MenuItemTestData;
-import com.mycompany.wheretogo.RestaurantTestData;
 import com.mycompany.wheretogo.model.Dish;
 import com.mycompany.wheretogo.model.MenuItem;
 import com.mycompany.wheretogo.model.Restaurant;
