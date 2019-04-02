@@ -2,13 +2,18 @@ package com.mycompany.wheretogo.web.restaurant;
 
 import com.mycompany.wheretogo.TestUtil;
 import com.mycompany.wheretogo.to.RestaurantTo;
+import com.mycompany.wheretogo.to.VoteTo;
 import com.mycompany.wheretogo.web.AbstractRestControllerTest;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
+import java.util.List;
+
 import static com.mycompany.wheretogo.MenuItemTestData.TODAY_MENU_ITEMS;
-import static com.mycompany.wheretogo.VoteTestData.TODAY_USER_VOTE;
+import static com.mycompany.wheretogo.VoteTestData.*;
 import static com.mycompany.wheretogo.util.RestaurantUtil.groupMenuItemsByRestaurant;
+import static com.mycompany.wheretogo.util.VoteUtil.getVoteWithDateTime;
+import static com.mycompany.wheretogo.util.VoteUtil.getVotesWithDateTime;
 import static com.mycompany.wheretogo.web.restaurant.RestaurantRestController.REST_URL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -17,11 +22,48 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class RestaurantRestControllerTest extends AbstractRestControllerTest {
     @Test
-    public void testGet() throws Exception {
+    public void testGetRestaurants() throws Exception {
         mockMvc.perform(get(REST_URL))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(TestUtil.fromJsonAndAssert(groupMenuItemsByRestaurant(TODAY_MENU_ITEMS, TODAY_USER_VOTE), RestaurantTo.class));
     }
+
+    @Test
+    public void testGetVotes() throws Exception {
+        mockMvc.perform(get(REST_URL + "/votes"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(TestUtil.fromJsonAndAssert(getVotesWithDateTime(List.of(TODAY_USER_VOTE, USER_VOTE2, USER_VOTE1)), VoteTo.class));
+    }
+
+    @Test
+    public void testGetVotesBetweenDates() throws Exception {
+        mockMvc.perform(get(REST_URL + "/votes/between?startDate=2019-03-20&endDate=2019-03-21"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(TestUtil.fromJsonAndAssert(getVotesWithDateTime(List.of(USER_VOTE2, USER_VOTE1)), VoteTo.class));
+    }
+
+    @Test
+    public void testGetVotesBetweenDatesEmpty() throws Exception {
+        mockMvc.perform(get(REST_URL + "/votes/between?startDate=&endDate="))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(TestUtil.fromJsonAndAssert(getVotesWithDateTime(List.of(TODAY_USER_VOTE, USER_VOTE2, USER_VOTE1)), VoteTo.class));
+    }
+
+    @Test
+    public void testGetTodayVote() throws Exception {
+        mockMvc.perform(get(REST_URL + "/votes/today"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(TestUtil.fromJsonAndAssert(getVoteWithDateTime(TODAY_USER_VOTE), VoteTo.class));
+    }
+
 }
