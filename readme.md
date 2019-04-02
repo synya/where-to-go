@@ -49,4 +49,3 @@ If parameters are empty the request will return all user's votes between 01.01.2
 The request returns either user's today vote information, or result with one boolean `false` in `voteDone` field if no vote has been made today yet.
 
 *   `curl -X GET http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/today`
-
