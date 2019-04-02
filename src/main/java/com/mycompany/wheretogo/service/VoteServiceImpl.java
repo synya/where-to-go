@@ -39,7 +39,7 @@ public class VoteServiceImpl implements VoteService {
         Assert.notNull(vote, "vote must not be null");
         Assert.notNull(restaurantId, "restaurantId must not be null");
         Assert.notNull(userId, "userId must not be null");
-        if (!vote.getDateTime().toLocalDate().equals(LocalDate.now())) {
+        if (!vote.getDate().equals(LocalDate.now())) {
             throw new OutOfDateTimeException("Operation is not allowed - only today's votes applicable");
         }
         return saveUserVote(vote, restaurantId, userId);
@@ -50,10 +50,15 @@ public class VoteServiceImpl implements VoteService {
     public void update(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException, NotFoundException {
         Assert.notNull(vote, "vote must not be null");
         Assert.notNull(userId, "userId must not be null");
-        if (vote.getDateTime().compareTo(LocalDateTime.of(LocalDate.now(), ALLOWED_UPDATE_TIME_THRESHOLD)) >= 0) {
+        if (vote.getTime().compareTo(ALLOWED_UPDATE_TIME_THRESHOLD) >= 0) {
             throw new OutOfDateTimeException("Operation is not allowed - it's too late to change the vote");
         }
         saveUserVote(vote, restaurantId, userId);
+    }
+
+    @Override
+    public Vote getToday(Integer userId) {
+        return voteRepository.findByIdAndDate(userId, LocalDate.now()).orElse(null);
     }
 
     @Override
@@ -67,7 +72,7 @@ public class VoteServiceImpl implements VoteService {
         Assert.notNull(startDate, "startDate must not be null");
         Assert.notNull(endDate, "endDate must not be null");
         Assert.notNull(userId, "userId must not be null");
-        return voteRepository.findAllBetweenDateTimes(LocalDateTime.of(startDate, LocalTime.MIN), LocalDateTime.of(endDate, LocalTime.MAX), userId);
+        return voteRepository.findAllBetweenDates(startDate, endDate, userId);
     }
 
     private Vote getUserVote(Integer id, Integer userId) {

@@ -1,6 +1,7 @@
 package com.mycompany.wheretogo.util;
 
 import com.mycompany.wheretogo.model.MenuItem;
+import com.mycompany.wheretogo.model.Vote;
 import com.mycompany.wheretogo.to.RestaurantTo;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ public class RestaurantUtil {
     private RestaurantUtil() {
     }
 
-    public static List<RestaurantTo> groupMenuItemsByRestaurant(List<MenuItem> menuItems, Integer electedRestaurantId) {
+    public static List<RestaurantTo> groupMenuItemsByRestaurant(List<MenuItem> menuItems, Vote vote) {
         Map<Integer, RestaurantTo> linkedHashMap = new LinkedHashMap<>();
         menuItems.forEach(mi -> {
             Integer restaurantId = mi.getDish().getRestaurant().getId();
@@ -24,8 +25,8 @@ public class RestaurantUtil {
                         return o;
                     });
         });
-        if (electedRestaurantId != null) {
-            linkedHashMap.computeIfPresent(electedRestaurantId, (i, r) -> {
+        if (vote != null) {
+            linkedHashMap.computeIfPresent(vote.getRestaurant().getId(), (i, r) -> {
                 r.setElected(true);
                 return r;
             });

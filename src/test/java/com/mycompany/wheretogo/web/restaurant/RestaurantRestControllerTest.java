@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 
 import static com.mycompany.wheretogo.MenuItemTestData.TODAY_MENU_ITEMS;
+import static com.mycompany.wheretogo.VoteTestData.TODAY_USER_VOTE;
 import static com.mycompany.wheretogo.util.RestaurantUtil.groupMenuItemsByRestaurant;
 import static com.mycompany.wheretogo.web.restaurant.RestaurantRestController.REST_URL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -21,6 +22,6 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(groupMenuItemsByRestaurant(TODAY_MENU_ITEMS, null), RestaurantTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(groupMenuItemsByRestaurant(TODAY_MENU_ITEMS, TODAY_USER_VOTE), RestaurantTo.class));
     }
 }

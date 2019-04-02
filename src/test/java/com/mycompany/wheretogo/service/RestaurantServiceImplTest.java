@@ -152,7 +152,7 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void testUpdateMenuItem() throws Exception {
-        MenuItem updatedMenuItem = TODAY_MENU_ITEM1;
+        MenuItem updatedMenuItem = restaurantService.getMenuItem(TODAY_RESTAURANTS_MENU_ITEMS_ID);
         updatedMenuItem.setPrice(200_000);
         restaurantService.updateMenuItem(updatedMenuItem);
         assertMatch(restaurantService.getAllTodayMenuItems(),

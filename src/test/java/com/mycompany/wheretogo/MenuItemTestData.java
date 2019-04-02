@@ -37,7 +37,7 @@ public class MenuItemTestData {
     public static final MenuItem MENU_ITEM12 = new MenuItem(RESTAURANTS_MENU_ITEMS_ID + 11, RESTAURANT_ATEOTU_DISH6,
             LocalDate.of(2019, Month.MARCH, 21), 1000);
 
-    public static final int TODAY_RESTAURANTS_MENU_ITEMS_ID = START_SEQ + 32;
+    public static final int TODAY_RESTAURANTS_MENU_ITEMS_ID = START_SEQ + 28;
 
     public static final MenuItem TODAY_MENU_ITEM1 = new MenuItem(TODAY_RESTAURANTS_MENU_ITEMS_ID, BURGER_KING_DISH4, LocalDate.now(), 1500);
     public static final MenuItem TODAY_MENU_ITEM2 = new MenuItem(TODAY_RESTAURANTS_MENU_ITEMS_ID + 1, BURGER_KING_DISH1, LocalDate.now(), 210);

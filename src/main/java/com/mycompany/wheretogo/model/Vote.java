@@ -5,10 +5,11 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 @Entity
-@Table(name = "votes", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date_time"}, name = "votes_unique_user_datetime_idx")})
+@Table(name = "votes", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "date"}, name = "votes_unique_user_date_idx")})
 public class Vote extends AbstractBaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
@@ -22,21 +23,26 @@ public class Vote extends AbstractBaseEntity {
     @NotNull
     private Restaurant restaurant;
 
-    @Column(name = "date_time", nullable = false)
+    @Column(name = "date", nullable = false)
     @NotNull
-    private LocalDateTime dateTime;
+    private LocalDate date;
+
+    @Column(name = "time", nullable = false)
+    @NotNull
+    private LocalTime time;
 
     public Vote() {
     }
 
-    public Vote(@NotNull Restaurant restaurant, @NotNull LocalDateTime dateTime) {
-        this(null, restaurant, dateTime);
+    public Vote(@NotNull Restaurant restaurant, @NotNull LocalDate date, @NotNull LocalTime time) {
+        this(null, restaurant, date, time);
     }
 
-    public Vote(Integer id, @NotNull Restaurant restaurant, @NotNull LocalDateTime dateTime) {
+    public Vote(Integer id, @NotNull Restaurant restaurant, @NotNull LocalDate date, @NotNull LocalTime time) {
         super(id);
         this.restaurant = restaurant;
-        this.dateTime = dateTime;
+        this.date = date;
+        this.time = time;
     }
 
     public User getUser() {
@@ -55,12 +61,20 @@ public class Vote extends AbstractBaseEntity {
         this.restaurant = restaurant;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
+    public LocalTime getTime() {
+        return time;
+    }
+
+    public void setTime(LocalTime time) {
+        this.time = time;
     }
 
     @Override
@@ -68,7 +82,8 @@ public class Vote extends AbstractBaseEntity {
         return "Vote{" +
                 "id=" + id +
                 ", restaurant=" + restaurant +
-                ", dateTime=" + dateTime +
+                ", date=" + date +
+                ", time=" + time +
                 '}';
     }
 }
