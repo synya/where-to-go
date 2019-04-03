@@ -1,27 +1,35 @@
 package com.mycompany.wheretogo.web.restaurant;
 
 import com.mycompany.wheretogo.TestUtil;
+import com.mycompany.wheretogo.service.VoteService;
 import com.mycompany.wheretogo.to.RestaurantTo;
 import com.mycompany.wheretogo.to.VoteTo;
 import com.mycompany.wheretogo.web.AbstractRestControllerTest;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
 import java.util.List;
 
 import static com.mycompany.wheretogo.MenuItemTestData.TODAY_MENU_ITEMS;
 import static com.mycompany.wheretogo.RestaurantTestData.RESTAURANT_ATEOTU_ID;
-import static com.mycompany.wheretogo.VoteTestData.*;
+import static com.mycompany.wheretogo.UserTestData.USER_ID;
+import static com.mycompany.wheretogo.VoteTestData.USER_VOTE1;
+import static com.mycompany.wheretogo.VoteTestData.USER_VOTE2;
 import static com.mycompany.wheretogo.util.RestaurantUtil.groupMenuItemsByRestaurant;
 import static com.mycompany.wheretogo.util.VoteUtil.getVoteWithDateTime;
 import static com.mycompany.wheretogo.util.VoteUtil.getVotesWithDateTime;
 import static com.mycompany.wheretogo.web.restaurant.RestaurantRestController.REST_URL;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class RestaurantRestControllerTest extends AbstractRestControllerTest {
+    @Autowired
+    private VoteService voteService;
+
     @Test
     public void testGetRestaurants() throws Exception {
         mockMvc.perform(get(REST_URL))
@@ -73,6 +81,6 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(getVoteWithDateTime(TODAY_USER_VOTE), VoteTo.class, "dateTime"));
+                .andExpect(TestUtil.fromJsonAndAssert(getVoteWithDateTime(voteService.getToday(USER_ID)), VoteTo.class, "dateTime"));
     }
 }

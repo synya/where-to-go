@@ -1,5 +1,6 @@
 package com.mycompany.wheretogo.util;
 
+import com.mycompany.wheretogo.model.AbstractBaseEntity;
 import com.mycompany.wheretogo.util.exception.NotFoundException;
 
 public final class ValidationUtil {
@@ -23,6 +24,14 @@ public final class ValidationUtil {
     public static void checkNotFound(boolean found, String msg) {
         if (!found) {
             throw new NotFoundException("Not found entity with " + msg);
+        }
+    }
+
+    public static void assureIdConsistent(AbstractBaseEntity entity, int id) {
+        if (entity.isNew()) {
+            entity.setId(id);
+        } else if (entity.getId() != id) {
+            throw new IllegalArgumentException(entity + " must be with id=" + id);
         }
     }
 

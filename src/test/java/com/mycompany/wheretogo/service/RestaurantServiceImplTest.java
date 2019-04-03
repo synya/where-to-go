@@ -15,8 +15,11 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
 
+import static com.mycompany.wheretogo.DishTestData.assertMatch;
 import static com.mycompany.wheretogo.DishTestData.*;
+import static com.mycompany.wheretogo.MenuItemTestData.assertMatch;
 import static com.mycompany.wheretogo.MenuItemTestData.*;
+import static com.mycompany.wheretogo.RestaurantTestData.assertMatch;
 import static com.mycompany.wheretogo.RestaurantTestData.*;
 
 public class RestaurantServiceImplTest extends AbstractServiceTest {
@@ -58,8 +61,7 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void testUpdateRestaurant() throws Exception {
-        Restaurant updatedRestaurant = restaurantService.get(BURGER_KING_ID);
-        updatedRestaurant.setName("Rebranded Burger King");
+        Restaurant updatedRestaurant = new Restaurant(BURGER_KING_ID, "Rebranded Burger King");
         restaurantService.update(updatedRestaurant);
         assertMatch(restaurantService.getAll(), updatedRestaurant, RESTAURANT_ATEOTU);
     }
