@@ -1,5 +1,6 @@
 package com.mycompany.wheretogo.web.restaurant;
 
+import com.mycompany.wheretogo.model.Vote;
 import com.mycompany.wheretogo.service.RestaurantService;
 import com.mycompany.wheretogo.service.VoteService;
 import com.mycompany.wheretogo.to.RestaurantTo;
@@ -7,10 +8,16 @@ import com.mycompany.wheretogo.to.VoteTo;
 import com.mycompany.wheretogo.web.AbstractRestController;
 import com.mycompany.wheretogo.web.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 import static com.mycompany.wheretogo.util.DateUtil.adjustEndDate;
@@ -49,5 +56,22 @@ public class RestaurantRestController extends AbstractRestController {
     @GetMapping("/votes/today")
     public VoteTo getTodayVote() {
         return getVoteWithDateTime(voteService.getToday(SecurityUtil.authUserId()));
+    }
+
+    @PostMapping(value = "/votes/today")
+    public ResponseEntity<VoteTo> makeVote(@RequestParam(value = "restaurantId") Integer restaurantId) {
+        Vote createdVote = voteService.add(new Vote(LocalDateTime.now()), restaurantId, SecurityUtil.authUserId());
+        createdVote.setRestaurant(restaurantService.get(restaurantId));
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL + "/votes/today")
+                .build()
+                .toUri();
+        return ResponseEntity.created(uriOfNewResource).body(getVoteWithDateTime(createdVote));
+    }
+
+    @PutMapping(value = "/votes/today")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void update(@RequestParam(value = "restaurantId") Integer restaurantId) {
+        voteService.update(new Vote(LocalDateTime.now()), restaurantId, SecurityUtil.authUserId());
     }
 }

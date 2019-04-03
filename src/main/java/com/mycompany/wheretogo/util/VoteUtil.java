@@ -19,7 +19,7 @@ public class VoteUtil {
     }
 
     public static VoteTo getVoteWithDateTime(@Nullable Vote vote) {
-        return vote == null ? new VoteTo(false) :
+        return vote == null ? new VoteTo() :
                 new VoteTo(vote.getId(), vote.getRestaurant().getName(), LocalDateTime.of(vote.getDate(), vote.getTime()));
     }
 

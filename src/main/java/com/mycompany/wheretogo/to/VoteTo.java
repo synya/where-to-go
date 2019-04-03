@@ -1,6 +1,6 @@
 package com.mycompany.wheretogo.to;
 
-import org.springframework.lang.Nullable;
+import org.springframework.lang.NonNull;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -12,40 +12,13 @@ public class VoteTo {
 
     private LocalDateTime dateTime;
 
-    private Boolean voteDone;
-
     public VoteTo() {
     }
 
-    public VoteTo(Boolean voteDone) {
-        this(null, null, null, voteDone);
-    }
-
-    public VoteTo(Integer id, String restaurantName, LocalDateTime dateTime) {
-        this(id, restaurantName, dateTime, null);
-    }
-
-    public VoteTo(@Nullable Integer id, @Nullable String restaurantName, @Nullable LocalDateTime dateTime, @Nullable Boolean voteDone) {
+    public VoteTo(@NonNull Integer id, @NonNull String restaurantName, @NonNull LocalDateTime dateTime) {
         this.id = id;
         this.restaurantName = restaurantName;
         this.dateTime = dateTime;
-        this.voteDone = voteDone;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public String getRestaurantName() {
-        return restaurantName;
-    }
-
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public Boolean getRemark() {
-        return voteDone;
     }
 
     @Override
@@ -55,13 +28,12 @@ public class VoteTo {
         VoteTo voteTo = (VoteTo) o;
         return Objects.equals(id, voteTo.id) &&
                 Objects.equals(restaurantName, voteTo.restaurantName) &&
-                Objects.equals(dateTime, voteTo.dateTime) &&
-                Objects.equals(voteDone, voteTo.voteDone);
+                Objects.equals(dateTime, voteTo.dateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, restaurantName, dateTime, voteDone);
+        return Objects.hash(id, restaurantName, dateTime);
     }
 
     @Override
@@ -70,7 +42,6 @@ public class VoteTo {
                 "id=" + id +
                 ", restaurantName='" + restaurantName + '\'' +
                 ", dateTime=" + dateTime +
-                ", voteDone=" + voteDone +
                 '}';
     }
 }
