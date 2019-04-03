@@ -14,7 +14,7 @@
 ------------------------------------------------------
 ##### Get all restaurants for voting
 
-The request returns restaurant id, restaurant name, menu of the day which consists from list of dish names and their prices. Pay attention, that all prices are presented in cents of USD.  
+The following `GET` request returns list of restaurants with their id, name and menu of the day which consists from list of dish names and their prices. Pay attention, that all prices are presented in cents of USD.  
  
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants"`
 
@@ -22,19 +22,19 @@ The request returns restaurant id, restaurant name, menu of the day which consis
 
 #### Votes
 
-Each valid vote contains vote id, restaurant name and date/time when vote was made.
+Each valid vote contains id, restaurant name and date/time when vote was made.
 
 ------------------------------------------------------
 
 ##### Get all user's votes
 
-The request returns all user's votes were made.
+The following `GET` request returns all user's votes were made.
 
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes"`
 
 ##### Get all user's votes between certain dates 
 
-The request returns all user's votes were made between two dates.
+The following `GET` request returns all user's votes were made between two dates.
 
 The request accepts two following parameters: `startDate` and `endDate` both in `ISO_DATE` format  
 
@@ -46,18 +46,58 @@ If parameters are empty the request will return all user's votes between 01.01.2
 
 ##### Get today user's vote
 
-The request returns either user's today vote information, or empty object if no vote has been made today yet.
+The following `GET` request returns either user's today vote information, or empty object if no vote has been made today yet.
 
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/today"`
 
 ##### Make vote for a restaurant
 
-To make vote for a restaurant it's necessary to perform simple `POST` request with one parameter: `restaurantId` of the restaurant user votes for.
+The following `POST` request stores user's vote for a restaurant.
+
+The request accepts one parameter: `restaurantId` - id of the restaurant user votes for.
 
 *   `curl -X POST "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/today?restaurantId=100003"`
 
 ##### Update vote
 
-To make update of previously made vote it's necessary to perform  `PUT` request with one parameter: `restaurantId` of the restaurant user votes for. Pay attention that it's allowed to change the opinion only before 11:00
+The following `PUT` request makes update of previously made vote.
+
+The request accepts one parameter: `restaurantId` - id of the restaurant user votes for. Pay attention that it's allowed to change the opinion only before 11:00
 
 *   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/today?restaurantId=100002"`
+
+------------------------------------------------------
+
+#### Restaurant management
+
+------------------------------------------------------
+
+##### Get all restaurants
+
+The following `GET` request returns all stored restaurants.
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants"`
+
+##### Get restaurant
+
+The following `GET` request returns restaurant with its `id`.
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/100003"`
+
+##### Add new restaurant
+
+The following  `POST` request adds new restaurant.
+
+*   `curl -X POST "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants" -d '{"name":"The New Place To Launch At"}' -H "Content-Type: application/json"`
+
+##### Update restaurant
+
+The following  `PUT` request updates the restaurant information.
+
+*   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/100002" -d '{"name":"Burger King Rebranded"}' -H "Content-Type: application/json"`
+
+##### Delete restaurant
+
+The following  `DELETE` request deletes existed restaurant.
+
+*   `curl -X DELETE "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/100002"`
