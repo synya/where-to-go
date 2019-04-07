@@ -24,27 +24,18 @@ public class RestaurantAdminRestController extends AbstractRestController {
     @Autowired
     private RestaurantService restaurantService;
 
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Restaurant> createWithLocation(@RequestBody Restaurant restaurant) {
+        Restaurant created = restaurantService.add(restaurant);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL + "/{restaurantId}")
+                .buildAndExpand(created.getId()).toUri();
+        return ResponseEntity.created(uriOfNewResource).body(created);
+    }
+
     @GetMapping("/{restaurantId}")
     public Restaurant get(@PathVariable int restaurantId) {
         return restaurantService.get(restaurantId);
-    }
-
-    @GetMapping("/{restaurantId}/dishes/{dishId}")
-    public Dish getDish(@PathVariable int restaurantId, @PathVariable int dishId) {
-        return restaurantService.getDish(dishId);
-    }
-
-
-    @DeleteMapping("/{restaurantId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("restaurantId") Integer restaurantId) {
-        restaurantService.delete(restaurantId);
-    }
-
-    @DeleteMapping("/{restaurantId}/dishes/{dishId}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteDish(@PathVariable int restaurantId, @PathVariable int dishId) {
-        restaurantService.deleteDish(dishId);
     }
 
     @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -54,20 +45,15 @@ public class RestaurantAdminRestController extends AbstractRestController {
         restaurantService.update(restaurant);
     }
 
-    @PutMapping(value = "/{restaurantId}/dishes/{dishId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateDish(@RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int dishId) {
-        assureIdConsistent(dish, dishId);
-        restaurantService.updateDish(dish, restaurantId);
+    @DeleteMapping("/{restaurantId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("restaurantId") Integer restaurantId) {
+        restaurantService.delete(restaurantId);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> createWithLocation(@RequestBody Restaurant restaurant) {
-        Restaurant created = restaurantService.add(restaurant);
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/{restaurantId}")
-                .buildAndExpand(created.getId()).toUri();
-        return ResponseEntity.created(uriOfNewResource).body(created);
+    @GetMapping
+    public List<Restaurant> getAll() {
+        return restaurantService.getAll();
     }
 
     @PostMapping(value = "/{restaurantId}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -79,9 +65,22 @@ public class RestaurantAdminRestController extends AbstractRestController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
-    @GetMapping
-    public List<Restaurant> getAll() {
-        return restaurantService.getAll();
+    @GetMapping("/{restaurantId}/dishes/{dishId}")
+    public Dish getDish(@PathVariable int restaurantId, @PathVariable int dishId) {
+        return restaurantService.getDish(dishId);
+    }
+
+    @PutMapping(value = "/{restaurantId}/dishes/{dishId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void updateDish(@RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int dishId) {
+        assureIdConsistent(dish, dishId);
+        restaurantService.updateDish(dish, restaurantId);
+    }
+
+    @DeleteMapping("/{restaurantId}/dishes/{dishId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDish(@PathVariable int restaurantId, @PathVariable int dishId) {
+        restaurantService.deleteDish(dishId);
     }
 
     @GetMapping("/{restaurantId}/dishes")
