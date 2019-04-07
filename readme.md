@@ -125,3 +125,9 @@ The following  `POST` request adds new dish to the restaurant with `id`.
 The following  `PUT` request updates dish of the restaurant with `id`.
 
 *   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/100003/dishes/100011" -d '{"name":"The Pan Galactic Gargle Blaster Updated"}' -H "Content-Type: application/json"`
+
+##### Delete restaurant's dish
+
+The following  `DELETE` request deletes existed dish of the restaurant with `id`.
+
+*   `curl -X DELETE "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/100003/dishes/100011"`
