@@ -34,6 +34,7 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Before
     public void setUp() throws Exception {
+        cacheManager.getCache("todayMenuItems").clear();
         cacheManager.getCache("menuItems").clear();
         cacheManager.getCache("dishes").clear();
         jpaUtil.clear2ndLevelHibernateCache();
@@ -174,6 +175,14 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     @Test(expected = NotFoundException.class)
     public void testDeleteMenuItemNotFound() throws Exception {
         restaurantService.deleteMenuItem(ENTITY_NOT_FOUND_ID);
+    }
+
+    @Test
+    public void testGetAllMenuItems() throws Exception {
+        assertMatch(restaurantService.getAllMenuItems(),
+                TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5,
+                MENU_ITEM7, MENU_ITEM9, MENU_ITEM8, MENU_ITEM10, MENU_ITEM12, MENU_ITEM11,
+                MENU_ITEM1, MENU_ITEM2, MENU_ITEM3, MENU_ITEM6, MENU_ITEM4, MENU_ITEM5);
     }
 
     @Test

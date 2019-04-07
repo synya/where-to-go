@@ -36,6 +36,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
 
     @Before
     public void setUp() throws Exception {
+        cacheManager.getCache("todayMenuItems").clear();
         cacheManager.getCache("menuItems").clear();
         cacheManager.getCache("dishes").clear();
         jpaUtil.clear2ndLevelHibernateCache();

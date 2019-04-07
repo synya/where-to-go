@@ -21,6 +21,9 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Integer> {
     @Transactional
     MenuItem save(MenuItem menuItem);
 
+    @Query("SELECT mi from MenuItem mi ORDER BY mi.date DESC, mi.dish.restaurant.name, mi.dish.name ASC")
+    List<MenuItem> findAll();
+
     @Query("SELECT mi from MenuItem mi WHERE mi.date=:date ORDER BY mi.date DESC, mi.dish.restaurant.name, mi.dish.name ASC")
     List<MenuItem> findAllByDate(@Param("date") LocalDate date);
 

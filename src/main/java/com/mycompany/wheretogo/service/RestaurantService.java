@@ -37,6 +37,8 @@ public interface RestaurantService {
 
     void deleteMenuItem(int id) throws NotFoundException;
 
+    List<MenuItem> getAllMenuItems();
+
     List<MenuItem> getAllTodayMenuItems();
 
     List<MenuItem> getAllMenuItemsBetweenDates(LocalDate startDate, LocalDate endDate);
