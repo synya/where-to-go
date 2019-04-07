@@ -21,7 +21,7 @@ public class VoteTestData {
             LocalDate.now(), LocalTime.of(9, 30, 0));
 
     public static void assertMatch(Vote actual, Vote expected) {
-        TestUtil.assertMatch(actual, expected);
+        TestUtil.assertMatch(actual, expected, "user");
     }
 
     public static void assertMatch(Iterable<Vote> actual, Vote... expected) {
@@ -29,6 +29,6 @@ public class VoteTestData {
     }
 
     public static void assertMatch(Iterable<Vote> actual, Iterable<Vote> expected) {
-        TestUtil.assertMatch(actual, expected);
+        TestUtil.assertMatch(actual, expected, "user");
     }
 }

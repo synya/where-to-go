@@ -15,6 +15,7 @@ import static com.mycompany.wheretogo.UserTestData.ADMIN_ID;
 import static com.mycompany.wheretogo.UserTestData.USER_ID;
 import static com.mycompany.wheretogo.VoteTestData.*;
 import static com.mycompany.wheretogo.VoteTestData.assertMatch;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class VoteServiceTest extends AbstractServiceTest {
     @Autowired
@@ -35,6 +36,7 @@ public class VoteServiceTest extends AbstractServiceTest {
         Vote updatedVote = voteService.getToday(USER_ID);
         updatedVote.setTime(LocalTime.of(10, 20));
         voteService.update(updatedVote, BURGER_KING_ID, USER_ID);
+        updatedVote.setRestaurant(BURGER_KING);
         assertMatch(voteService.getToday(USER_ID), updatedVote);
     }
 
@@ -60,7 +62,7 @@ public class VoteServiceTest extends AbstractServiceTest {
 
     @Test
     public void testGetTodayVoteNotFound() throws Exception {
-        assertMatch(voteService.getToday(ADMIN_ID), null);
+        assertThat(voteService.getToday(ADMIN_ID)).isEqualTo(null);
     }
 
     @Test

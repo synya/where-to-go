@@ -1,5 +1,6 @@
 package com.mycompany.wheretogo.web.restaurant;
 
+import com.mycompany.wheretogo.model.Dish;
 import com.mycompany.wheretogo.model.Restaurant;
 import com.mycompany.wheretogo.service.RestaurantService;
 import com.mycompany.wheretogo.web.AbstractRestController;
@@ -24,21 +25,40 @@ public class RestaurantAdminRestController extends AbstractRestController {
     private RestaurantService restaurantService;
 
     @GetMapping("/{restaurantId}")
-    public Restaurant getRestaurant(@PathVariable int restaurantId) {
+    public Restaurant get(@PathVariable int restaurantId) {
         return restaurantService.get(restaurantId);
     }
 
+    @GetMapping("/{restaurantId}/dishes/{dishId}")
+    public Dish getDish(@PathVariable int restaurantId, @PathVariable int dishId) {
+        return restaurantService.getDish(dishId);
+    }
+
+
     @DeleteMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteRestaurant(@PathVariable("restaurantId") Integer restaurantId) {
+    public void delete(@PathVariable("restaurantId") Integer restaurantId) {
         restaurantService.delete(restaurantId);
+    }
+
+    @DeleteMapping("/{restaurantId}/dishes/{dishId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteDish(@PathVariable int restaurantId, @PathVariable int dishId) {
+        restaurantService.deleteDish(dishId);
     }
 
     @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateRestaurant(@RequestBody Restaurant restaurant, @PathVariable int restaurantId) {
+    public void update(@RequestBody Restaurant restaurant, @PathVariable int restaurantId) {
         assureIdConsistent(restaurant, restaurantId);
         restaurantService.update(restaurant);
+    }
+
+    @PutMapping(value = "/{restaurantId}/dishes/{dishId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void updateDish(@RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int dishId) {
+        assureIdConsistent(dish, dishId);
+        restaurantService.updateDish(dish, restaurantId);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -50,8 +70,23 @@ public class RestaurantAdminRestController extends AbstractRestController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @PostMapping(value = "/{restaurantId}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Dish> createDishWithLocation(@RequestBody Dish dish, @PathVariable int restaurantId) {
+        Dish created = restaurantService.addDish(dish, restaurantId);
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL + "/{restaurantId}/dishes/{dishId}")
+                .buildAndExpand(restaurantId, created.getId()).toUri();
+        return ResponseEntity.created(uriOfNewResource).body(created);
+    }
+
     @GetMapping
-    public List<Restaurant> getRestaurants() {
+    public List<Restaurant> getAll() {
         return restaurantService.getAll();
     }
+
+    @GetMapping("/{restaurantId}/dishes")
+    public List<Dish> getAllDishes(@PathVariable int restaurantId) {
+        return restaurantService.getAllDishes(restaurantId);
+    }
+
 }

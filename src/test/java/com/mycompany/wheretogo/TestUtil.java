@@ -12,11 +12,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUtil {
     public static <T> void assertMatch(T actual, T expected) {
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isEqualToComparingFieldByField(expected);
     }
 
     public static <T> void assertMatch(T actual, T expected, String... ignoreProperties) {
         assertThat(actual).isEqualToIgnoringGivenFields(expected, ignoreProperties);
+    }
+
+    public static <T> void assertMatch(Iterable<T> actual, Iterable<T> expected) {
+        assertThat(actual).usingFieldByFieldElementComparator().isEqualTo(expected);
     }
 
     public static <T> void assertMatch(Iterable<T> actual, Iterable<T> expected, String... ignoreProperties) {

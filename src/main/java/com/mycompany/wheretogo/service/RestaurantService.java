@@ -19,11 +19,11 @@ public interface RestaurantService {
 
     List<Restaurant> getAll();
 
-    Dish addDish(Dish dish);
+    Dish addDish(Dish dish, Integer restaurantId);
 
     Dish getDish(Integer id) throws NotFoundException;
 
-    void updateDish(Dish dish) throws NotFoundException;
+    void updateDish(Dish dish, Integer restaurantId) throws NotFoundException;
 
     void deleteDish(int id) throws NotFoundException;
 

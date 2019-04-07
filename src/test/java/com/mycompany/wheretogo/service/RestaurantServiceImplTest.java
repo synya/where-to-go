@@ -84,9 +84,10 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void testAddDish() throws Exception {
-        Dish dish = new Dish("The Brand New Mega Hamburger", BURGER_KING);
-        Dish addedDish = restaurantService.addDish(dish);
+        Dish dish = new Dish("The Brand New Mega Hamburger");
+        Dish addedDish = restaurantService.addDish(dish, BURGER_KING_ID);
         dish.setId(addedDish.getId());
+        dish.setRestaurant(BURGER_KING);
         assertMatch(dish, addedDish);
         assertMatch(restaurantService.getAllDishes(BURGER_KING_ID),
                 BURGER_KING_DISH1, BURGER_KING_DISH4, BURGER_KING_DISH2,
@@ -107,7 +108,8 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     public void testUpdateDish() throws Exception {
         Dish updatedDish = restaurantService.getDish(RESTAURANT_ATEOTU_DISH_ID + 1);
         updatedDish.setName("The Pan Galactic Gargle Blaster Updated");
-        restaurantService.updateDish(updatedDish);
+        restaurantService.updateDish(updatedDish, RESTAURANT_ATEOTU_ID);
+        updatedDish.setRestaurant(RESTAURANT_ATEOTU);
         assertMatch(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID),
                 RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
                 RESTAURANT_ATEOTU_DISH1, RESTAURANT_ATEOTU_DISH5, updatedDish);
@@ -158,7 +160,7 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
         updatedMenuItem.setPrice(200_000);
         restaurantService.updateMenuItem(updatedMenuItem);
         assertMatch(restaurantService.getAllTodayMenuItems(),
-                TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5);
+                TODAY_MENU_ITEM2, updatedMenuItem, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5);
     }
 
     @Test
@@ -191,7 +193,7 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
     public void testValidation() throws Exception {
         validateRootCause(() -> restaurantService.add(new Restaurant(null, " ")), ConstraintViolationException.class);
         validateRootCause(() -> restaurantService.add(new Restaurant(null, null)), ConstraintViolationException.class);
-        validateRootCause(() -> restaurantService.addDish(new Dish(null, null, null)), ConstraintViolationException.class);
+        validateRootCause(() -> restaurantService.addDish(new Dish(null, null, null), 100002), ConstraintViolationException.class);
     }
 
 }

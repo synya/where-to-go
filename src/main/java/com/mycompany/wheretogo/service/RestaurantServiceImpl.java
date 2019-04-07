@@ -65,8 +65,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Dish addDish(Dish dish) {
+    @Transactional
+    public Dish addDish(Dish dish, Integer restaurantId) {
         Assert.notNull(dish, "dish must not be null");
+        Assert.notNull(restaurantId, "restaurantId must not be null");
+        dish.setRestaurant(restaurantRepository.getOne(restaurantId));
         return dishRepository.save(dish);
     }
 
@@ -77,8 +80,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @CacheEvict(value = "dishes", allEntries = true)
     @Override
-    public void updateDish(Dish dish) {
+    @Transactional
+    public void updateDish(Dish dish, Integer restaurantId) {
         Assert.notNull(dish, "dish must not be null");
+        Assert.notNull(restaurantId, "restaurantId must not be null");
+        dish.setRestaurant(restaurantRepository.getOne(restaurantId));
         checkNotFoundWithId(dishRepository.save(dish), dish.getId());
     }
 

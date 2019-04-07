@@ -101,3 +101,27 @@ The following  `PUT` request updates the restaurant information.
 The following  `DELETE` request deletes existed restaurant.
 
 *   `curl -X DELETE "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/100002"`
+
+------------------------------------------------------
+
+#### Restaurant's dishes management
+
+------------------------------------------------------
+
+##### Get all dishes of restaurant with `id`
+
+The following `GET` request returns all stored restaurants.
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/100003/dishes"`
+
+##### Add new restaurant's dish
+
+The following  `POST` request adds new dish to the restaurant with `id`.
+
+*   `curl -X POST "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/100003/dishes" -d '{"name":"The New And Delicious Dish"}' -H "Content-Type: application/json"`
+
+##### Update restaurant's dish
+
+The following  `PUT` request updates dish of the restaurant with `id`.
+
+*   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/100003/dishes/100011" -d '{"name":"The Pan Galactic Gargle Blaster Updated"}' -H "Content-Type: application/json"`
