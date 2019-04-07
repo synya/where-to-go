@@ -131,3 +131,45 @@ The following  `PUT` request updates dish of the restaurant with `id`.
 The following  `DELETE` request deletes existed dish of the restaurant with `id`.
 
 *   `curl -X DELETE "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/100003/dishes/100011"`
+
+------------------------------------------------------
+
+#### Restaurant's menu of the day management
+
+------------------------------------------------------
+
+##### Get all menus of the day of the restaurant with `id`
+
+The following `GET` request returns all stored menus of the day.
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily"`
+
+##### Get all menus of the day of the restaurant with `id` between dates
+
+The following `GET` request returns all stored menus of the day.
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily/between/?startDate=2019-03-20&endDate=2019-03-21"`
+
+##### Get all today menu items
+
+The following `GET` request returns all stored menus of the day.
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily/today/items"`
+
+##### Add new today menu item
+
+The following  `POST` request adds new today menu item.
+
+*   `curl -X POST "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily/today/items?dishId=100012&price=10020"`
+
+##### Update today menu item
+
+The following  `PUT` request adds new today menu item.
+
+*   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily/today/items/100030" -d '{"id":100030,"dish":{"id":100010,"name":"Meet The Meat","restaurant":{"id":100003,"name":"The Restaurant at the End of the Universe"}},"date":"2019-04-07","price":2560}' -H "Content-Type: application/json"`
+
+##### Delete today menu item
+
+The following  `DELETE` request deletes existed today menu item.
+
+*   `curl -X DELETE "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily/today/items/100030"`

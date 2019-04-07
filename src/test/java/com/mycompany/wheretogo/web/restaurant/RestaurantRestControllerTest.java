@@ -16,7 +16,7 @@ import static com.mycompany.wheretogo.RestaurantTestData.RESTAURANT_ATEOTU_ID;
 import static com.mycompany.wheretogo.UserTestData.USER_ID;
 import static com.mycompany.wheretogo.VoteTestData.USER_VOTE1;
 import static com.mycompany.wheretogo.VoteTestData.USER_VOTE2;
-import static com.mycompany.wheretogo.util.RestaurantUtil.groupMenuItemsByRestaurant;
+import static com.mycompany.wheretogo.util.RestaurantUtil.groupByRestaurantWithVote;
 import static com.mycompany.wheretogo.util.VoteUtil.getVoteWithDateTime;
 import static com.mycompany.wheretogo.util.VoteUtil.getVotesWithDateTime;
 import static com.mycompany.wheretogo.web.restaurant.RestaurantRestController.REST_URL;
@@ -36,7 +36,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(groupMenuItemsByRestaurant(TODAY_MENU_ITEMS, null), RestaurantTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(groupByRestaurantWithVote(TODAY_MENU_ITEMS, null), RestaurantTo.class));
     }
 
     @Test

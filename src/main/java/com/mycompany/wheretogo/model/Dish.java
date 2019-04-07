@@ -27,6 +27,10 @@ public class Dish extends AbstractNamedEntity {
         this(null, name, null);
     }
 
+    public Dish(String name, Restaurant restaurant) {
+        this(null, name, restaurant);
+    }
+
     public Dish(Integer id, String name, Restaurant restaurant) {
         super(id, name);
         this.restaurant = restaurant;

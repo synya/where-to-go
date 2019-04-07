@@ -88,11 +88,11 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
         Dish dish = new Dish("The Brand New Mega Hamburger");
         Dish addedDish = restaurantService.addDish(dish, BURGER_KING_ID);
         dish.setId(addedDish.getId());
-        dish.setRestaurant(BURGER_KING);
         assertMatch(dish, addedDish);
+        dish.setRestaurant(BURGER_KING);
         assertMatch(restaurantService.getAllDishes(BURGER_KING_ID),
                 BURGER_KING_DISH1, BURGER_KING_DISH4, BURGER_KING_DISH2,
-                BURGER_KING_DISH6, BURGER_KING_DISH5, BURGER_KING_DISH3, addedDish);
+                BURGER_KING_DISH6, BURGER_KING_DISH5, BURGER_KING_DISH3, dish);
     }
 
     @Test
@@ -166,7 +166,7 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void testDeleteMenuItem() throws Exception {
-        restaurantService.deleteMenuItem(TODAY_MENU_ITEM2.getId());
+        restaurantService.deleteMenuItem(TODAY_RESTAURANTS_MENU_ITEMS_ID + 1);
         assertMatch(restaurantService.getAllTodayMenuItems(),
                 TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5);
 
@@ -179,16 +179,12 @@ public class RestaurantServiceImplTest extends AbstractServiceTest {
 
     @Test
     public void testGetAllMenuItems() throws Exception {
-        assertMatch(restaurantService.getAllMenuItems(),
-                TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5,
-                MENU_ITEM7, MENU_ITEM9, MENU_ITEM8, MENU_ITEM10, MENU_ITEM12, MENU_ITEM11,
-                MENU_ITEM1, MENU_ITEM2, MENU_ITEM3, MENU_ITEM6, MENU_ITEM4, MENU_ITEM5);
+        assertMatch(restaurantService.getAllMenuItems(), ALL_MENU_ITEMS);
     }
 
     @Test
     public void testGetAllTodayMenuItems() throws Exception {
-        assertMatch(restaurantService.getAllTodayMenuItems(),
-                TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5);
+        assertMatch(restaurantService.getAllTodayMenuItems(), TODAY_MENU_ITEMS);
     }
 
     @Test

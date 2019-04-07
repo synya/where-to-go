@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -21,7 +22,7 @@ import java.util.List;
 
 import static com.mycompany.wheretogo.util.DateUtil.adjustEndDate;
 import static com.mycompany.wheretogo.util.DateUtil.adjustStartDate;
-import static com.mycompany.wheretogo.util.RestaurantUtil.groupMenuItemsByRestaurant;
+import static com.mycompany.wheretogo.util.RestaurantUtil.groupByRestaurantWithVote;
 import static com.mycompany.wheretogo.util.VoteUtil.getVoteWithDateTime;
 import static com.mycompany.wheretogo.util.VoteUtil.getVotesWithDateTime;
 
@@ -38,7 +39,7 @@ public class RestaurantRestController extends AbstractRestController {
 
     @GetMapping
     public List<RestaurantTo> getRestaurants() {
-        return groupMenuItemsByRestaurant(restaurantService.getAllTodayMenuItems(), voteService.getToday(SecurityUtil.authUserId()));
+        return groupByRestaurantWithVote(restaurantService.getAllTodayMenuItems(), voteService.getToday(SecurityUtil.authUserId()));
     }
 
     @GetMapping("/votes")
@@ -58,6 +59,7 @@ public class RestaurantRestController extends AbstractRestController {
     }
 
     @PostMapping(value = "/votes/today")
+    @Transactional
     public ResponseEntity<VoteTo> makeVote(@RequestParam(value = "restaurantId") Integer restaurantId) {
         Vote createdVote = voteService.add(new Vote(LocalDateTime.now()), restaurantId, SecurityUtil.authUserId());
         createdVote.setRestaurant(restaurantService.get(restaurantId));

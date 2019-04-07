@@ -64,6 +64,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return restaurantRepository.findAll(SORT_NAME);
     }
 
+    @CacheEvict(value = "dishes", allEntries = true)
     @Override
     @Transactional
     public Dish addDish(Dish dish, Integer restaurantId) {
@@ -101,6 +102,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return dishRepository.findAll(restaurantId);
     }
 
+    @CacheEvict(value = {"menuItems", "todayMenuItems"}, allEntries = true)
     @Override
     @Transactional
     public MenuItem addMenuItem(Integer dishId, LocalDate date, Integer price) {

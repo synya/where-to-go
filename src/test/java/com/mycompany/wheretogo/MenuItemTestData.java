@@ -47,6 +47,12 @@ public class MenuItemTestData {
     public static final MenuItem TODAY_MENU_ITEM6 = new MenuItem(TODAY_RESTAURANTS_MENU_ITEMS_ID + 5, RESTAURANT_ATEOTU_DISH4, LocalDate.now(), 1230);
 
     public static final List<MenuItem> TODAY_MENU_ITEMS = List.of(TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5);
+    public static final List<MenuItem> ALL_MENU_ITEMS = List.of(TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5,
+            MENU_ITEM7, MENU_ITEM9, MENU_ITEM8, MENU_ITEM10, MENU_ITEM12, MENU_ITEM11,
+            MENU_ITEM1, MENU_ITEM2, MENU_ITEM3, MENU_ITEM6, MENU_ITEM4, MENU_ITEM5);
+    public static final List<MenuItem> HISTORY_MENU_ITEMS = List.of(MENU_ITEM7, MENU_ITEM9, MENU_ITEM8, MENU_ITEM10, MENU_ITEM12, MENU_ITEM11,
+            MENU_ITEM1, MENU_ITEM2, MENU_ITEM3, MENU_ITEM6, MENU_ITEM4, MENU_ITEM5);
+
 
     public static void assertMatch(MenuItem actual, MenuItem expected) {
         TestUtil.assertMatch(actual, expected);
