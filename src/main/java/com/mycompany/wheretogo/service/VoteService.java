@@ -8,9 +8,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface VoteService {
-    Vote add(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException;
+    Vote addToday(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException;
 
-    void update(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException, NotFoundException;
+    void updateToday(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException, NotFoundException;
 
     Vote getToday(Integer userId);
 

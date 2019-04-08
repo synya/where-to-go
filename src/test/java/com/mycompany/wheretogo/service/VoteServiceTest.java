@@ -23,7 +23,7 @@ public class VoteServiceTest extends AbstractServiceTest {
 
     @Test
     public void testAddVote() throws Exception {
-        Vote addedVote = voteService.add(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
+        Vote addedVote = voteService.addToday(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
         addedVote.setId(addedVote.getId());
         addedVote.setRestaurant(RESTAURANT_ATEOTU);
         assertMatch(addedVote, TODAY_USER_VOTE);
@@ -32,31 +32,31 @@ public class VoteServiceTest extends AbstractServiceTest {
 
     @Test
     public void testUpdateVote() throws Exception {
-        voteService.add(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
+        voteService.addToday(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
         Vote updatedVote = voteService.getToday(USER_ID);
         updatedVote.setTime(LocalTime.of(10, 20));
-        voteService.update(updatedVote, BURGER_KING_ID, USER_ID);
+        voteService.updateToday(updatedVote, BURGER_KING_ID, USER_ID);
         updatedVote.setRestaurant(BURGER_KING);
         assertMatch(voteService.getToday(USER_ID), updatedVote);
     }
 
     @Test(expected = OutOfDateTimeException.class)
     public void testUpdateVoteOutdated() throws Exception {
-        voteService.add(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
+        voteService.addToday(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
         Vote updatedVote = voteService.getToday(USER_ID);
         updatedVote.setTime(LocalTime.of(11, 01));
-        voteService.update(updatedVote, BURGER_KING_ID, USER_ID);
+        voteService.updateToday(updatedVote, BURGER_KING_ID, USER_ID);
     }
 
     @Test(expected = OutOfDateTimeException.class)
     public void testAddVoteOutdated() throws Exception {
         Vote vote = new Vote(LocalDate.of(2019, Month.MARCH, 19), LocalTime.now());
-        voteService.add(vote, BURGER_KING_ID, USER_ID);
+        voteService.addToday(vote, BURGER_KING_ID, USER_ID);
     }
 
     @Test
     public void testGetToday() throws Exception {
-        voteService.add(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
+        voteService.addToday(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
         assertMatch(voteService.getToday(USER_ID), TODAY_USER_VOTE);
     }
 

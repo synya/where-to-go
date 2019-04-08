@@ -15,6 +15,8 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static com.mycompany.wheretogo.util.ValidationUtil.checkNotFound;
+
 @Service
 public class VoteServiceImpl implements VoteService {
     private static final LocalTime ALLOWED_UPDATE_TIME_THRESHOLD = LocalTime.of(11, 0);
@@ -34,7 +36,7 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     @Transactional
-    public Vote add(Vote vote, Integer restaurantId, Integer userId) {
+    public Vote addToday(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException {
         Assert.notNull(vote, "vote must not be null");
         Assert.notNull(restaurantId, "restaurantId must not be null");
         Assert.notNull(userId, "userId must not be null");
@@ -46,12 +48,15 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     @Transactional
-    public void update(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException, NotFoundException {
+    public void updateToday(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException, NotFoundException {
         Assert.notNull(vote, "vote must not be null");
         Assert.notNull(userId, "userId must not be null");
+        Vote previousVote = getToday(userId);
+        checkNotFound(previousVote, "Not found today vote, nothing to update");
         if (vote.getTime().compareTo(ALLOWED_UPDATE_TIME_THRESHOLD) >= 0) {
             throw new OutOfDateTimeException("Operation is not allowed - it's too late to change the vote");
         }
+        vote.setId(previousVote.getId());
         saveUserVote(vote, restaurantId, userId);
     }
 

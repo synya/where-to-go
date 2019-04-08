@@ -61,7 +61,7 @@ public class RestaurantRestController extends AbstractRestController {
     @PostMapping(value = "/votes/today")
     @Transactional
     public ResponseEntity<VoteTo> makeVote(@RequestParam(value = "restaurantId") Integer restaurantId) {
-        Vote createdVote = voteService.add(new Vote(LocalDateTime.now()), restaurantId, SecurityUtil.authUserId());
+        Vote createdVote = voteService.addToday(new Vote(LocalDateTime.now()), restaurantId, SecurityUtil.authUserId());
         createdVote.setRestaurant(restaurantService.get(restaurantId));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/votes/today")
@@ -73,6 +73,6 @@ public class RestaurantRestController extends AbstractRestController {
     @PutMapping(value = "/votes/today")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@RequestParam(value = "restaurantId") Integer restaurantId) {
-        voteService.update(new Vote(LocalDateTime.now()), restaurantId, SecurityUtil.authUserId());
+        voteService.updateToday(new Vote(LocalDateTime.now()), restaurantId, SecurityUtil.authUserId());
     }
 }
