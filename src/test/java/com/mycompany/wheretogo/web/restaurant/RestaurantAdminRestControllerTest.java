@@ -53,7 +53,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(BURGER_KING, Restaurant.class));
+                .andExpect(fromJsonAndAssert(BURGER_KING));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(BURGER_KING_DISH1, Dish.class));
+                .andExpect(fromJsonAndAssert(BURGER_KING_DISH1));
     }
 
     @Test
@@ -71,7 +71,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(TODAY_MENU_ITEM1, MenuItem.class));
+                .andExpect(fromJsonAndAssert(TODAY_MENU_ITEM1));
     }
 
     @Test
@@ -80,7 +80,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(List.of(BURGER_KING, RESTAURANT_ATEOTU), Restaurant.class));
+                .andExpect(fromJsonAndAssert(BURGER_KING, RESTAURANT_ATEOTU));
     }
 
     @Test
@@ -89,8 +89,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(List.of(RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
-                        RESTAURANT_ATEOTU_DISH1, RESTAURANT_ATEOTU_DISH5, RESTAURANT_ATEOTU_DISH2), Dish.class));
+                .andExpect(fromJsonAndAssert(RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
+                        RESTAURANT_ATEOTU_DISH1, RESTAURANT_ATEOTU_DISH5, RESTAURANT_ATEOTU_DISH2));
     }
 
     @Test
@@ -99,7 +99,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(TODAY_MENU_ITEMS, MenuItem.class));
+                .andExpect(fromJsonAndAssert(TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6,
+                        TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5));
     }
 
     @Test

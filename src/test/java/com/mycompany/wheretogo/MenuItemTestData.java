@@ -1,6 +1,7 @@
 package com.mycompany.wheretogo;
 
 import com.mycompany.wheretogo.model.MenuItem;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -66,4 +67,11 @@ public class MenuItemTestData {
         TestUtil.assertMatch(actual, expected);
     }
 
+    public static ResultMatcher fromJsonAndAssert(MenuItem... expected) {
+        return TestUtil.fromJsonAndAssert(List.of(expected), MenuItem.class);
+    }
+
+    public static ResultMatcher fromJsonAndAssert(MenuItem expected) {
+        return TestUtil.fromJsonAndAssert(expected, MenuItem.class);
+    }
 }

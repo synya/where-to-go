@@ -47,6 +47,10 @@ public class TestUtil {
         return result -> assertMatch(readListFromJsonMvcResult(result, clazz), expected);
     }
 
+    public static <T> ResultMatcher fromJsonAndAssert(Iterable<T> expected, Class<T> clazz, String... ignoreProperties) {
+        return result -> assertMatch(readListFromJsonMvcResult(result, clazz), expected, ignoreProperties);
+    }
+
     public static <T> ResultMatcher fromJsonAndAssert(T expected, Class<T> clazz) {
         return result -> assertMatch(readFromJsonMvcResult(result, clazz), expected);
     }

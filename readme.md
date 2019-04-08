@@ -191,3 +191,39 @@ The following  `PUT` request adds new today menu item.
 The following  `DELETE` request deletes existed today menu item.
 
 *   `curl -X DELETE "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily/today/items/100030"`
+
+------------------------------------------------------
+
+#### Users management
+
+------------------------------------------------------
+
+##### Get all users
+
+The following `GET` request returns all stored menus of the day.
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/users"`
+
+##### Get user
+
+The following `GET` request returns user with `id`.
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/users/100000"`
+
+##### Get user by Email
+
+The following `GET` request returns user with particular email.
+
+*   `curl -X GET "http://localhost:8080/where-to-go//rest/api-v1/management/users/by?email=user@gmail.com"`
+
+##### Add new user
+
+The following  `POST` request adds new user.
+
+*   `curl -X POST "http://localhost:8080/where-to-go/rest/api-v1/management/users" -d '{"name":"New User","email":"newuser@gmail.com","password":"password","enabled":true,"registered":"2019-04-08T11:46:48.632158","roles":["ROLE_USER"]}' -H "Content-Type: application/json"`
+
+##### Update user information
+
+The following  `PUT` request updates existing user.
+
+*   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/management/users/100000" -d '{"id":100000,"name":"Updated Name","email":"user@gmail.com","password":"userPassword","enabled":true,"registered":"2019-04-08T11:46:48.841556","roles":["ROLE_ADMIN"]}' -H "Content-Type: application/json"`

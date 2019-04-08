@@ -2,6 +2,7 @@ package com.mycompany.wheretogo;
 
 import com.mycompany.wheretogo.model.Role;
 import com.mycompany.wheretogo.model.User;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -13,8 +14,8 @@ public class UserTestData {
     public static final int USER_ID = START_SEQ;
     public static final int ADMIN_ID = START_SEQ + 1;
 
-    public static final User USER = new User(USER_ID, "User", "user@gmail.com", "user", Role.ROLE_USER);
-    public static final User ADMIN = new User(ADMIN_ID, "Admin", "admin@gmail.com", "admin", Role.ROLE_ADMIN, Role.ROLE_USER);
+    public static final User USER = new User(USER_ID, "User", "user@gmail.com", "userPassword", Role.ROLE_USER);
+    public static final User ADMIN = new User(ADMIN_ID, "Admin", "admin@gmail.com", "adminPassword", Role.ROLE_ADMIN, Role.ROLE_USER);
 
     public static User getNew() {
         return new User(null, "New", "new@gmail.com", "newPass", false, LocalDateTime.now(), Collections.singleton(Role.ROLE_USER));
@@ -34,5 +35,13 @@ public class UserTestData {
 
     public static void assertMatch(Iterable<User> actual, Iterable<User> expected) {
         TestUtil.assertMatch(actual, expected, "registered");
+    }
+
+    public static ResultMatcher fromJsonAndAssert(User... expected) {
+        return TestUtil.fromJsonAndAssert(List.of(expected), User.class, "registered");
+    }
+
+    public static ResultMatcher fromJsonAndAssert(User expected) {
+        return TestUtil.fromJsonAndAssert(expected, User.class, "registered");
     }
 }

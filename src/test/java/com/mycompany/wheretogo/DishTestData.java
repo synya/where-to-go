@@ -1,6 +1,7 @@
 package com.mycompany.wheretogo;
 
 import com.mycompany.wheretogo.model.Dish;
+import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.util.List;
 
@@ -36,5 +37,13 @@ public class DishTestData {
 
     public static void assertMatch(Iterable<Dish> actual, Iterable<Dish> expected) {
         TestUtil.assertMatch(actual, expected);
+    }
+
+    public static ResultMatcher fromJsonAndAssert(Dish... expected) {
+        return TestUtil.fromJsonAndAssert(List.of(expected), Dish.class);
+    }
+
+    public static ResultMatcher fromJsonAndAssert(Dish expected) {
+        return TestUtil.fromJsonAndAssert(expected, Dish.class);
     }
 }
