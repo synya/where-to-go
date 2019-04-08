@@ -27,6 +27,10 @@ public class Dish extends AbstractNamedEntity {
         this(null, name, null);
     }
 
+    public Dish(Dish dish) {
+        this(dish.getId(), dish.getName(), dish.getRestaurant());
+    }
+
     public Dish(String name, Restaurant restaurant) {
         this(null, name, restaurant);
     }

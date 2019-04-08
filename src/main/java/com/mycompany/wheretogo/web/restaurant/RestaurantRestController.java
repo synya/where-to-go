@@ -42,6 +42,18 @@ public class RestaurantRestController extends AbstractRestController {
         return groupByRestaurantWithVote(restaurantService.getAllTodayMenuItems(), voteService.getToday(SecurityUtil.authUserId()));
     }
 
+    @PostMapping(value = "/votes/today")
+    @Transactional
+    public ResponseEntity<VoteTo> makeVote(@RequestParam(value = "restaurantId") Integer restaurantId) {
+        Vote createdVote = voteService.addToday(new Vote(LocalDateTime.now()), restaurantId, SecurityUtil.authUserId());
+        createdVote.setRestaurant(restaurantService.get(restaurantId));
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL + "/votes/today")
+                .build()
+                .toUri();
+        return ResponseEntity.created(uriOfNewResource).body(getVoteWithDateTime(createdVote));
+    }
+
     @GetMapping("/votes")
     public List<VoteTo> getVotes() {
         return getVotesWithDateTime(voteService.getAll(SecurityUtil.authUserId()));
@@ -56,18 +68,6 @@ public class RestaurantRestController extends AbstractRestController {
     @GetMapping("/votes/today")
     public VoteTo getTodayVote() {
         return getVoteWithDateTime(voteService.getToday(SecurityUtil.authUserId()));
-    }
-
-    @PostMapping(value = "/votes/today")
-    @Transactional
-    public ResponseEntity<VoteTo> makeVote(@RequestParam(value = "restaurantId") Integer restaurantId) {
-        Vote createdVote = voteService.addToday(new Vote(LocalDateTime.now()), restaurantId, SecurityUtil.authUserId());
-        createdVote.setRestaurant(restaurantService.get(restaurantId));
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/votes/today")
-                .build()
-                .toUri();
-        return ResponseEntity.created(uriOfNewResource).body(getVoteWithDateTime(createdVote));
     }
 
     @PutMapping(value = "/votes/today")

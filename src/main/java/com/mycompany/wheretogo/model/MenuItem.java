@@ -32,6 +32,10 @@ public class MenuItem extends AbstractBaseEntity {
     public MenuItem() {
     }
 
+    public MenuItem(MenuItem menuItem) {
+        this(menuItem.getId(), menuItem.getDish(), menuItem.getDate(), menuItem.getPrice());
+    }
+
     public MenuItem(@NotNull Dish dish, @NotNull LocalDate date, @Range(min = 0, max = 1_000_000_00) Integer price) {
         this(null, dish, date, price);
     }

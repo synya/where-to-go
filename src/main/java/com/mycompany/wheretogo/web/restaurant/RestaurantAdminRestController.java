@@ -43,6 +43,11 @@ public class RestaurantAdminRestController extends AbstractRestController {
         return restaurantService.get(restaurantId);
     }
 
+    @GetMapping
+    public List<Restaurant> getAll() {
+        return restaurantService.getAll();
+    }
+
     @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@RequestBody Restaurant restaurant, @PathVariable int restaurantId) {
@@ -54,11 +59,6 @@ public class RestaurantAdminRestController extends AbstractRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("restaurantId") Integer restaurantId) {
         restaurantService.delete(restaurantId);
-    }
-
-    @GetMapping
-    public List<Restaurant> getAll() {
-        return restaurantService.getAll();
     }
 
     @PostMapping(value = "/{restaurantId}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -77,6 +77,11 @@ public class RestaurantAdminRestController extends AbstractRestController {
         return restaurantService.getDish(dishId);
     }
 
+    @GetMapping("/{restaurantId}/dishes")
+    public List<Dish> getAllDishes(@PathVariable int restaurantId) {
+        return restaurantService.getAllDishes(restaurantId);
+    }
+
     @PutMapping(value = "/{restaurantId}/dishes/{dishId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void updateDish(@RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int dishId) {
@@ -88,16 +93,6 @@ public class RestaurantAdminRestController extends AbstractRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDish(@PathVariable int restaurantId, @PathVariable int dishId) {
         restaurantService.deleteDish(dishId);
-    }
-
-    @GetMapping("/{restaurantId}/dishes")
-    public List<Dish> getAllDishes(@PathVariable int restaurantId) {
-        return restaurantService.getAllDishes(restaurantId);
-    }
-
-    @GetMapping("/menus/daily/today/items")
-    public List<MenuItem> getTodayMenuItems() {
-        return restaurantService.getAllTodayMenuItems();
     }
 
     @PostMapping("/menus/daily/today/items")
@@ -114,6 +109,11 @@ public class RestaurantAdminRestController extends AbstractRestController {
     @GetMapping(value = "/menus/daily/today/items/{menuItemId}")
     public MenuItem getMenuItem(@PathVariable int menuItemId) {
         return restaurantService.getMenuItem(menuItemId);
+    }
+
+    @GetMapping("/menus/daily/today/items")
+    public List<MenuItem> getTodayMenuItems() {
+        return restaurantService.getAllTodayMenuItems();
     }
 
     @PutMapping(value = "/menus/daily/today/items/{menuItemId}", consumes = MediaType.APPLICATION_JSON_VALUE)

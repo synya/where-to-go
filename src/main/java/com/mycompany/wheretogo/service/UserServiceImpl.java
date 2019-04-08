@@ -45,6 +45,12 @@ public class UserServiceImpl implements UserService {
         return checkNotFound(userRepository.findByEmail(email), "email=" + email);
     }
 
+    @Cacheable("users")
+    @Override
+    public List<User> getAll() {
+        return userRepository.findAll(SORT_NAME_EMAIL);
+    }
+
     @CacheEvict(value = "users", allEntries = true)
     @Override
     public void update(User user) {
@@ -56,11 +62,5 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(int id) throws NotFoundException {
         checkNotFoundWithId(userRepository.delete(id) != 0, id);
-    }
-
-    @Cacheable("users")
-    @Override
-    public List<User> getAll() {
-        return userRepository.findAll(SORT_NAME_EMAIL);
     }
 }

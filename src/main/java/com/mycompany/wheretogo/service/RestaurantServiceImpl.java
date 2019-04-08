@@ -49,6 +49,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
+    public List<Restaurant> getAll() {
+        return restaurantRepository.findAll(SORT_NAME);
+    }
+
+    @Override
     public void update(Restaurant restaurant) throws NotFoundException {
         Assert.notNull(restaurant, "restaurant must not be null");
         checkNotFoundWithId(restaurantRepository.save(restaurant), restaurant.getId());
@@ -57,11 +62,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public void delete(int id) throws NotFoundException {
         checkNotFoundWithId(restaurantRepository.delete(id) != 0, id);
-    }
-
-    @Override
-    public List<Restaurant> getAll() {
-        return restaurantRepository.findAll(SORT_NAME);
     }
 
     @CacheEvict(value = "dishes", allEntries = true)
@@ -77,6 +77,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public Dish getDish(Integer id) throws NotFoundException {
         return checkNotFoundWithId(dishRepository.findById(id).orElse(null), id);
+    }
+
+    @Cacheable("dishes")
+    @Override
+    public List<Dish> getAllDishes(Integer restaurantId) {
+        Assert.notNull(restaurantId, "restaurantId must not be null");
+        return dishRepository.findAll(restaurantId);
     }
 
     @CacheEvict(value = "dishes", allEntries = true)
@@ -95,13 +102,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         checkNotFoundWithId(dishRepository.delete(id) != 0, id);
     }
 
-    @Cacheable("dishes")
-    @Override
-    public List<Dish> getAllDishes(Integer restaurantId) {
-        Assert.notNull(restaurantId, "restaurantId must not be null");
-        return dishRepository.findAll(restaurantId);
-    }
-
     @CacheEvict(value = {"menuItems", "todayMenuItems"}, allEntries = true)
     @Override
     @Transactional
@@ -115,19 +115,6 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public MenuItem getMenuItem(Integer id) throws NotFoundException {
         return checkNotFoundWithId(menuItemRepository.findById(id).orElse(null), id);
-    }
-
-    @CacheEvict(value = {"menuItems", "todayMenuItems"}, allEntries = true)
-    @Override
-    public void updateMenuItem(MenuItem menuItem) throws NotFoundException {
-        Assert.notNull(menuItem, "menuItem must not be null");
-        checkNotFoundWithId(menuItemRepository.save(menuItem), menuItem.getId());
-    }
-
-    @CacheEvict(value = {"menuItems", "todayMenuItems"}, allEntries = true)
-    @Override
-    public void deleteMenuItem(int id) throws NotFoundException {
-        checkNotFoundWithId(menuItemRepository.delete(id) != 0, id);
     }
 
     @Cacheable("menuItems")
@@ -145,5 +132,18 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public List<MenuItem> getAllMenuItemsBetweenDates(LocalDate startDate, LocalDate endDate) {
         return menuItemRepository.findAllBetweenDates(startDate, endDate);
+    }
+
+    @CacheEvict(value = {"menuItems", "todayMenuItems"}, allEntries = true)
+    @Override
+    public void updateMenuItem(MenuItem menuItem) throws NotFoundException {
+        Assert.notNull(menuItem, "menuItem must not be null");
+        checkNotFoundWithId(menuItemRepository.save(menuItem), menuItem.getId());
+    }
+
+    @CacheEvict(value = {"menuItems", "todayMenuItems"}, allEntries = true)
+    @Override
+    public void deleteMenuItem(int id) throws NotFoundException {
+        checkNotFoundWithId(menuItemRepository.delete(id) != 0, id);
     }
 }

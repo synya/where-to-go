@@ -47,20 +47,6 @@ public class VoteServiceImpl implements VoteService {
     }
 
     @Override
-    @Transactional
-    public void updateToday(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException, NotFoundException {
-        Assert.notNull(vote, "vote must not be null");
-        Assert.notNull(userId, "userId must not be null");
-        Vote previousVote = getToday(userId);
-        checkNotFound(previousVote, "Not found today vote, nothing to update");
-        if (vote.getTime().compareTo(ALLOWED_UPDATE_TIME_THRESHOLD) >= 0) {
-            throw new OutOfDateTimeException("Operation is not allowed - it's too late to change the vote");
-        }
-        vote.setId(previousVote.getId());
-        saveUserVote(vote, restaurantId, userId);
-    }
-
-    @Override
     public Vote getToday(Integer userId) {
         return voteRepository.findByIdAndDate(userId, LocalDate.now()).orElse(null);
     }
@@ -77,6 +63,20 @@ public class VoteServiceImpl implements VoteService {
         Assert.notNull(endDate, "endDate must not be null");
         Assert.notNull(userId, "userId must not be null");
         return voteRepository.findAllBetweenDates(startDate, endDate, userId);
+    }
+
+    @Override
+    @Transactional
+    public void updateToday(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException, NotFoundException {
+        Assert.notNull(vote, "vote must not be null");
+        Assert.notNull(userId, "userId must not be null");
+        Vote previousVote = getToday(userId);
+        checkNotFound(previousVote, "Not found today vote, nothing to update");
+        if (vote.getTime().compareTo(ALLOWED_UPDATE_TIME_THRESHOLD) >= 0) {
+            throw new OutOfDateTimeException("Operation is not allowed - it's too late to change the vote");
+        }
+        vote.setId(previousVote.getId());
+        saveUserVote(vote, restaurantId, userId);
     }
 
     private Vote getUserVote(Integer id, Integer userId) {
