@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Transactional(readOnly = true)
 public interface MenuItemRepository extends JpaRepository<MenuItem, Integer> {
@@ -20,6 +21,9 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, Integer> {
     @Override
     @Transactional
     MenuItem save(MenuItem menuItem);
+
+    @Override
+    Optional<MenuItem> findById(Integer id);
 
     @Query("SELECT mi from MenuItem mi ORDER BY mi.date DESC, mi.dish.restaurant.name, mi.dish.name ASC")
     List<MenuItem> findAll();

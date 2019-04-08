@@ -114,6 +114,12 @@ The following `GET` request returns all stored restaurants.
 
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/100003/dishes"`
 
+##### Get restaurant's dish with `id`
+
+The following `GET` request returns dish with `id` of the restauranat with.
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/100003/dishes/100013"`
+
 ##### Add new restaurant's dish
 
 The following  `POST` request adds new dish to the restaurant with `id`.
@@ -134,7 +140,7 @@ The following  `DELETE` request deletes existed dish of the restaurant with `id`
 
 ------------------------------------------------------
 
-#### Restaurant's menu of the day management
+#### Restaurant's menu of the day history view
 
 ------------------------------------------------------
 
@@ -150,11 +156,23 @@ The following `GET` request returns all stored menus of the day.
 
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily/between/?startDate=2019-03-20&endDate=2019-03-21"`
 
+------------------------------------------------------
+
+#### Restaurant's today menu items management
+
+------------------------------------------------------
+
 ##### Get all today menu items
 
 The following `GET` request returns all stored menus of the day.
 
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily/today/items"`
+
+##### Get today menu item with `id`
+
+The following `GET` request returns all stored menus of the day.
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily/today/items/100029"`
 
 ##### Add new today menu item
 

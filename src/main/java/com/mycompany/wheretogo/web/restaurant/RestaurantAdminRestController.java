@@ -4,7 +4,6 @@ import com.mycompany.wheretogo.model.Dish;
 import com.mycompany.wheretogo.model.MenuItem;
 import com.mycompany.wheretogo.model.Restaurant;
 import com.mycompany.wheretogo.service.RestaurantService;
-import com.mycompany.wheretogo.to.RestaurantTo;
 import com.mycompany.wheretogo.to.RestaurantsTo;
 import com.mycompany.wheretogo.web.AbstractRestController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.mycompany.wheretogo.util.RestaurantUtil.groupByDateAndRestaurant;
-import static com.mycompany.wheretogo.util.RestaurantUtil.groupByRestaurant;
 import static com.mycompany.wheretogo.util.ValidationUtil.assureIdConsistent;
 
 @RestController
@@ -113,6 +111,11 @@ public class RestaurantAdminRestController extends AbstractRestController {
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
+    @GetMapping(value = "/menus/daily/today/items/{menuItemId}")
+    public MenuItem getMenuItem(@PathVariable int menuItemId) {
+        return restaurantService.getMenuItem(menuItemId);
+    }
+
     @PutMapping(value = "/menus/daily/today/items/{menuItemId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void updateMenuItem(@RequestBody MenuItem menuItem, @PathVariable int menuItemId) {
@@ -124,11 +127,6 @@ public class RestaurantAdminRestController extends AbstractRestController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMenuItem(@PathVariable int menuItemId) {
         restaurantService.deleteMenuItem(menuItemId);
-    }
-
-    @GetMapping("/menus/daily/today")
-    public List<RestaurantTo> getTodayMenus() {
-        return groupByRestaurant(restaurantService.getAllTodayMenuItems());
     }
 
     @GetMapping("/menus/daily")

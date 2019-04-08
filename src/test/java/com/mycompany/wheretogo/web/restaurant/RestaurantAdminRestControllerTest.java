@@ -48,6 +48,33 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
     }
 
     @Test
+    public void testGetRestaurant() throws Exception {
+        mockMvc.perform(get(REST_URL + "/" + BURGER_KING_ID))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(TestUtil.fromJsonAndAssert(BURGER_KING, Restaurant.class));
+    }
+
+    @Test
+    public void testGetRestaurantDish() throws Exception {
+        mockMvc.perform(get(REST_URL + "/" + BURGER_KING_ID + "/dishes/" + BURGER_KING_DISH_ID))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(TestUtil.fromJsonAndAssert(BURGER_KING_DISH1, Dish.class));
+    }
+
+    @Test
+    public void testGetTodayMenuItem() throws Exception {
+        mockMvc.perform(get(REST_URL + "/menus/daily/today/items/" + TODAY_RESTAURANTS_MENU_ITEMS_ID))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(TestUtil.fromJsonAndAssert(TODAY_MENU_ITEM1, MenuItem.class));
+    }
+
+    @Test
     public void testGetRestaurants() throws Exception {
         mockMvc.perform(get(REST_URL))
                 .andDo(print())
