@@ -6,6 +6,8 @@ import com.mycompany.wheretogo.model.Restaurant;
 import com.mycompany.wheretogo.service.RestaurantService;
 import com.mycompany.wheretogo.to.RestaurantsTo;
 import com.mycompany.wheretogo.web.AbstractRestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,6 +28,8 @@ import static com.mycompany.wheretogo.util.ValidationUtil.assureIdConsistent;
 public class RestaurantAdminRestController extends AbstractRestController {
     static final String REST_URL = REST_BASE_URL + "/management/restaurants";
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private RestaurantService restaurantService;
 
@@ -35,6 +39,7 @@ public class RestaurantAdminRestController extends AbstractRestController {
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{restaurantId}")
                 .buildAndExpand(created.getId()).toUri();
+        log.info("added new restaurant with id = {}", created.getId());
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
@@ -53,12 +58,14 @@ public class RestaurantAdminRestController extends AbstractRestController {
     public void update(@RequestBody Restaurant restaurant, @PathVariable int restaurantId) {
         assureIdConsistent(restaurant, restaurantId);
         restaurantService.update(restaurant);
+        log.info("updated restaurant with id = {}", restaurantId);
     }
 
     @DeleteMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("restaurantId") Integer restaurantId) {
         restaurantService.delete(restaurantId);
+        log.info("deleted restaurant with id = {}", restaurantId);
     }
 
     @PostMapping(value = "/{restaurantId}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -69,6 +76,7 @@ public class RestaurantAdminRestController extends AbstractRestController {
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{restaurantId}/dishes/{dishId}")
                 .buildAndExpand(restaurantId, created.getId()).toUri();
+        log.info("added new dish with id = {} for restaurant with id = {}", created.getId(), restaurantId);
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
@@ -87,12 +95,14 @@ public class RestaurantAdminRestController extends AbstractRestController {
     public void updateDish(@RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int dishId) {
         assureIdConsistent(dish, dishId);
         restaurantService.updateDish(dish, restaurantId);
+        log.info("updated dish with id = {} for restaurant with id = {}", dishId, restaurantId);
     }
 
     @DeleteMapping("/{restaurantId}/dishes/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDish(@PathVariable int restaurantId, @PathVariable int dishId) {
         restaurantService.deleteDish(dishId);
+        log.info("deleted dish with id = {} for restaurant with id = {}", dishId, restaurantId);
     }
 
     @PostMapping("/menus/daily/today/items")
@@ -103,6 +113,7 @@ public class RestaurantAdminRestController extends AbstractRestController {
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/menus/daily/today/items/{menuItemId}")
                 .buildAndExpand(created.getId()).toUri();
+        log.info("added new menu item with id = {} from dish with id = {}", created.getId(), dishId);
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
@@ -121,12 +132,14 @@ public class RestaurantAdminRestController extends AbstractRestController {
     public void updateMenuItem(@RequestBody MenuItem menuItem, @PathVariable int menuItemId) {
         assureIdConsistent(menuItem, menuItemId);
         restaurantService.updateMenuItem(menuItem);
+        log.info("updated menu item with id = {}", menuItem.getId());
     }
 
     @DeleteMapping("/menus/daily/today/items/{menuItemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMenuItem(@PathVariable int menuItemId) {
         restaurantService.deleteMenuItem(menuItemId);
+        log.info("deleted menu item with id = {}", menuItemId);
     }
 
     @GetMapping("/menus/daily")

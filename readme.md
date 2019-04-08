@@ -5,13 +5,18 @@
 
 ### A voting system for deciding where to have lunch
 
-#### curl commands to test rest API
+Each restaurant has id, name and set of dishes that cooked at the restaurant. Administrator makes the update of daily menu. Menus of the day consist of items each one with the dish, date and price. 
+
+Use following curl commands to test rest API
+
+------------------------------------------------------
+
+### User's API
 
 ------------------------------------------------------
 
 #### Restaurants
 
-------------------------------------------------------
 ##### Get all restaurants for voting
 
 The following `GET` request returns list of restaurants with their id, name and menu of the day which consists from list of dish names and their prices. Pay attention, that all prices are presented in cents of USD.  
@@ -23,8 +28,6 @@ The following `GET` request returns list of restaurants with their id, name and 
 #### Votes
 
 Each valid vote contains id, restaurant name and date/time when vote was made.
-
-------------------------------------------------------
 
 ##### Get all user's votes
 
@@ -54,7 +57,7 @@ The following `GET` request returns either user's today vote information, or emp
 
 The following `POST` request stores user's vote for a restaurant.
 
-The request accepts one parameter: `restaurantId` - id of the restaurant user votes for.
+The request accepts one parameter: `restaurantId` - an id of the restaurant the user votes for.
 
 *   `curl -X POST "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/today?restaurantId=100003"`
 
@@ -62,15 +65,18 @@ The request accepts one parameter: `restaurantId` - id of the restaurant user vo
 
 The following `PUT` request makes update of previously made vote.
 
-The request accepts one parameter: `restaurantId` - id of the restaurant user votes for. Pay attention that it's allowed to change the opinion only before 11:00
+The request accepts one parameter: `restaurantId` - an id of the restaurant the user votes for. 
+Pay attention that it's allowed to change the opinion only before 11:00
 
 *   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/today?restaurantId=100002"`
 
 ------------------------------------------------------
 
-#### Restaurant management
+### Administrators's API
 
 ------------------------------------------------------
+
+#### Restaurant management
 
 ##### Get all restaurants
 
@@ -80,7 +86,7 @@ The following `GET` request returns all stored restaurants.
 
 ##### Get restaurant
 
-The following `GET` request returns restaurant with its `id`.
+The following `GET` request returns restaurant with `id`.
 
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/100003"`
 
@@ -105,8 +111,6 @@ The following  `DELETE` request deletes existed restaurant.
 ------------------------------------------------------
 
 #### Restaurant's dishes management
-
-------------------------------------------------------
 
 ##### Get all dishes of restaurant with `id`
 
@@ -142,8 +146,6 @@ The following  `DELETE` request deletes existed dish of the restaurant with `id`
 
 #### Restaurant's menu of the day history view
 
-------------------------------------------------------
-
 ##### Get all menus of the day of the restaurant with `id`
 
 The following `GET` request returns all stored menus of the day.
@@ -159,8 +161,6 @@ The following `GET` request returns all stored menus of the day.
 ------------------------------------------------------
 
 #### Restaurant's today menu items management
-
-------------------------------------------------------
 
 ##### Get all today menu items
 
@@ -196,8 +196,6 @@ The following  `DELETE` request deletes existed today menu item.
 
 #### Users management
 
-------------------------------------------------------
-
 ##### Get all users
 
 The following `GET` request returns all stored menus of the day.
@@ -227,3 +225,9 @@ The following  `POST` request adds new user.
 The following  `PUT` request updates existing user.
 
 *   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/management/users/100000" -d '{"id":100000,"name":"Updated Name","email":"user@gmail.com","password":"userPassword","enabled":true,"registered":"2019-04-08T11:46:48.841556","roles":["ROLE_ADMIN"]}' -H "Content-Type: application/json"`
+
+##### Delete user
+
+The following  `DELETE` request deletes existing user.
+
+*   `curl -X DELETE "http://localhost:8080/where-to-go/rest/api-v1/management/users/100000"`

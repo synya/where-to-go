@@ -7,6 +7,8 @@ import com.mycompany.wheretogo.to.RestaurantTo;
 import com.mycompany.wheretogo.to.VoteTo;
 import com.mycompany.wheretogo.web.AbstractRestController;
 import com.mycompany.wheretogo.web.SecurityUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -31,6 +33,8 @@ import static com.mycompany.wheretogo.util.VoteUtil.getVotesWithDateTime;
 public class RestaurantRestController extends AbstractRestController {
     static final String REST_URL = REST_BASE_URL + "/restaurants";
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private RestaurantService restaurantService;
 
@@ -51,6 +55,7 @@ public class RestaurantRestController extends AbstractRestController {
                 .path(REST_URL + "/votes/today")
                 .build()
                 .toUri();
+        log.info("user with id = {} made vote for restaurant with id = {}", SecurityUtil.authUserId(), restaurantId);
         return ResponseEntity.created(uriOfNewResource).body(getVoteWithDateTime(createdVote));
     }
 
@@ -74,5 +79,6 @@ public class RestaurantRestController extends AbstractRestController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@RequestParam(value = "restaurantId") Integer restaurantId) {
         voteService.updateToday(new Vote(LocalDateTime.now()), restaurantId, SecurityUtil.authUserId());
+        log.info("user with id = {} updated his vote for restaurant with id = {}", SecurityUtil.authUserId(), restaurantId);
     }
 }
