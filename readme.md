@@ -72,6 +72,28 @@ Pay attention that it's allowed to change the opinion only before 11:00
 
 ------------------------------------------------------
 
+#### User's profile
+
+##### Get user profile
+
+The following `GET` request returns full user's information.
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/profile"`
+
+##### Update user profile
+
+The following `PUT` request updates user's information.
+
+*   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/profile" -d '{"id":100000,"name":"Updated Name","email":"user@gmail.com","password":"userPassword","enabled":true}' -H "Content-Type: application/json"`
+
+##### Delete user profile
+
+The following `DELETE` request deletes user from service.
+
+*   `curl -X DELETE "http://localhost:8080/where-to-go/rest/api-v1/profile"`
+
+------------------------------------------------------
+
 ### Administrators's API
 
 ------------------------------------------------------

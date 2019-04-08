@@ -2,14 +2,8 @@ package com.mycompany.wheretogo.web.user;
 
 import com.mycompany.wheretogo.model.Role;
 import com.mycompany.wheretogo.model.User;
-import com.mycompany.wheretogo.service.UserService;
-import com.mycompany.wheretogo.util.JpaUtil;
-import com.mycompany.wheretogo.web.AbstractRestControllerTest;
 import com.mycompany.wheretogo.web.json.JsonUtil;
-import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -23,22 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class UserAdminRestControllerTest extends AbstractRestControllerTest {
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private CacheManager cacheManager;
-
-    @Autowired
-    private JpaUtil jpaUtil;
-
-    @Before
-    public void setUp() throws Exception {
-        cacheManager.getCache("users").clear();
-        jpaUtil.clear2ndLevelHibernateCache();
-    }
-
+public class UserAdminRestControllerTest extends AbstractUserRestControllerTest {
     @Test
     public void testGet() throws Exception {
         mockMvc.perform(get(REST_URL + "/" + USER_ID))
