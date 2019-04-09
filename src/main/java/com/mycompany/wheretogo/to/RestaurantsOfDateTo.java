@@ -4,15 +4,15 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-public class RestaurantsTo {
+public class RestaurantsOfDateTo {
     private LocalDate localDate;
 
     private List<RestaurantTo> restaurants;
 
-    public RestaurantsTo() {
+    public RestaurantsOfDateTo() {
     }
 
-    public RestaurantsTo(LocalDate localDate, List<RestaurantTo> restaurants) {
+    public RestaurantsOfDateTo(LocalDate localDate, List<RestaurantTo> restaurants) {
         this.localDate = localDate;
         this.restaurants = restaurants;
     }
@@ -21,7 +21,7 @@ public class RestaurantsTo {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        RestaurantsTo that = (RestaurantsTo) o;
+        RestaurantsOfDateTo that = (RestaurantsOfDateTo) o;
         return Objects.equals(localDate, that.localDate) &&
                 Objects.equals(restaurants, that.restaurants);
     }
@@ -33,7 +33,7 @@ public class RestaurantsTo {
 
     @Override
     public String toString() {
-        return "RestaurantsTo{" +
+        return "RestaurantsOfDateTo{" +
                 "localDate=" + localDate +
                 ", restaurants=" + restaurants +
                 '}';

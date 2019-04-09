@@ -16,9 +16,9 @@ import static com.mycompany.wheretogo.RestaurantTestData.RESTAURANT_ATEOTU_ID;
 import static com.mycompany.wheretogo.UserTestData.USER_ID;
 import static com.mycompany.wheretogo.VoteTestData.USER_VOTE1;
 import static com.mycompany.wheretogo.VoteTestData.USER_VOTE2;
-import static com.mycompany.wheretogo.util.RestaurantUtil.groupByRestaurantWithVote;
-import static com.mycompany.wheretogo.util.VoteUtil.getVoteWithDateTime;
-import static com.mycompany.wheretogo.util.VoteUtil.getVotesWithDateTime;
+import static com.mycompany.wheretogo.util.MenuItemsUtil.toRestaurantToWithVote;
+import static com.mycompany.wheretogo.util.VotesUtil.toVoteTo;
+import static com.mycompany.wheretogo.util.VotesUtil.toVoteTos;
 import static com.mycompany.wheretogo.web.restaurant.RestaurantRestController.REST_URL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,7 +36,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(groupByRestaurantWithVote(TODAY_MENU_ITEMS, null), RestaurantTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(toRestaurantToWithVote(TODAY_MENU_ITEMS, null), RestaurantTo.class));
     }
 
     @Test
@@ -45,7 +45,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(getVotesWithDateTime(List.of(USER_VOTE2, USER_VOTE1)), VoteTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(toVoteTos(List.of(USER_VOTE2, USER_VOTE1)), VoteTo.class));
     }
 
     @Test
@@ -54,7 +54,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(getVotesWithDateTime(List.of(USER_VOTE2, USER_VOTE1)), VoteTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(toVoteTos(List.of(USER_VOTE2, USER_VOTE1)), VoteTo.class));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(getVotesWithDateTime(List.of(USER_VOTE2, USER_VOTE1)), VoteTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(toVoteTos(List.of(USER_VOTE2, USER_VOTE1)), VoteTo.class));
     }
 
     @Test
@@ -72,7 +72,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(getVoteWithDateTime(null), VoteTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(toVoteTo(null), VoteTo.class));
     }
 
     @Test
@@ -81,6 +81,6 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(getVoteWithDateTime(voteService.getToday(USER_ID)), VoteTo.class, "dateTime"));
+                .andExpect(TestUtil.fromJsonAndAssert(toVoteTo(voteService.getToday(USER_ID)), VoteTo.class, "dateTime"));
     }
 }

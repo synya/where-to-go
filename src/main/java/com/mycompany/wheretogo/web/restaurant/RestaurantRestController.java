@@ -24,9 +24,9 @@ import java.util.List;
 
 import static com.mycompany.wheretogo.util.DateUtil.adjustEndDate;
 import static com.mycompany.wheretogo.util.DateUtil.adjustStartDate;
-import static com.mycompany.wheretogo.util.RestaurantUtil.groupByRestaurantWithVote;
-import static com.mycompany.wheretogo.util.VoteUtil.getVoteWithDateTime;
-import static com.mycompany.wheretogo.util.VoteUtil.getVotesWithDateTime;
+import static com.mycompany.wheretogo.util.MenuItemsUtil.toRestaurantToWithVote;
+import static com.mycompany.wheretogo.util.VotesUtil.toVoteTo;
+import static com.mycompany.wheretogo.util.VotesUtil.toVoteTos;
 
 @RestController
 @RequestMapping(value = RestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -43,7 +43,7 @@ public class RestaurantRestController extends AbstractRestController {
 
     @GetMapping
     public List<RestaurantTo> getRestaurants() {
-        return groupByRestaurantWithVote(restaurantService.getAllTodayMenuItems(), voteService.getToday(SecurityUtil.authUserId()));
+        return toRestaurantToWithVote(restaurantService.getAllTodayMenuItems(), voteService.getToday(SecurityUtil.authUserId()));
     }
 
     @PostMapping(value = "/votes/today")
@@ -56,23 +56,23 @@ public class RestaurantRestController extends AbstractRestController {
                 .build()
                 .toUri();
         log.info("user with id = {} made vote for restaurant with id = {}", SecurityUtil.authUserId(), restaurantId);
-        return ResponseEntity.created(uriOfNewResource).body(getVoteWithDateTime(createdVote));
+        return ResponseEntity.created(uriOfNewResource).body(toVoteTo(createdVote));
     }
 
     @GetMapping("/votes")
     public List<VoteTo> getVotes() {
-        return getVotesWithDateTime(voteService.getAll(SecurityUtil.authUserId()));
+        return toVoteTos(voteService.getAll(SecurityUtil.authUserId()));
     }
 
     @GetMapping("/votes/between")
     public List<VoteTo> getVotesBetween(@RequestParam(value = "startDate", required = false) LocalDate startDate,
                                         @RequestParam(value = "endDate", required = false) LocalDate endDate) {
-        return getVotesWithDateTime(voteService.getAllBetweenDates(adjustStartDate(startDate), adjustEndDate(endDate), SecurityUtil.authUserId()));
+        return toVoteTos(voteService.getAllBetweenDates(adjustStartDate(startDate), adjustEndDate(endDate), SecurityUtil.authUserId()));
     }
 
     @GetMapping("/votes/today")
     public VoteTo getTodayVote() {
-        return getVoteWithDateTime(voteService.getToday(SecurityUtil.authUserId()));
+        return toVoteTo(voteService.getToday(SecurityUtil.authUserId()));
     }
 
     @PutMapping(value = "/votes/today")

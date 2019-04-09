@@ -4,7 +4,7 @@ import com.mycompany.wheretogo.model.Dish;
 import com.mycompany.wheretogo.model.MenuItem;
 import com.mycompany.wheretogo.model.Restaurant;
 import com.mycompany.wheretogo.service.RestaurantService;
-import com.mycompany.wheretogo.to.RestaurantsTo;
+import com.mycompany.wheretogo.to.RestaurantsOfDateTo;
 import com.mycompany.wheretogo.web.AbstractRestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +20,7 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 
-import static com.mycompany.wheretogo.util.RestaurantUtil.groupByDateAndRestaurant;
+import static com.mycompany.wheretogo.util.MenuItemsUtil.toRestaurantsOfDateTo;
 import static com.mycompany.wheretogo.util.ValidationUtil.assureIdConsistent;
 
 @RestController
@@ -143,13 +143,13 @@ public class RestaurantAdminRestController extends AbstractRestController {
     }
 
     @GetMapping("/menus/daily")
-    public List<RestaurantsTo> getAllMenus() {
-        return groupByDateAndRestaurant(restaurantService.getAllMenuItems());
+    public List<RestaurantsOfDateTo> getAllMenus() {
+        return toRestaurantsOfDateTo(restaurantService.getAllMenuItems());
     }
 
     @GetMapping("/menus/daily/between")
-    public List<RestaurantsTo> getAllMenusBetweenDates(@RequestParam(value = "startDate", required = false) LocalDate startDate,
-                                                       @RequestParam(value = "endDate", required = false) LocalDate endDate) {
-        return groupByDateAndRestaurant(restaurantService.getAllMenuItemsBetweenDates(startDate, endDate));
+    public List<RestaurantsOfDateTo> getAllMenusBetweenDates(@RequestParam(value = "startDate", required = false) LocalDate startDate,
+                                                             @RequestParam(value = "endDate", required = false) LocalDate endDate) {
+        return toRestaurantsOfDateTo(restaurantService.getAllMenuItemsBetweenDates(startDate, endDate));
     }
 }

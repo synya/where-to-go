@@ -5,7 +5,7 @@ import com.mycompany.wheretogo.model.Dish;
 import com.mycompany.wheretogo.model.MenuItem;
 import com.mycompany.wheretogo.model.Restaurant;
 import com.mycompany.wheretogo.service.RestaurantService;
-import com.mycompany.wheretogo.to.RestaurantsTo;
+import com.mycompany.wheretogo.to.RestaurantsOfDateTo;
 import com.mycompany.wheretogo.util.JpaUtil;
 import com.mycompany.wheretogo.web.AbstractRestControllerTest;
 import com.mycompany.wheretogo.web.json.JsonUtil;
@@ -22,7 +22,7 @@ import java.util.List;
 import static com.mycompany.wheretogo.DishTestData.*;
 import static com.mycompany.wheretogo.MenuItemTestData.*;
 import static com.mycompany.wheretogo.RestaurantTestData.*;
-import static com.mycompany.wheretogo.util.RestaurantUtil.groupByDateAndRestaurant;
+import static com.mycompany.wheretogo.util.MenuItemsUtil.toRestaurantsOfDateTo;
 import static com.mycompany.wheretogo.web.restaurant.RestaurantAdminRestController.REST_URL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -109,7 +109,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(groupByDateAndRestaurant(ALL_MENU_ITEMS), RestaurantsTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(toRestaurantsOfDateTo(ALL_MENU_ITEMS), RestaurantsOfDateTo.class));
     }
 
     @Test
@@ -118,7 +118,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(groupByDateAndRestaurant(HISTORY_MENU_ITEMS), RestaurantsTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(toRestaurantsOfDateTo(HISTORY_MENU_ITEMS), RestaurantsOfDateTo.class));
     }
 
     @Test

@@ -3,7 +3,7 @@ package com.mycompany.wheretogo.util;
 import com.mycompany.wheretogo.model.MenuItem;
 import com.mycompany.wheretogo.model.Vote;
 import com.mycompany.wheretogo.to.RestaurantTo;
-import com.mycompany.wheretogo.to.RestaurantsTo;
+import com.mycompany.wheretogo.to.RestaurantsOfDateTo;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -11,16 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class RestaurantUtil {
-    private RestaurantUtil() {
+public class MenuItemsUtil {
+    private MenuItemsUtil() {
     }
 
-    public static List<RestaurantTo> groupByRestaurant(List<MenuItem> menuItems) {
+    public static List<RestaurantTo> toRestaurantTo(List<MenuItem> menuItems) {
         return new ArrayList<>(fetchMenuItemsOfRestaurants(menuItems).values());
     }
 
 
-    public static List<RestaurantTo> groupByRestaurantWithVote(List<MenuItem> menuItems, Vote vote) {
+    public static List<RestaurantTo> toRestaurantToWithVote(List<MenuItem> menuItems, Vote vote) {
         Map<Integer, RestaurantTo> linkedHashMap = fetchMenuItemsOfRestaurants(menuItems);
         if (vote != null) {
             linkedHashMap.computeIfPresent(vote.getRestaurant().getId(), (i, r) -> {
@@ -31,10 +31,10 @@ public class RestaurantUtil {
         return new ArrayList<>(linkedHashMap.values());
     }
 
-    public static List<RestaurantsTo> groupByDateAndRestaurant(List<MenuItem> menuItems) {
+    public static List<RestaurantsOfDateTo> toRestaurantsOfDateTo(List<MenuItem> menuItems) {
         return menuItems.stream()
                 .collect(Collectors.groupingBy(MenuItem::getDate)).entrySet().stream()
-                .map(e -> new RestaurantsTo(e.getKey(), groupByRestaurant(e.getValue())))
+                .map(e -> new RestaurantsOfDateTo(e.getKey(), toRestaurantTo(e.getValue())))
                 .collect(Collectors.toList());
     }
 

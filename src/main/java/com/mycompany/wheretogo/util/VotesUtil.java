@@ -8,17 +8,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class VoteUtil {
-    private VoteUtil() {
+public class VotesUtil {
+    private VotesUtil() {
     }
 
-    public static List<VoteTo> getVotesWithDateTime(List<Vote> votes) {
+    public static List<VoteTo> toVoteTos(List<Vote> votes) {
         return votes.stream()
-                .map(VoteUtil::getVoteWithDateTime)
+                .map(VotesUtil::toVoteTo)
                 .collect(Collectors.toList());
     }
 
-    public static VoteTo getVoteWithDateTime(@Nullable Vote vote) {
+    public static VoteTo toVoteTo(@Nullable Vote vote) {
         return vote == null ? new VoteTo() :
                 new VoteTo(vote.getId(), vote.getRestaurant().getName(), LocalDateTime.of(vote.getDate(), vote.getTime()));
     }
