@@ -6,20 +6,22 @@ import com.mycompany.wheretogo.to.RestaurantTo;
 import com.mycompany.wheretogo.to.RestaurantsOfDateTo;
 import org.springframework.lang.Nullable;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MenuItemsUtil {
     private MenuItemsUtil() {
     }
 
+    public static Set<Integer> toSetOfRestaurantIs(List<MenuItem> menuItems) {
+        return menuItems.stream()
+                .map(mi -> mi.getDish().getRestaurant().getId())
+                .collect(Collectors.toSet());
+    }
+
     public static List<RestaurantTo> toRestaurantTo(List<MenuItem> menuItems) {
         return new ArrayList<>(fetchMenuItemsOfRestaurants(menuItems).values());
     }
-
 
     public static List<RestaurantTo> toRestaurantToWithVote(List<MenuItem> menuItems, @Nullable Vote vote) {
         Map<Integer, RestaurantTo> linkedHashMap = fetchMenuItemsOfRestaurants(menuItems);

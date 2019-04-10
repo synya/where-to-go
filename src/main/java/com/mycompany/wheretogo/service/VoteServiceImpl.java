@@ -5,7 +5,7 @@ import com.mycompany.wheretogo.repository.RestaurantRepository;
 import com.mycompany.wheretogo.repository.UserRepository;
 import com.mycompany.wheretogo.repository.VoteRepository;
 import com.mycompany.wheretogo.util.exception.NotFoundException;
-import com.mycompany.wheretogo.util.exception.OutOfDateTimeException;
+import com.mycompany.wheretogo.util.exception.VotingRulesException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import static com.mycompany.wheretogo.util.MenuItemsUtil.toSetOfRestaurantIs;
 import static com.mycompany.wheretogo.util.ValidationUtil.checkNotFound;
 import static com.mycompany.wheretogo.util.ValidationUtil.checkNotFoundWithId;
 
@@ -29,6 +30,9 @@ public class VoteServiceImpl implements VoteService {
     private final VoteRepository voteRepository;
 
     @Autowired
+    private RestaurantService restaurantService;
+
+    @Autowired
     public VoteServiceImpl(UserRepository userRepository, VoteRepository voteRepository, RestaurantRepository restaurantRepository) {
         this.userRepository = userRepository;
         this.voteRepository = voteRepository;
@@ -37,12 +41,15 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     @Transactional
-    public Vote addToday(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException {
+    public Vote addToday(Vote vote, Integer restaurantId, Integer userId) throws VotingRulesException {
         Assert.notNull(vote, "vote must not be null");
         Assert.notNull(restaurantId, "restaurantId must not be null");
         Assert.notNull(userId, "userId must not be null");
+        if(!toSetOfRestaurantIs(restaurantService.getAllTodayMenuItems()).contains(restaurantId)){
+            throw new VotingRulesException("Operation is not allowed - the applied restaurantId not in today list of restaurants");
+        }
         if (!vote.getDate().equals(LocalDate.now())) {
-            throw new OutOfDateTimeException("Operation is not allowed - only today's votes applicable");
+            throw new VotingRulesException("Operation is not allowed - only today's votes applicable");
         }
         return saveUserVote(vote, restaurantId, userId);
     }
@@ -68,13 +75,13 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     @Transactional
-    public void updateToday(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException, NotFoundException {
+    public void updateToday(Vote vote, Integer restaurantId, Integer userId) throws VotingRulesException, NotFoundException {
         Assert.notNull(vote, "vote must not be null");
         Assert.notNull(userId, "userId must not be null");
         Vote previousVote = getToday(userId);
         checkNotFound(previousVote, "Not found today vote, nothing to update");
         if (vote.getTime().compareTo(ALLOWED_UPDATE_TIME_THRESHOLD) >= 0) {
-            throw new OutOfDateTimeException("Operation is not allowed - it's too late to change the vote");
+            throw new VotingRulesException("Operation is not allowed - it's too late to change the vote");
         }
         vote.setId(previousVote.getId());
         saveUserVote(vote, restaurantId, userId);

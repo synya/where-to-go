@@ -2,7 +2,7 @@ package com.mycompany.wheretogo.service;
 
 import com.mycompany.wheretogo.model.Vote;
 import com.mycompany.wheretogo.util.exception.NotFoundException;
-import com.mycompany.wheretogo.util.exception.OutOfDateTimeException;
+import com.mycompany.wheretogo.util.exception.VotingRulesException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,6 +11,7 @@ import java.time.LocalTime;
 import java.time.Month;
 import java.util.List;
 
+import static com.mycompany.wheretogo.MenuItemTestData.TODAY_RESTAURANTS_MENU_ITEMS_ID;
 import static com.mycompany.wheretogo.RestaurantTestData.*;
 import static com.mycompany.wheretogo.UserTestData.USER_ID;
 import static com.mycompany.wheretogo.VoteTestData.*;
@@ -19,6 +20,9 @@ import static com.mycompany.wheretogo.VoteTestData.assertMatch;
 public class VoteServiceTest extends AbstractServiceTest {
     @Autowired
     private VoteService voteService;
+
+    @Autowired
+    private RestaurantService restaurantService;
 
     @Test
     public void testAddVote() throws Exception {
@@ -39,7 +43,7 @@ public class VoteServiceTest extends AbstractServiceTest {
         assertMatch(voteService.getToday(USER_ID), updatedVote);
     }
 
-    @Test(expected = OutOfDateTimeException.class)
+    @Test(expected = VotingRulesException.class)
     public void testUpdateVoteOutdated() throws Exception {
         voteService.addToday(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
         Vote updatedVote = voteService.getToday(USER_ID);
@@ -47,8 +51,16 @@ public class VoteServiceTest extends AbstractServiceTest {
         voteService.updateToday(updatedVote, BURGER_KING_ID, USER_ID);
     }
 
-    @Test(expected = OutOfDateTimeException.class)
+    @Test(expected = VotingRulesException.class)
     public void testAddVoteOutdated() throws Exception {
+        Vote vote = new Vote(LocalDate.of(2019, Month.MARCH, 19), LocalTime.now());
+        voteService.addToday(vote, BURGER_KING_ID, USER_ID);
+    }
+
+    @Test(expected = VotingRulesException.class)
+    public void testAddNotWithinTodayRestaurants() throws Exception {
+        restaurantService.deleteMenuItem(TODAY_RESTAURANTS_MENU_ITEMS_ID );
+        restaurantService.deleteMenuItem(TODAY_RESTAURANTS_MENU_ITEMS_ID + 1);
         Vote vote = new Vote(LocalDate.of(2019, Month.MARCH, 19), LocalTime.now());
         voteService.addToday(vote, BURGER_KING_ID, USER_ID);
     }
