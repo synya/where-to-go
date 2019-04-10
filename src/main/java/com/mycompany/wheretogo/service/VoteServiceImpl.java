@@ -16,6 +16,7 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static com.mycompany.wheretogo.util.ValidationUtil.checkNotFound;
+import static com.mycompany.wheretogo.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class VoteServiceImpl implements VoteService {
@@ -48,7 +49,7 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public Vote getToday(Integer userId) {
-        return voteRepository.findByIdAndDate(userId, LocalDate.now()).orElse(null);
+        return checkNotFoundWithId(voteRepository.findByIdAndDate(userId, LocalDate.now()).orElse(null), userId);
     }
 
     @Override

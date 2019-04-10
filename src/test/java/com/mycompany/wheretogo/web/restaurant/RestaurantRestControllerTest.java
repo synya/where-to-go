@@ -1,6 +1,7 @@
 package com.mycompany.wheretogo.web.restaurant;
 
 import com.mycompany.wheretogo.TestUtil;
+import com.mycompany.wheretogo.model.Vote;
 import com.mycompany.wheretogo.service.VoteService;
 import com.mycompany.wheretogo.to.RestaurantTo;
 import com.mycompany.wheretogo.to.VoteTo;
@@ -14,8 +15,7 @@ import java.util.List;
 import static com.mycompany.wheretogo.MenuItemTestData.TODAY_MENU_ITEMS;
 import static com.mycompany.wheretogo.RestaurantTestData.RESTAURANT_ATEOTU_ID;
 import static com.mycompany.wheretogo.UserTestData.USER_ID;
-import static com.mycompany.wheretogo.VoteTestData.USER_VOTE1;
-import static com.mycompany.wheretogo.VoteTestData.USER_VOTE2;
+import static com.mycompany.wheretogo.VoteTestData.*;
 import static com.mycompany.wheretogo.util.MenuItemsUtil.toRestaurantToWithVote;
 import static com.mycompany.wheretogo.util.VotesUtil.toVoteTo;
 import static com.mycompany.wheretogo.util.VotesUtil.toVoteTos;
@@ -68,11 +68,13 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
 
     @Test
     public void testGetTodayVote() throws Exception {
+        voteService.addToday(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
+        Vote vote = voteService.getToday(USER_ID);
         mockMvc.perform(get(REST_URL + "/votes/today"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(toVoteTo(null), VoteTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(toVoteTo(vote), VoteTo.class));
     }
 
     @Test

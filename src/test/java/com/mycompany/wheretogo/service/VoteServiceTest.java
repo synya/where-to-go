@@ -1,6 +1,7 @@
 package com.mycompany.wheretogo.service;
 
 import com.mycompany.wheretogo.model.Vote;
+import com.mycompany.wheretogo.util.exception.NotFoundException;
 import com.mycompany.wheretogo.util.exception.OutOfDateTimeException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,11 +12,9 @@ import java.time.Month;
 import java.util.List;
 
 import static com.mycompany.wheretogo.RestaurantTestData.*;
-import static com.mycompany.wheretogo.UserTestData.ADMIN_ID;
 import static com.mycompany.wheretogo.UserTestData.USER_ID;
 import static com.mycompany.wheretogo.VoteTestData.*;
 import static com.mycompany.wheretogo.VoteTestData.assertMatch;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class VoteServiceTest extends AbstractServiceTest {
     @Autowired
@@ -60,9 +59,9 @@ public class VoteServiceTest extends AbstractServiceTest {
         assertMatch(voteService.getToday(USER_ID), TODAY_USER_VOTE);
     }
 
-    @Test
+    @Test(expected = NotFoundException.class)
     public void testGetTodayVoteNotFound() throws Exception {
-        assertThat(voteService.getToday(ADMIN_ID)).isEqualTo(null);
+        voteService.getToday(USER_ID);
     }
 
     @Test

@@ -10,7 +10,7 @@ import java.util.List;
 public interface VoteService {
     Vote addToday(Vote vote, Integer restaurantId, Integer userId) throws OutOfDateTimeException;
 
-    Vote getToday(Integer userId);
+    Vote getToday(Integer userId) throws NotFoundException;
 
     List<Vote> getAll(Integer userId);
 

@@ -4,6 +4,7 @@ import com.mycompany.wheretogo.model.MenuItem;
 import com.mycompany.wheretogo.model.Vote;
 import com.mycompany.wheretogo.to.RestaurantTo;
 import com.mycompany.wheretogo.to.RestaurantsOfDateTo;
+import org.springframework.lang.Nullable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -20,7 +21,7 @@ public class MenuItemsUtil {
     }
 
 
-    public static List<RestaurantTo> toRestaurantToWithVote(List<MenuItem> menuItems, Vote vote) {
+    public static List<RestaurantTo> toRestaurantToWithVote(List<MenuItem> menuItems, @Nullable Vote vote) {
         Map<Integer, RestaurantTo> linkedHashMap = fetchMenuItemsOfRestaurants(menuItems);
         if (vote != null) {
             linkedHashMap.computeIfPresent(vote.getRestaurant().getId(), (i, r) -> {

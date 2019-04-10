@@ -5,6 +5,7 @@ import com.mycompany.wheretogo.service.RestaurantService;
 import com.mycompany.wheretogo.service.VoteService;
 import com.mycompany.wheretogo.to.RestaurantTo;
 import com.mycompany.wheretogo.to.VoteTo;
+import com.mycompany.wheretogo.util.exception.NotFoundException;
 import com.mycompany.wheretogo.web.AbstractRestController;
 import com.mycompany.wheretogo.web.SecurityUtil;
 import org.slf4j.Logger;
@@ -43,7 +44,13 @@ public class RestaurantRestController extends AbstractRestController {
 
     @GetMapping
     public List<RestaurantTo> getRestaurants() {
-        return toRestaurantToWithVote(restaurantService.getAllTodayMenuItems(), voteService.getToday(SecurityUtil.authUserId()));
+        Vote vote;
+        try {
+            vote = voteService.getToday(SecurityUtil.authUserId());
+        } catch (NotFoundException e) {
+            vote = null;
+        }
+        return toRestaurantToWithVote(restaurantService.getAllTodayMenuItems(), vote);
     }
 
     @PostMapping(value = "/votes/today")
