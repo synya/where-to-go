@@ -10,6 +10,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.Collections;
 
 import static com.mycompany.wheretogo.TestUtil.readFromJson;
+import static com.mycompany.wheretogo.TestUtil.userHttpBasic;
 import static com.mycompany.wheretogo.UserTestData.*;
 import static com.mycompany.wheretogo.web.user.UserAdminRestController.REST_URL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -19,8 +20,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class UserAdminRestControllerTest extends AbstractUserRestControllerTest {
     @Test
+    public void testGetUnauthorized() throws Exception {
+        mockMvc.perform(get(REST_URL))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     public void testGet() throws Exception {
-        mockMvc.perform(get(REST_URL + "/" + USER_ID))
+        mockMvc.perform(get(REST_URL + "/" + USER_ID)
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -29,7 +37,8 @@ public class UserAdminRestControllerTest extends AbstractUserRestControllerTest 
 
     @Test
     public void testGetByEmail() throws Exception {
-        mockMvc.perform(get(REST_URL + "/by?email=" + USER.getEmail()))
+        mockMvc.perform(get(REST_URL + "/by?email=" + USER.getEmail())
+                .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(fromJsonAndAssert(USER));
@@ -37,7 +46,8 @@ public class UserAdminRestControllerTest extends AbstractUserRestControllerTest 
 
     @Test
     public void testGetAll() throws Exception {
-        mockMvc.perform(get(REST_URL))
+        mockMvc.perform(get(REST_URL)
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -45,11 +55,19 @@ public class UserAdminRestControllerTest extends AbstractUserRestControllerTest 
     }
 
     @Test
+    public void testGetAllForbidden() throws Exception {
+        mockMvc.perform(get(REST_URL)
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
     public void testAdd() throws Exception {
         User expected = new User(null, "New User", "newuser@gmail.com", "password", Role.ROLE_USER);
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(expected)))
+                .content(JsonUtil.writeValue(expected))
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isCreated());
         User returned = readFromJson(action, User.class);
@@ -65,7 +83,8 @@ public class UserAdminRestControllerTest extends AbstractUserRestControllerTest 
         updated.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
         mockMvc.perform(put(REST_URL + "/" + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .content(JsonUtil.writeValue(updated))
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(userService.get(USER_ID), updated);
@@ -73,7 +92,8 @@ public class UserAdminRestControllerTest extends AbstractUserRestControllerTest 
 
     @Test
     public void testDelete() throws Exception {
-        mockMvc.perform(delete(REST_URL + "/" + USER_ID))
+        mockMvc.perform(delete(REST_URL + "/" + USER_ID)
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(userService.getAll(), ADMIN);

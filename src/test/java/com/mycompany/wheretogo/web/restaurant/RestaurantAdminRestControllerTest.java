@@ -22,6 +22,8 @@ import java.util.List;
 import static com.mycompany.wheretogo.DishTestData.*;
 import static com.mycompany.wheretogo.MenuItemTestData.*;
 import static com.mycompany.wheretogo.RestaurantTestData.*;
+import static com.mycompany.wheretogo.TestUtil.userHttpBasic;
+import static com.mycompany.wheretogo.UserTestData.ADMIN;
 import static com.mycompany.wheretogo.util.MenuItemsUtil.toRestaurantsOfDateTo;
 import static com.mycompany.wheretogo.web.restaurant.RestaurantAdminRestController.REST_URL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -48,8 +50,15 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
     }
 
     @Test
+    public void testGetUnauthorized() throws Exception {
+        mockMvc.perform(get(RestaurantRestController.REST_URL))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
     public void testGetRestaurant() throws Exception {
-        mockMvc.perform(get(REST_URL + "/" + BURGER_KING_ID))
+        mockMvc.perform(get(REST_URL + "/" + BURGER_KING_ID)
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -58,7 +67,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
 
     @Test
     public void testGetRestaurantDish() throws Exception {
-        mockMvc.perform(get(REST_URL + "/" + BURGER_KING_ID + "/dishes/" + BURGER_KING_DISH_ID))
+        mockMvc.perform(get(REST_URL + "/" + BURGER_KING_ID + "/dishes/" + BURGER_KING_DISH_ID)
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -67,7 +77,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
 
     @Test
     public void testGetTodayMenuItem() throws Exception {
-        mockMvc.perform(get(REST_URL + "/menus/daily/today/items/" + TODAY_RESTAURANTS_MENU_ITEMS_ID))
+        mockMvc.perform(get(REST_URL + "/menus/daily/today/items/" + TODAY_RESTAURANTS_MENU_ITEMS_ID)
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -76,7 +87,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
 
     @Test
     public void testGetRestaurants() throws Exception {
-        mockMvc.perform(get(REST_URL))
+        mockMvc.perform(get(REST_URL)
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -85,7 +97,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
 
     @Test
     public void testGetRestaurantDishes() throws Exception {
-        mockMvc.perform(get(REST_URL + '/' + RESTAURANT_ATEOTU_ID + "/dishes"))
+        mockMvc.perform(get(REST_URL + '/' + RESTAURANT_ATEOTU_ID + "/dishes")
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -95,7 +108,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
 
     @Test
     public void testGetTodayMenuItems() throws Exception {
-        mockMvc.perform(get(REST_URL + "/menus/daily/today/items"))
+        mockMvc.perform(get(REST_URL + "/menus/daily/today/items")
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -105,7 +119,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
 
     @Test
     public void testGetAllRestaurantsMenus() throws Exception {
-        mockMvc.perform(get(REST_URL + "/menus/daily"))
+        mockMvc.perform(get(REST_URL + "/menus/daily")
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -114,7 +129,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
 
     @Test
     public void testGetAllRestaurantsMenusBetweenDates() throws Exception {
-        mockMvc.perform(get(REST_URL + "/menus/daily/between?startDate=2019-03-20&endDate=2019-03-21"))
+        mockMvc.perform(get(REST_URL + "/menus/daily/between?startDate=2019-03-20&endDate=2019-03-21")
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -126,7 +142,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
         Restaurant expectedRestaurant = new Restaurant("The New Place To Have Launch At");
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(expectedRestaurant)))
+                .content(JsonUtil.writeValue(expectedRestaurant))
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isCreated());
         Restaurant returnedRestaurant = TestUtil.readFromJson(action, Restaurant.class);
@@ -140,7 +157,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
         Dish expectedDish = new Dish("The New And Delicious Dish", RESTAURANT_ATEOTU);
         ResultActions action = mockMvc.perform(post(REST_URL + '/' + RESTAURANT_ATEOTU_ID + "/dishes")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(expectedDish)))
+                .content(JsonUtil.writeValue(expectedDish))
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isCreated());
         Dish returnedDish = TestUtil.readFromJson(action, Dish.class);
@@ -153,7 +171,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
     @Test
     public void testAddTodayMenuItem() throws Exception {
         MenuItem expectedMenuItem = new MenuItem(RESTAURANT_ATEOTU_DISH3, LocalDate.now(), 10020);
-        ResultActions action = mockMvc.perform(post(REST_URL + "/menus/daily/today/items?dishId=100012&price=10020"))
+        ResultActions action = mockMvc.perform(post(REST_URL + "/menus/daily/today/items?dishId=100012&price=10020")
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
@@ -170,7 +189,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
         Integer updatedRestaurantId = BURGER_KING_ID;
         mockMvc.perform(put(REST_URL + '/' + updatedRestaurantId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updatedRestaurant)))
+                .content(JsonUtil.writeValue(updatedRestaurant))
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(restaurantService.get(updatedRestaurantId), updatedRestaurant);
@@ -182,7 +202,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
         Integer updatedDishId = RESTAURANT_ATEOTU_DISH2.getId();
         mockMvc.perform(put(REST_URL + '/' + RESTAURANT_ATEOTU_ID + "/dishes/" + updatedDishId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updatedDish)))
+                .content(JsonUtil.writeValue(updatedDish))
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         updatedDish.setId(updatedDishId);
@@ -196,7 +217,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
         MenuItem updatedMenuItem = new MenuItem(updatedMenuItemId, RESTAURANT_ATEOTU_DISH1, LocalDate.now(), 2560);
         mockMvc.perform(put(REST_URL + "/menus/daily/today/items/" + updatedMenuItemId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updatedMenuItem)))
+                .content(JsonUtil.writeValue(updatedMenuItem))
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(restaurantService.getAllTodayMenuItems(), TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6,
@@ -205,7 +227,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
 
     @Test
     public void testDeleteRestaurant() throws Exception {
-        mockMvc.perform(delete(REST_URL + '/' + BURGER_KING_ID))
+        mockMvc.perform(delete(REST_URL + '/' + BURGER_KING_ID)
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(restaurantService.getAll(), List.of(RESTAURANT_ATEOTU));
@@ -213,7 +236,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
 
     @Test
     public void testDeleteRestaurantDish() throws Exception {
-        mockMvc.perform(delete(REST_URL + '/' + RESTAURANT_ATEOTU_ID + "/dishes/" + RESTAURANT_ATEOTU_DISH1.getId()))
+        mockMvc.perform(delete(REST_URL + '/' + RESTAURANT_ATEOTU_ID + "/dishes/" + RESTAURANT_ATEOTU_DISH1.getId())
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID), RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
@@ -223,7 +247,8 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
 
     @Test
     public void testDeleteTodayMenuItem() throws Exception {
-        mockMvc.perform(delete(REST_URL + "/menus/daily/today/items/" + TODAY_MENU_ITEM3.getId()))
+        mockMvc.perform(delete(REST_URL + "/menus/daily/today/items/" + TODAY_MENU_ITEM3.getId())
+                .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(restaurantService.getAllTodayMenuItems(), TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6,

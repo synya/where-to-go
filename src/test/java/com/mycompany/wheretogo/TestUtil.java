@@ -1,9 +1,12 @@
 package com.mycompany.wheretogo;
 
+import com.mycompany.wheretogo.model.User;
 import com.mycompany.wheretogo.web.json.JsonUtil;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -59,4 +62,7 @@ public class TestUtil {
         return result -> assertMatch(readFromJsonMvcResult(result, clazz), expected, ignoreProperties);
     }
 
+    public static RequestPostProcessor userHttpBasic(User user) {
+        return SecurityMockMvcRequestPostProcessors.httpBasic(user.getEmail(), user.getPassword());
+    }
 }

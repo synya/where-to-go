@@ -7,6 +7,7 @@ import com.mycompany.wheretogo.web.json.JsonUtil;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
+import static com.mycompany.wheretogo.TestUtil.userHttpBasic;
 import static com.mycompany.wheretogo.UserTestData.*;
 import static com.mycompany.wheretogo.web.user.UserProfileRestController.REST_URL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -16,8 +17,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class UserProfileRestControllerTest extends AbstractUserRestControllerTest {
     @Test
-    public void testGet() throws Exception {
+    public void testGetUnauthorized() throws Exception {
         mockMvc.perform(get(REST_URL))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testGet() throws Exception {
+        mockMvc.perform(get(REST_URL)
+                .with(userHttpBasic(USER)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
@@ -29,7 +37,8 @@ public class UserProfileRestControllerTest extends AbstractUserRestControllerTes
         UserTo updated = new UserTo(null, "Updated Name", "updated@mail.com", "updatedPassword");
         mockMvc.perform(put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated)))
+                .content(JsonUtil.writeValue(updated))
+                .with(userHttpBasic(USER)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(userService.get(USER_ID), UserUtil.updateFromTo(new User(USER), updated));
@@ -37,7 +46,8 @@ public class UserProfileRestControllerTest extends AbstractUserRestControllerTes
 
     @Test
     public void testDelete() throws Exception {
-        mockMvc.perform(delete(REST_URL))
+        mockMvc.perform(delete(REST_URL)
+                .with(userHttpBasic(USER)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(userService.getAll(), ADMIN);
