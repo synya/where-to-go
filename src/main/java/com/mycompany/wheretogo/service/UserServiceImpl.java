@@ -2,12 +2,15 @@ package com.mycompany.wheretogo.service;
 
 import com.mycompany.wheretogo.model.User;
 import com.mycompany.wheretogo.repository.UserRepository;
+import com.mycompany.wheretogo.to.UserTo;
+import com.mycompany.wheretogo.util.UserUtil;
 import com.mycompany.wheretogo.util.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.List;
@@ -56,6 +59,14 @@ public class UserServiceImpl implements UserService {
     public void update(User user) {
         Assert.notNull(user, "user must not be null");
         checkNotFoundWithId(userRepository.save(user), user.getId());
+    }
+
+    @CacheEvict(value = "users", allEntries = true)
+    @Override
+    @Transactional
+    public void update(UserTo userTo) {
+        User user = get(userTo.getId());
+        userRepository.save(UserUtil.updateFromTo(user, userTo));
     }
 
     @CacheEvict(value = "users", allEntries = true)

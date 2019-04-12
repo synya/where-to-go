@@ -2,6 +2,7 @@ package com.mycompany.wheretogo.web.user;
 
 import com.mycompany.wheretogo.model.User;
 import com.mycompany.wheretogo.service.UserService;
+import com.mycompany.wheretogo.to.UserTo;
 import com.mycompany.wheretogo.web.AbstractRestController;
 import com.mycompany.wheretogo.web.SecurityUtil;
 import org.slf4j.Logger;
@@ -30,9 +31,9 @@ public class UserProfileRestController extends AbstractRestController {
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestBody User user) {
-        assureIdConsistent(user, SecurityUtil.authUserId());
-        userService.update(user);
+    public void update(@RequestBody UserTo userTo) {
+        assureIdConsistent(userTo, SecurityUtil.authUserId());
+        userService.update(userTo);
         log.info("updated user with id = {}", SecurityUtil.authUserId());
     }
 

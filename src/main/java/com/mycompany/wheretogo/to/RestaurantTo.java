@@ -4,9 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class RestaurantTo {
-    private Integer id;
-
+public class RestaurantTo extends AbstractBaseTo {
     private String name;
 
     private List<DishOfTheDay> dishesOfTheDay = new ArrayList<>();
@@ -17,7 +15,7 @@ public class RestaurantTo {
     }
 
     public RestaurantTo(Integer id, String name, String dishName, Integer dishPrice, boolean elected) {
-        this.id = id;
+        super(id    );
         this.name = name;
         addDishOfTheDay(dishName, dishPrice);
         this.elected = elected;

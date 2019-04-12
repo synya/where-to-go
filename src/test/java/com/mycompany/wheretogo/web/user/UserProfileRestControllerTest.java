@@ -1,6 +1,8 @@
 package com.mycompany.wheretogo.web.user;
 
 import com.mycompany.wheretogo.model.User;
+import com.mycompany.wheretogo.to.UserTo;
+import com.mycompany.wheretogo.util.UserUtil;
 import com.mycompany.wheretogo.web.json.JsonUtil;
 import org.junit.Test;
 import org.springframework.http.MediaType;
@@ -24,14 +26,13 @@ public class UserProfileRestControllerTest extends AbstractUserRestControllerTes
 
     @Test
     public void testUpdate() throws Exception {
-        User updated = new User(USER);
-        updated.setName("Updated Name");
+        UserTo updated = new UserTo(null, "Updated Name", "updated@mail.com", "updatedPassword");
         mockMvc.perform(put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(updated)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertMatch(userService.get(USER_ID), updated);
+        assertMatch(userService.get(USER_ID), UserUtil.updateFromTo(new User(USER), updated));
     }
 
     @Test

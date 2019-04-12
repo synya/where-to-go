@@ -5,9 +5,7 @@ import org.springframework.lang.NonNull;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-public class VoteTo {
-    private Integer id;
-
+public class VoteTo extends AbstractBaseTo{
     private String restaurantName;
 
     private LocalDateTime dateTime;
@@ -16,7 +14,7 @@ public class VoteTo {
     }
 
     public VoteTo(@NonNull Integer id, @NonNull String restaurantName, @NonNull LocalDateTime dateTime) {
-        this.id = id;
+        super(id);
         this.restaurantName = restaurantName;
         this.dateTime = dateTime;
     }

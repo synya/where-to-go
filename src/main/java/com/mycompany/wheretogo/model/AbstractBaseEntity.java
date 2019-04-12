@@ -1,12 +1,12 @@
 package com.mycompany.wheretogo.model;
 
-import org.springframework.data.domain.Persistable;
+import com.mycompany.wheretogo.HasId;
 
 import javax.persistence.*;
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
-public class AbstractBaseEntity implements Persistable<Integer> {
+public class AbstractBaseEntity implements HasId {
     public static final int START_SEQ = 100_000;
 
     @Id
@@ -21,17 +21,13 @@ public class AbstractBaseEntity implements Persistable<Integer> {
         this.id = id;
     }
 
+    @Override
     public void setId(Integer id) {
         this.id = id;
     }
 
     public Integer getId() {
         return id;
-    }
-
-    @Override
-    public boolean isNew() {
-        return this.id == null;
     }
 
     @Override
