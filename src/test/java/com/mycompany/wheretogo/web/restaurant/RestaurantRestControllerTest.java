@@ -6,7 +6,6 @@ import com.mycompany.wheretogo.service.VoteService;
 import com.mycompany.wheretogo.to.RestaurantTo;
 import com.mycompany.wheretogo.to.VoteTo;
 import com.mycompany.wheretogo.web.AbstractRestControllerTest;
-import com.mycompany.wheretogo.web.user.UserProfileRestController;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;

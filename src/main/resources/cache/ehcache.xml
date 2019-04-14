@@ -19,5 +19,4 @@
     <cache alias="users" uses-template="singleNonExpiryCache"/>
     <cache alias="dishes" uses-template="singleNonExpiryCache"/>
     <cache alias="todayMenuItems" uses-template="expiryCache"/>
-    <cache alias="menuItems" uses-template="expiryCache"/>
 </config>
