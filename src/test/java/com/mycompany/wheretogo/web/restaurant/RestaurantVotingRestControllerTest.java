@@ -22,14 +22,14 @@ import static com.mycompany.wheretogo.VoteTestData.*;
 import static com.mycompany.wheretogo.util.MenuItemsUtil.asRestaurantsToWithVote;
 import static com.mycompany.wheretogo.util.VoteUtil.asTo;
 import static com.mycompany.wheretogo.util.VoteUtil.asListOfTo;
-import static com.mycompany.wheretogo.web.restaurant.RestaurantRestController.REST_URL;
+import static com.mycompany.wheretogo.web.restaurant.RestaurantVotingRestController.REST_URL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class RestaurantRestControllerTest extends AbstractRestControllerTest {
+public class RestaurantVotingRestControllerTest extends AbstractRestControllerTest {
     @Autowired
     private VoteService voteService;
 

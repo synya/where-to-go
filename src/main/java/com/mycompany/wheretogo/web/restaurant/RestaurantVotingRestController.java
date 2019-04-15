@@ -30,8 +30,8 @@ import static com.mycompany.wheretogo.util.VoteUtil.asTo;
 import static com.mycompany.wheretogo.util.VoteUtil.asListOfTo;
 
 @RestController
-@RequestMapping(value = RestaurantRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantRestController extends AbstractRestController {
+@RequestMapping(value = RestaurantVotingRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+public class RestaurantVotingRestController extends AbstractRestController {
     static final String REST_URL = REST_BASE_URL + "/restaurants";
 
     private final Logger log = LoggerFactory.getLogger(getClass());

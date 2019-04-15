@@ -50,7 +50,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
 
     @Test
     public void testGetUnauthorized() throws Exception {
-        mockMvc.perform(get(RestaurantRestController.REST_URL))
+        mockMvc.perform(get(REST_URL))
                 .andExpect(status().isUnauthorized());
     }
 
