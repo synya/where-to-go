@@ -15,7 +15,7 @@ public class RestaurantTo extends AbstractBaseTo {
     }
 
     public RestaurantTo(Integer id, String name, String dishName, Integer dishPrice, boolean elected) {
-        super(id    );
+        super(id);
         this.name = name;
         addDishOfTheDay(dishName, dishPrice);
         this.elected = elected;

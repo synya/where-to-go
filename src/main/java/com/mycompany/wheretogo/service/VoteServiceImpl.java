@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static com.mycompany.wheretogo.util.MenuItemsUtil.toSetOfRestaurantIs;
+import static com.mycompany.wheretogo.util.MenuItemsUtil.asSetOfRestaurantId;
 import static com.mycompany.wheretogo.util.ValidationUtil.checkNotFound;
 import static com.mycompany.wheretogo.util.ValidationUtil.checkNotFoundWithId;
 
@@ -45,7 +45,7 @@ public class VoteServiceImpl implements VoteService {
         Assert.notNull(vote, "vote must not be null");
         Assert.notNull(restaurantId, "restaurantId must not be null");
         Assert.notNull(userId, "userId must not be null");
-        if(!toSetOfRestaurantIs(restaurantService.getAllTodayMenuItems()).contains(restaurantId)){
+        if(!asSetOfRestaurantId(restaurantService.getAllTodayMenuItems()).contains(restaurantId)){
             throw new VotingRulesException("Operation is not allowed - the applied restaurantId not in today list of restaurants");
         }
         if (!vote.getDate().equals(LocalDate.now())) {

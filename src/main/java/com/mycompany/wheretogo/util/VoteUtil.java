@@ -7,17 +7,17 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class VotesUtil {
-    private VotesUtil() {
+public class VoteUtil {
+    private VoteUtil() {
     }
 
-    public static List<VoteTo> toVoteTos(List<Vote> votes) {
+    public static List<VoteTo> asListOfTo(List<Vote> votes) {
         return votes.stream()
-                .map(VotesUtil::toVoteTo)
+                .map(VoteUtil::asTo)
                 .collect(Collectors.toList());
     }
 
-    public static VoteTo toVoteTo(Vote vote) {
+    public static VoteTo asTo(Vote vote) {
         return new VoteTo(vote.getId(), vote.getRestaurant().getName(), LocalDateTime.of(vote.getDate(), vote.getTime()));
     }
 

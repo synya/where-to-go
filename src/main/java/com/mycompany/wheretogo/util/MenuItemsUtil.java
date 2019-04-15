@@ -3,9 +3,10 @@ package com.mycompany.wheretogo.util;
 import com.mycompany.wheretogo.model.MenuItem;
 import com.mycompany.wheretogo.model.Vote;
 import com.mycompany.wheretogo.to.RestaurantTo;
-import com.mycompany.wheretogo.to.RestaurantsOfDateTo;
+import com.mycompany.wheretogo.to.RestaurantsTo;
 import org.springframework.lang.Nullable;
 
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -13,35 +14,35 @@ public class MenuItemsUtil {
     private MenuItemsUtil() {
     }
 
-    public static Set<Integer> toSetOfRestaurantIs(List<MenuItem> menuItems) {
+    public static Set<Integer> asSetOfRestaurantId(List<MenuItem> menuItems) {
         return menuItems.stream()
                 .map(mi -> mi.getDish().getRestaurant().getId())
                 .collect(Collectors.toSet());
     }
 
-    public static List<RestaurantTo> toRestaurantTo(List<MenuItem> menuItems) {
-        return new ArrayList<>(fetchMenuItemsOfRestaurants(menuItems).values());
+    public static RestaurantsTo asRestaurantsTo(LocalDate localDate, List<MenuItem> menuItems) {
+        return new RestaurantsTo(localDate, new ArrayList<>(groupByRestaurantId(menuItems).values()));
     }
 
-    public static List<RestaurantTo> toRestaurantToWithVote(List<MenuItem> menuItems, @Nullable Vote vote) {
-        Map<Integer, RestaurantTo> linkedHashMap = fetchMenuItemsOfRestaurants(menuItems);
+    public static RestaurantsTo asRestaurantsToWithVote(LocalDate localDate, List<MenuItem> menuItems, @Nullable Vote vote) {
+        Map<Integer, RestaurantTo> linkedHashMap = groupByRestaurantId(menuItems);
         if (vote != null) {
             linkedHashMap.computeIfPresent(vote.getRestaurant().getId(), (i, r) -> {
                 r.setElected(true);
                 return r;
             });
         }
-        return new ArrayList<>(linkedHashMap.values());
+        return new RestaurantsTo(localDate, new ArrayList<>(linkedHashMap.values()));
     }
 
-    public static List<RestaurantsOfDateTo> toRestaurantsOfDateTo(List<MenuItem> menuItems) {
+    public static List<RestaurantsTo> asListOfRestaurantsTo(List<MenuItem> menuItems) {
         return menuItems.stream()
                 .collect(Collectors.groupingBy(MenuItem::getDate)).entrySet().stream()
-                .map(e -> new RestaurantsOfDateTo(e.getKey(), toRestaurantTo(e.getValue())))
+                .map(e -> asRestaurantsTo(e.getKey(), e.getValue()))
                 .collect(Collectors.toList());
     }
 
-    private static Map<Integer, RestaurantTo> fetchMenuItemsOfRestaurants(List<MenuItem> menuItems) {
+    private static Map<Integer, RestaurantTo> groupByRestaurantId(List<MenuItem> menuItems) {
         Map<Integer, RestaurantTo> linkedHashMap = new LinkedHashMap<>();
         menuItems.forEach(mi -> {
             Integer restaurantId = mi.getDish().getRestaurant().getId();

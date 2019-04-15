@@ -3,13 +3,14 @@ package com.mycompany.wheretogo.web.restaurant;
 import com.mycompany.wheretogo.TestUtil;
 import com.mycompany.wheretogo.model.Vote;
 import com.mycompany.wheretogo.service.VoteService;
-import com.mycompany.wheretogo.to.RestaurantTo;
+import com.mycompany.wheretogo.to.RestaurantsTo;
 import com.mycompany.wheretogo.to.VoteTo;
 import com.mycompany.wheretogo.web.AbstractRestControllerTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static com.mycompany.wheretogo.MenuItemTestData.TODAY_MENU_ITEMS;
@@ -18,9 +19,9 @@ import static com.mycompany.wheretogo.TestUtil.userHttpBasic;
 import static com.mycompany.wheretogo.UserTestData.USER;
 import static com.mycompany.wheretogo.UserTestData.USER_ID;
 import static com.mycompany.wheretogo.VoteTestData.*;
-import static com.mycompany.wheretogo.util.MenuItemsUtil.toRestaurantToWithVote;
-import static com.mycompany.wheretogo.util.VotesUtil.toVoteTo;
-import static com.mycompany.wheretogo.util.VotesUtil.toVoteTos;
+import static com.mycompany.wheretogo.util.MenuItemsUtil.asRestaurantsToWithVote;
+import static com.mycompany.wheretogo.util.VoteUtil.asTo;
+import static com.mycompany.wheretogo.util.VoteUtil.asListOfTo;
 import static com.mycompany.wheretogo.web.restaurant.RestaurantRestController.REST_URL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -45,7 +46,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(toRestaurantToWithVote(TODAY_MENU_ITEMS, null), RestaurantTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(asRestaurantsToWithVote(LocalDate.now(), TODAY_MENU_ITEMS, null), RestaurantsTo.class));
     }
 
     @Test
@@ -55,7 +56,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(toVoteTos(List.of(USER_VOTE2, USER_VOTE1)), VoteTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(asListOfTo(List.of(USER_VOTE2, USER_VOTE1)), VoteTo.class));
     }
 
     @Test
@@ -65,7 +66,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(toVoteTos(List.of(USER_VOTE2, USER_VOTE1)), VoteTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(asListOfTo(List.of(USER_VOTE2, USER_VOTE1)), VoteTo.class));
     }
 
     @Test
@@ -75,7 +76,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(toVoteTos(List.of(USER_VOTE2, USER_VOTE1)), VoteTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(asListOfTo(List.of(USER_VOTE2, USER_VOTE1)), VoteTo.class));
     }
 
     @Test
@@ -87,7 +88,7 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(toVoteTo(vote), VoteTo.class));
+                .andExpect(TestUtil.fromJsonAndAssert(asTo(vote), VoteTo.class));
     }
 
     @Test
@@ -97,6 +98,6 @@ public class RestaurantRestControllerTest extends AbstractRestControllerTest {
                 .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(TestUtil.fromJsonAndAssert(toVoteTo(voteService.getToday(USER_ID)), VoteTo.class, "dateTime"));
+                .andExpect(TestUtil.fromJsonAndAssert(asTo(voteService.getToday(USER_ID)), VoteTo.class, "dateTime"));
     }
 }
