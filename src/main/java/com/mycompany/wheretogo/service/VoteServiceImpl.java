@@ -45,7 +45,7 @@ public class VoteServiceImpl implements VoteService {
         Assert.notNull(vote, "vote must not be null");
         Assert.notNull(restaurantId, "restaurantId must not be null");
         Assert.notNull(userId, "userId must not be null");
-        if(!asSetOfRestaurantId(restaurantService.getAllTodayMenuItems()).contains(restaurantId)){
+        if (!asSetOfRestaurantId(restaurantService.getAllTodayMenuItems()).contains(restaurantId)) {
             throw new VotingRulesException("Operation is not allowed - the applied restaurantId not in today list of restaurants");
         }
         if (!vote.getDate().equals(LocalDate.now())) {
@@ -80,7 +80,7 @@ public class VoteServiceImpl implements VoteService {
         Assert.notNull(userId, "userId must not be null");
         Vote previousVote = getToday(userId);
         checkNotFound(previousVote, "Not found today vote, nothing to update");
-        if (vote.getTime().compareTo(ALLOWED_UPDATE_TIME_THRESHOLD) >= 0) {
+        if (vote.getTime().isAfter(ALLOWED_UPDATE_TIME_THRESHOLD)) {
             throw new VotingRulesException("Operation is not allowed - it's too late to change the vote");
         }
         vote.setId(previousVote.getId());

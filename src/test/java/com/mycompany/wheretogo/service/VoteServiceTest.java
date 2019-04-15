@@ -47,7 +47,7 @@ public class VoteServiceTest extends AbstractServiceTest {
     public void testUpdateVoteOutdated() throws Exception {
         voteService.addToday(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
         Vote updatedVote = voteService.getToday(USER_ID);
-        updatedVote.setTime(LocalTime.of(11, 01));
+        updatedVote.setTime(LocalTime.of(11, 1));
         voteService.updateToday(updatedVote, BURGER_KING_ID, USER_ID);
     }
 
