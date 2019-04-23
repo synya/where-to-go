@@ -10,6 +10,7 @@
         <http-basic/>
         <intercept-url pattern="/rest/api-v1/management/**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/index" access="isAnonymous()"/>
         <csrf disabled="true"/>
     </http>
 
