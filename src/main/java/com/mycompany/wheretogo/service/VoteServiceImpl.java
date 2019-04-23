@@ -17,7 +17,6 @@ import java.util.List;
 
 import static com.mycompany.wheretogo.util.MenuItemsUtil.asSetOfRestaurantId;
 import static com.mycompany.wheretogo.util.ValidationUtil.checkNotFound;
-import static com.mycompany.wheretogo.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class VoteServiceImpl implements VoteService {

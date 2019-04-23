@@ -68,7 +68,7 @@ public class ExceptionInfoHandler {
     }
 
     private static ErrorInfo getBindingErrorInfo(HttpServletRequest req, BindingResult result) {
-        ErrorInfo errorInfo = new ErrorInfo(req.getRequestURL(), ErrorType.VALIDATION_ERROR, new ArrayList<>());
+        ErrorInfo errorInfo = new ErrorInfo(req.getRequestURL(), VALIDATION_ERROR, new ArrayList<>());
         result.getFieldErrors().forEach(
                 fe -> {
                     String msg = fe.getDefaultMessage();

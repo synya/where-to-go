@@ -76,7 +76,7 @@ public class UserAdminRestControllerTest extends AbstractUserRestControllerTest 
         User expected = new User(null, "New User", "newuser@gmail.com", "password", Role.ROLE_USER);
         ResultActions action = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(expected))
+                .content(toJsonWithPassword(expected, "password"))
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isCreated());
@@ -104,7 +104,7 @@ public class UserAdminRestControllerTest extends AbstractUserRestControllerTest 
         mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(ADMIN))
-                .content(JsonUtil.writeValue(expected)))
+                .content(toJsonWithPassword(expected, "password")))
                 .andDo(print())
                 .andExpect(status().isConflict());
     }
@@ -116,7 +116,7 @@ public class UserAdminRestControllerTest extends AbstractUserRestControllerTest 
         updated.setRoles(Collections.singletonList(Role.ROLE_ADMIN));
         mockMvc.perform(put(REST_URL + "/" + USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated))
+                .content(toJsonWithPassword(updated, USER.getPassword()))
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());

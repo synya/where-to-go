@@ -2,6 +2,7 @@ package com.mycompany.wheretogo;
 
 import com.mycompany.wheretogo.model.Role;
 import com.mycompany.wheretogo.model.User;
+import com.mycompany.wheretogo.web.json.JsonUtil;
 import org.springframework.test.web.servlet.ResultMatcher;
 
 import java.time.LocalDateTime;
@@ -26,7 +27,7 @@ public class UserTestData {
     }
 
     public static void assertMatch(User actual, User expected) {
-        TestUtil.assertMatch(actual, expected, "registered");
+        TestUtil.assertMatch(actual, expected, "registered", "password");
     }
 
     public static void assertMatch(Iterable<User> actual, User... expected) {
@@ -34,14 +35,18 @@ public class UserTestData {
     }
 
     public static void assertMatch(Iterable<User> actual, Iterable<User> expected) {
-        TestUtil.assertMatch(actual, expected, "registered");
+        TestUtil.assertMatch(actual, expected, "registered", "password");
     }
 
     public static ResultMatcher fromJsonAndAssert(User... expected) {
-        return TestUtil.fromJsonAndAssert(List.of(expected), User.class, "registered");
+        return TestUtil.fromJsonAndAssert(List.of(expected), User.class, "registered", "password");
     }
 
     public static ResultMatcher fromJsonAndAssert(User expected) {
-        return TestUtil.fromJsonAndAssert(expected, User.class, "registered");
+        return TestUtil.fromJsonAndAssert(expected, User.class, "registered", "password");
+    }
+
+    public static String toJsonWithPassword(User user, String pass) {
+        return JsonUtil.writeAdditionProps(user, "password", pass);
     }
 }

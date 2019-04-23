@@ -1,14 +1,14 @@
 package com.mycompany.wheretogo.web.user;
 
-import com.mycompany.wheretogo.model.User;
+import com.mycompany.wheretogo.TestUtil;
 import com.mycompany.wheretogo.to.UserTo;
-import com.mycompany.wheretogo.util.UserUtil;
 import com.mycompany.wheretogo.web.json.JsonUtil;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
 import static com.mycompany.wheretogo.TestUtil.userHttpBasic;
 import static com.mycompany.wheretogo.UserTestData.*;
+import static com.mycompany.wheretogo.util.UserUtil.asTo;
 import static com.mycompany.wheretogo.web.user.UserProfileRestController.REST_URL;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -24,32 +24,39 @@ public class UserProfileRestControllerTest extends AbstractUserRestControllerTes
 
     @Test
     public void testGet() throws Exception {
+        UserTo expected = asTo(USER);
         mockMvc.perform(get(REST_URL)
                 .with(userHttpBasic(USER)))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(fromJsonAndAssert(USER));
+                .andExpect(TestUtil.fromJsonAndAssert(expected, UserTo.class, "password"));
     }
 
     @Test
     public void testUpdate() throws Exception {
-        UserTo updated = new UserTo(null, "Updated Name", "updated@mail.com", "updatedPassword");
+        UserTo updated = asTo(USER);
+        updated.setName("Updated Name");
+        updated.setEmail("updated@mail.com");
+        updated.setPassword("updatedPassword");
         mockMvc.perform(put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated))
+                .content(JsonUtil.writeAdditionProps(updated, "password", "updatedPassword"))
                 .with(userHttpBasic(USER)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertMatch(userService.get(USER_ID), UserUtil.updateFromTo(new User(USER), updated));
+        TestUtil.assertMatch(asTo(userService.get(USER_ID)), updated, "password");
     }
 
     @Test
     public void testUpdateNotValid() throws Exception {
-        UserTo updated = new UserTo(null, "", "updated@mail.com", "");
+        UserTo updated = asTo(USER);
+        updated.setName("");
+        updated.setEmail("updated@mail.com");
+        updated.setPassword("");
         mockMvc.perform(put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(JsonUtil.writeValue(updated))
+                .content(JsonUtil.writeAdditionProps(updated, "password", ""))
                 .with(userHttpBasic(USER)))
                 .andDo(print())
                 .andExpect(status().isUnprocessableEntity());
