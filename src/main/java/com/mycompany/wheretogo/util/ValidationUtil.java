@@ -9,11 +9,11 @@ public final class ValidationUtil {
     }
 
     public static <T> T checkNotFoundWithId(T object, int id) {
-        return checkNotFound(object, "id=" + id);
+        return checkNotFound(object, " with id=" + id);
     }
 
     public static void checkNotFoundWithId(boolean found, int id) {
-        checkNotFound(found, "id=" + id);
+        checkNotFound(found, " with id=" + id);
     }
 
     public static <T> T checkNotFound(T object, String msg) {
@@ -23,7 +23,7 @@ public final class ValidationUtil {
 
     public static void checkNotFound(boolean found, String msg) {
         if (!found) {
-            throw new NotFoundException("Not found entity with " + msg);
+            throw new NotFoundException("Not found entity" + msg);
         }
     }
 
@@ -43,5 +43,9 @@ public final class ValidationUtil {
             result = cause;
         }
         return result;
+    }
+
+    public static String getMessage(Throwable e) {
+        return e.getLocalizedMessage() != null ? e.getLocalizedMessage() : e.getClass().getName();
     }
 }

@@ -5,6 +5,7 @@ import com.mycompany.wheretogo.model.MenuItem;
 import com.mycompany.wheretogo.model.Restaurant;
 import com.mycompany.wheretogo.service.RestaurantService;
 import com.mycompany.wheretogo.to.RestaurantsTo;
+import com.mycompany.wheretogo.util.exception.IllegalRequestDataException;
 import com.mycompany.wheretogo.web.AbstractRestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
@@ -34,7 +36,7 @@ public class RestaurantAdminRestController extends AbstractRestController {
     private RestaurantService restaurantService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Restaurant> createWithLocation(@RequestBody Restaurant restaurant) {
+    public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
         Restaurant created = restaurantService.add(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{restaurantId}")
@@ -55,7 +57,7 @@ public class RestaurantAdminRestController extends AbstractRestController {
 
     @PutMapping(value = "/{restaurantId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void update(@RequestBody Restaurant restaurant, @PathVariable int restaurantId) {
+    public void update(@Valid @RequestBody Restaurant restaurant, @PathVariable int restaurantId) {
         assureIdConsistent(restaurant, restaurantId);
         restaurantService.update(restaurant);
         log.info("updated restaurant with id = {}", restaurantId);
@@ -70,7 +72,7 @@ public class RestaurantAdminRestController extends AbstractRestController {
 
     @PostMapping(value = "/{restaurantId}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
-    public ResponseEntity<Dish> createDishWithLocation(@RequestBody Dish dish, @PathVariable int restaurantId) {
+    public ResponseEntity<Dish> createDishWithLocation(@Valid @RequestBody Dish dish, @PathVariable int restaurantId) {
         Dish created = restaurantService.addDish(dish, restaurantId);
         created.setRestaurant(restaurantService.get(restaurantId));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -92,7 +94,7 @@ public class RestaurantAdminRestController extends AbstractRestController {
 
     @PutMapping(value = "/{restaurantId}/dishes/{dishId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateDish(@RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int dishId) {
+    public void updateDish(@Valid @RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int dishId) {
         assureIdConsistent(dish, dishId);
         restaurantService.updateDish(dish, restaurantId);
         log.info("updated dish with id = {} for restaurant with id = {}", dishId, restaurantId);
@@ -108,6 +110,9 @@ public class RestaurantAdminRestController extends AbstractRestController {
     @PostMapping("/menus/daily/today/items")
     @Transactional
     public ResponseEntity<MenuItem> createTodayMenuItem(@RequestParam("dishId") int dishId, @RequestParam("price") int price) {
+        if (price < 0 || price > 1_000_000_00) {
+            throw new IllegalRequestDataException("price must be in range [0...100000000]");
+        }
         MenuItem created = restaurantService.addMenuItem(dishId, LocalDate.now(), price);
         created.setDish(restaurantService.getDish(dishId));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -129,7 +134,7 @@ public class RestaurantAdminRestController extends AbstractRestController {
 
     @PutMapping(value = "/menus/daily/today/items/{menuItemId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void updateMenuItem(@RequestBody MenuItem menuItem, @PathVariable int menuItemId) {
+    public void updateMenuItem(@Valid @RequestBody MenuItem menuItem, @PathVariable int menuItemId) {
         assureIdConsistent(menuItem, menuItemId);
         restaurantService.updateMenuItem(menuItem);
         log.info("updated menu item with id = {}", menuItem.getId());

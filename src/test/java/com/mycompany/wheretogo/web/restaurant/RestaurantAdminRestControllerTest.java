@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -65,6 +67,14 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
     }
 
     @Test
+    public void testGetRestaurantNotFound() throws Exception {
+        mockMvc.perform(get(REST_URL + "/" + ENTITY_NOT_FOUND_ID)
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     public void testGetRestaurantDish() throws Exception {
         mockMvc.perform(get(REST_URL + "/" + BURGER_KING_ID + "/dishes/" + BURGER_KING_DISH_ID)
                 .with(userHttpBasic(ADMIN)))
@@ -72,6 +82,14 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(fromJsonAndAssert(BURGER_KING_DISH1));
+    }
+
+    @Test
+    public void testGetRestaurantDishNotFound() throws Exception {
+        mockMvc.perform(get(REST_URL + "/" + BURGER_KING_ID + "/dishes/" + ENTITY_NOT_FOUND_ID)
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -152,6 +170,29 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
     }
 
     @Test
+    public void testAddRestaurantNotValid() throws Exception {
+        Restaurant expectedRestaurant = new Restaurant("");
+        mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(expectedRestaurant))
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    public void testAddDuplicateRestaurant() throws Exception {
+        Restaurant duplicatedRestaurant = new Restaurant(BURGER_KING.getName());
+        mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(duplicatedRestaurant))
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isConflict());
+    }
+
+    @Test
     public void testAddRestaurantDish() throws Exception {
         Dish expectedDish = new Dish("The New And Delicious Dish", RESTAURANT_ATEOTU);
         ResultActions action = mockMvc.perform(post(REST_URL + '/' + RESTAURANT_ATEOTU_ID + "/dishes")
@@ -165,6 +206,29 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
         assertMatch(returnedDish, expectedDish);
         assertMatch(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID), RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
                 RESTAURANT_ATEOTU_DISH1, RESTAURANT_ATEOTU_DISH5, expectedDish, RESTAURANT_ATEOTU_DISH2);
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    public void testAddDuplicateRestaurantDish() throws Exception {
+        Dish duplicatedDish = new Dish(RESTAURANT_ATEOTU_DISH1.getName(), RESTAURANT_ATEOTU);
+        mockMvc.perform(post(REST_URL + '/' + RESTAURANT_ATEOTU_ID + "/dishes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(duplicatedDish))
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    public void testAddRestaurantDishNotValid() throws Exception {
+        Dish expectedDish = new Dish("", RESTAURANT_ATEOTU);
+        mockMvc.perform(post(REST_URL + '/' + RESTAURANT_ATEOTU_ID + "/dishes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(expectedDish))
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -183,6 +247,23 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
     }
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
+    public void testAddTodayMenuItemNotValid() throws Exception {
+        mockMvc.perform(post(REST_URL + "/menus/daily/today/items?dishId=100012&price=-1")
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    public void testAddTodayMenuItemDishNotFound() throws Exception {
+        mockMvc.perform(post(REST_URL + "/menus/daily/today/items?dishId=1&price=100")
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     public void testUpdateRestaurant() throws Exception {
         Restaurant updatedRestaurant = new Restaurant(BURGER_KING_ID, "Rebranded Burger King");
         Integer updatedRestaurantId = BURGER_KING_ID;
@@ -193,6 +274,18 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(restaurantService.get(updatedRestaurantId), updatedRestaurant);
+    }
+
+    @Test
+    public void testUpdateRestaurantNotValid() throws Exception {
+        Restaurant updatedRestaurant = new Restaurant(BURGER_KING_ID, "");
+        Integer updatedRestaurantId = BURGER_KING_ID;
+        mockMvc.perform(put(REST_URL + '/' + updatedRestaurantId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updatedRestaurant))
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -211,6 +304,18 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
     }
 
     @Test
+    public void testUpdateRestaurantDishNotValid() throws Exception {
+        Dish updatedDish = new Dish("");
+        Integer updatedDishId = RESTAURANT_ATEOTU_DISH2.getId();
+        mockMvc.perform(put(REST_URL + '/' + RESTAURANT_ATEOTU_ID + "/dishes/" + updatedDishId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updatedDish))
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     public void testUpdateTodayMenuItem() throws Exception {
         Integer updatedMenuItemId = TODAY_MENU_ITEM3.getId();
         MenuItem updatedMenuItem = new MenuItem(updatedMenuItemId, RESTAURANT_ATEOTU_DISH1, LocalDate.now(), 2560);
@@ -225,12 +330,33 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
     }
 
     @Test
+    @Transactional(propagation = Propagation.NEVER)
+    public void testUpdateTodayMenuItemNotValid() throws Exception {
+        Integer updatedMenuItemId = TODAY_MENU_ITEM3.getId();
+        MenuItem updatedMenuItem = new MenuItem(updatedMenuItemId, RESTAURANT_ATEOTU_DISH1, LocalDate.now(), -1);
+        mockMvc.perform(put(REST_URL + "/menus/daily/today/items/" + updatedMenuItemId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updatedMenuItem))
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     public void testDeleteRestaurant() throws Exception {
         mockMvc.perform(delete(REST_URL + '/' + BURGER_KING_ID)
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         assertMatch(restaurantService.getAll(), List.of(RESTAURANT_ATEOTU));
+    }
+
+    @Test
+    public void testDeleteRestaurantNotFound() throws Exception {
+        mockMvc.perform(delete(REST_URL + '/' + ENTITY_NOT_FOUND_ID)
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -245,6 +371,14 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
     }
 
     @Test
+    public void testDeleteRestaurantDishNotFound() throws Exception {
+        mockMvc.perform(delete(REST_URL + '/' + RESTAURANT_ATEOTU_ID + "/dishes/" + ENTITY_NOT_FOUND_ID)
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     public void testDeleteTodayMenuItem() throws Exception {
         mockMvc.perform(delete(REST_URL + "/menus/daily/today/items/" + TODAY_MENU_ITEM3.getId())
                 .with(userHttpBasic(ADMIN)))
@@ -253,5 +387,13 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
         assertMatch(restaurantService.getAllTodayMenuItems(), TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6,
                 TODAY_MENU_ITEM4, TODAY_MENU_ITEM5);
 
+    }
+
+    @Test
+    public void testDeleteTodayMenuItemNoyFound() throws Exception {
+        mockMvc.perform(delete(REST_URL + "/menus/daily/today/items/" + ENTITY_NOT_FOUND_ID)
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
     }
 }

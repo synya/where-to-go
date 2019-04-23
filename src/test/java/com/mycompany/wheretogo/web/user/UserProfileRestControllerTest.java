@@ -45,6 +45,17 @@ public class UserProfileRestControllerTest extends AbstractUserRestControllerTes
     }
 
     @Test
+    public void testUpdateNotValid() throws Exception {
+        UserTo updated = new UserTo(null, "", "updated@mail.com", "");
+        mockMvc.perform(put(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(updated))
+                .with(userHttpBasic(USER)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
     public void testDelete() throws Exception {
         mockMvc.perform(delete(REST_URL)
                 .with(userHttpBasic(USER)))

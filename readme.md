@@ -41,15 +41,15 @@ The following `GET` request returns all user's votes were made between two dates
 
 The request accepts two following parameters: `startDate` and `endDate` both in `ISO_DATE` format  
 
-*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes?startDate=2019-03-20&endDate=2019-03-21" --user user@gmail.com:userPassword`
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/between?startDate=2019-03-20&endDate=2019-03-21" --user user@gmail.com:userPassword`
 
 If parameters are empty the request will return all user's votes between 01.01.2000 and 01.01.3000
 
-*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes?startDate=&endDate=" --user user@gmail.com:userPassword`
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/between?startDate=&endDate=" --user user@gmail.com:userPassword`
 
 ##### Get today user's vote
 
-The following `GET` request returns either user's today vote information, or empty object if no vote has been made today yet.
+The following `GET` request returns either user's today vote information, or error message if no vote has been made today.
 
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/today" --user user@gmail.com:userPassword`
 
@@ -65,8 +65,7 @@ The request accepts one parameter: `restaurantId` - an id of the restaurant the 
 
 The following `PUT` request makes update of previously made vote.
 
-The request accepts one parameter: `restaurantId` - an id of the restaurant the user votes for. 
-Pay attention that it's allowed to change the opinion only before 11:00
+The request accepts one parameter: `restaurantId` - an id of the restaurant the user votes for. The request will return error message if user change his opinion after 11:00.
 
 *   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/today?restaurantId=100002" --user user@gmail.com:userPassword`
 
@@ -76,7 +75,7 @@ Pay attention that it's allowed to change the opinion only before 11:00
 
 ##### Get user profile
 
-The following `GET` request returns full user's information.
+The following `GET` request returns user's information: id, name and email.
 
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/profile" --user user@gmail.com:userPassword`
 
@@ -116,7 +115,7 @@ The following `GET` request returns restaurant with `id`.
 
 The following  `POST` request adds new restaurant.
 
-*   `curl -X POST "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants" -d '{"name":"The New Place To Launch At"}' -H "Content-Type: application/json" --user admin@gmail.com:adminPassword`
+*   `curl -X POST "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants" -d '{"name":"The New Place To Have Launch At"}' -H "Content-Type: application/json" --user admin@gmail.com:adminPassword`
 
 ##### Update restaurant
 
@@ -176,7 +175,7 @@ The following `GET` request returns all stored menus of the day.
 
 ##### Get all menus of the day of the restaurant with `id` between dates
 
-The following `GET` request returns all stored menus of the day.
+The following `GET` request returns all stored menus of the day between dates.
 
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily/between/?startDate=2019-03-20&endDate=2019-03-21" --user admin@gmail.com:adminPassword`
 
@@ -204,7 +203,7 @@ The following  `POST` request adds new today menu item.
 
 ##### Update today menu item
 
-The following  `PUT` request adds new today menu item.
+The following  `PUT` request updates today menu item with `id`.
 
 *   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily/today/items/100030" -d '{"id":100030,"dish":{"id":100010,"name":"Meet The Meat","restaurant":{"id":100003,"name":"The Restaurant at the End of the Universe"}},"date":"2019-04-07","price":2560}' -H "Content-Type: application/json" --user admin@gmail.com:adminPassword`
 
@@ -220,13 +219,13 @@ The following  `DELETE` request deletes existed today menu item.
 
 ##### Get all users
 
-The following `GET` request returns all stored menus of the day.
+The following `GET` request returns list of all users with their full information: id, name, email, date of registration, enabled status and set of roles.
 
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/users" --user admin@gmail.com:adminPassword`
 
 ##### Get user
 
-The following `GET` request returns user with `id`.
+The following `GET` request returns user with `id` with his full information: id, name, email, date of registration, enabled status and set of roles.
 
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/users/100000" --user admin@gmail.com:adminPassword`
 
@@ -240,13 +239,13 @@ The following `GET` request returns user with particular email.
 
 The following  `POST` request adds new user.
 
-*   `curl -X POST "http://localhost:8080/where-to-go/rest/api-v1/management/users" -d '{"name":"New User","email":"newuser@gmail.com","password":"password","enabled":true,"registered":"2019-04-08T11:46:48.632158","roles":["ROLE_USER"]}' -H "Content-Type: application/json" --user admin@gmail.com:adminPassword`
+*   `curl -X POST "http://localhost:8080/where-to-go/rest/api-v1/management/users" -d '{"name":"New User","email":"newuser@gmail.com","password":"password","enabled":true,"roles":["ROLE_USER"]}' -H "Content-Type: application/json" --user admin@gmail.com:adminPassword`
 
 ##### Update user information
 
 The following  `PUT` request updates existing user.
 
-*   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/management/users/100000" -d '{"id":100000,"name":"Updated Name","email":"user@gmail.com","password":"userPassword","enabled":true,"registered":"2019-04-08T11:46:48.841556","roles":["ROLE_ADMIN"]}' -H "Content-Type: application/json" --user admin@gmail.com:adminPassword`
+*   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/management/users/100000" -d '{"id":100000,"name":"Updated Name","email":"user@gmail.com","password":"userPassword","enabled":true,"roles":["ROLE_ADMIN"]}' -H "Content-Type: application/json" --user admin@gmail.com:adminPassword`
 
 ##### Delete user
 

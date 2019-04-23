@@ -46,7 +46,7 @@ public class VoteServiceImpl implements VoteService {
         Assert.notNull(restaurantId, "restaurantId must not be null");
         Assert.notNull(userId, "userId must not be null");
         if (!asSetOfRestaurantId(restaurantService.getAllTodayMenuItems()).contains(restaurantId)) {
-            throw new VotingRulesException("Operation is not allowed - the applied restaurantId not in today list of restaurants");
+            throw new VotingRulesException("Operation is not allowed - the applied restaurantId is not in today list of restaurants");
         }
         if (!vote.getDate().equals(LocalDate.now())) {
             throw new VotingRulesException("Operation is not allowed - only today's votes applicable");
@@ -56,7 +56,7 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     public Vote getToday(Integer userId) {
-        return checkNotFoundWithId(voteRepository.findByIdAndDate(userId, LocalDate.now()).orElse(null), userId);
+        return checkNotFound(voteRepository.findByIdAndDate(userId, LocalDate.now()).orElse(null), ". No today vote was made");
     }
 
     @Override

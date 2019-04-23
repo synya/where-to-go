@@ -23,6 +23,8 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 public abstract class AbstractRestControllerTest {
+    protected static final Integer ENTITY_NOT_FOUND_ID = 1;
+
     private static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
 
     static {

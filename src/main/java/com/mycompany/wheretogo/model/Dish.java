@@ -1,5 +1,6 @@
 package com.mycompany.wheretogo.model;
 
+import com.mycompany.wheretogo.View;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
@@ -17,7 +18,7 @@ public class Dish extends AbstractNamedEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull
+    @NotNull(groups = View.Persist.class)
     private Restaurant restaurant;
 
     public Dish() {

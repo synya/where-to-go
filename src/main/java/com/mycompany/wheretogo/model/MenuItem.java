@@ -1,5 +1,6 @@
 package com.mycompany.wheretogo.model;
 
+import com.mycompany.wheretogo.View;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.OnDelete;
@@ -18,11 +19,11 @@ public class MenuItem extends AbstractBaseEntity {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "dish_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @NotNull
+    @NotNull(groups = View.Persist.class)
     private Dish dish;
 
     @Column(name = "date", nullable = false)
-    @NotNull
+    @NotNull(groups = View.Persist.class)
     private LocalDate date;
 
     @Column(name = "price", nullable = false)

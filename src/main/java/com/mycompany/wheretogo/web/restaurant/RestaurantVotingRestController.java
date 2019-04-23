@@ -43,6 +43,7 @@ public class RestaurantVotingRestController extends AbstractRestController {
     private VoteService voteService;
 
     @GetMapping
+    @Transactional
     public RestaurantsTo getRestaurants() {
         Vote vote;
         try {
