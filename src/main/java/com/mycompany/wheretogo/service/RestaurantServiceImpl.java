@@ -64,7 +64,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         checkNotFoundWithId(restaurantRepository.delete(id) != 0, id);
     }
 
-    @CacheEvict(value = "dishes", allEntries = true)
     @Override
     @Transactional
     public Dish addDish(Dish dish, Integer restaurantId) {
@@ -79,14 +78,12 @@ public class RestaurantServiceImpl implements RestaurantService {
         return checkNotFoundWithId(dishRepository.findById(id).orElse(null), id);
     }
 
-    @Cacheable("dishes")
     @Override
     public List<Dish> getAllDishes(Integer restaurantId) {
         Assert.notNull(restaurantId, "restaurantId must not be null");
         return dishRepository.findAll(restaurantId);
     }
 
-    @CacheEvict(value = "dishes", allEntries = true)
     @Override
     @Transactional
     public void updateDish(Dish dish, Integer restaurantId) {
@@ -96,7 +93,6 @@ public class RestaurantServiceImpl implements RestaurantService {
         checkNotFoundWithId(dishRepository.save(dish), dish.getId());
     }
 
-    @CacheEvict(value = "dishes", allEntries = true)
     @Override
     public void deleteDish(int id) throws NotFoundException {
         checkNotFoundWithId(dishRepository.delete(id) != 0, id);
