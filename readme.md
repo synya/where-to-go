@@ -5,13 +5,13 @@
 
 ### A voting system for deciding where to have lunch
 
-Each restaurant has id, name and set of dishes that cooked at the restaurant. Administrator does the update of daily menu. Menus of the day consist of items each one with the dish, date and price. 
+Each restaurant has id, name and set of dishes that are cooked at the restaurant. Administrator does the update of daily menu. Daily menu of the day consist of items each one with the dish, date and price. 
 
 Use following curl commands to test rest API
 
 ------------------------------------------------------
 
-### User's area API
+### Public area API
 
 ------------------------------------------------------
 
@@ -25,31 +25,15 @@ The following `GET` request returns list of restaurants with their id, name and 
 
 ------------------------------------------------------
 
-#### Votes
+### User's area API
 
-Each valid vote contains id, restaurant name and date/time when vote was made.
+------------------------------------------------------
 
-##### Get all user's votes
-
-The following `GET` request returns all user's votes were made.
-
-*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/" --user user@gmail.com:userPassword`
-
-##### Get all user's votes between certain dates 
-
-The following `GET` request returns all user's votes were made between two dates.
-
-The request accepts two following parameters: `startDate` and `endDate` both in `ISO_DATE` format  
-
-*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/between?startDate=2019-03-20&endDate=2019-03-21" --user user@gmail.com:userPassword`
-
-If parameters are empty the request will return all user's votes between 01.01.2000 and 01.01.3000
-
-*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/between?startDate=&endDate=" --user user@gmail.com:userPassword`
+Each valid user vote contains id, restaurant name and date/time when the vote was made.
 
 ##### Get all restaurants for today voting with user's vote
 
-The following `GET` request returns either user's today vote information, or error message if no vote has been made today.
+The following `GET` request returns similar to previous list of restaurants with only one distinction: each reastaurant has `elected` boolean flag to show if the user made vote for the restaurant today.
 
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/today" --user user@gmail.com:userPassword`
 
@@ -68,6 +52,24 @@ The following `PUT` request makes an update of previously made vote.
 The request accepts one parameter: `id` - an id of the restaurant the user votes for. The request will return error message if user change his opinion after 11:00.
 
 *   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/today?id=100002" --user user@gmail.com:userPassword`
+
+##### Get all user's votes
+
+The following `GET` request returns all user's votes were made.
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/" --user user@gmail.com:userPassword`
+
+##### Get all user's votes between certain dates 
+
+The following `GET` request returns all user's votes were made between two dates.
+
+The request accepts two following parameters: `startDate` and `endDate` both in `ISO_DATE` format  
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/between?startDate=2019-03-20&endDate=2019-03-21" --user user@gmail.com:userPassword`
+
+If parameters are empty the request will return all user's votes between 01.01.2000 and 01.01.3000
+
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/between?startDate=&endDate=" --user user@gmail.com:userPassword`
 
 ------------------------------------------------------
 
