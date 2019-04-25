@@ -1,7 +1,9 @@
 package com.mycompany.wheretogo.web;
 
+import com.mycompany.wheretogo.util.JpaUtil;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -24,6 +26,13 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 @Transactional
 public abstract class AbstractRestControllerTest {
     protected static final Integer ENTITY_NOT_FOUND_ID = 1;
+
+    @Autowired
+    protected CacheManager cacheManager;
+
+    @Autowired
+    protected JpaUtil jpaUtil;
+
 
     private static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
 

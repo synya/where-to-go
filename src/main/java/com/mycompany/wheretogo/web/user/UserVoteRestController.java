@@ -1,4 +1,4 @@
-package com.mycompany.wheretogo.web.restaurant;
+package com.mycompany.wheretogo.web.user;
 
 import com.mycompany.wheretogo.AuthorizedUser;
 import com.mycompany.wheretogo.model.Vote;
@@ -27,13 +27,13 @@ import java.util.List;
 import static com.mycompany.wheretogo.util.DateUtil.adjustEndDate;
 import static com.mycompany.wheretogo.util.DateUtil.adjustStartDate;
 import static com.mycompany.wheretogo.util.MenuItemsUtil.asRestaurantsToWithVote;
-import static com.mycompany.wheretogo.util.VoteUtil.asTo;
 import static com.mycompany.wheretogo.util.VoteUtil.asListOfTo;
+import static com.mycompany.wheretogo.util.VoteUtil.asTo;
 
 @RestController
-@RequestMapping(value = RestaurantVotingRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-public class RestaurantVotingRestController extends AbstractRestController {
-    static final String REST_URL = REST_BASE_URL + "/restaurants";
+@RequestMapping(value = UserVoteRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+public class UserVoteRestController extends AbstractRestController {
+    static final String REST_URL = REST_BASE_URL + "/votes";
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -43,7 +43,12 @@ public class RestaurantVotingRestController extends AbstractRestController {
     @Autowired
     private VoteService voteService;
 
-    @GetMapping
+    @GetMapping("/restaurants")
+    public List<VoteTo> getVotes(@AuthenticationPrincipal AuthorizedUser authorizedUser) {
+        return asListOfTo(voteService.getAll(authorizedUser.getId()));
+    }
+
+    @GetMapping(value = "/restaurants/today")
     @Transactional
     public RestaurantsTo getRestaurants(@AuthenticationPrincipal AuthorizedUser authorizedUser) {
         Vote vote;
@@ -55,42 +60,33 @@ public class RestaurantVotingRestController extends AbstractRestController {
         return asRestaurantsToWithVote(LocalDate.now(), restaurantService.getAllTodayMenuItems(), vote);
     }
 
-    @PostMapping(value = "/votes/today")
-    @Transactional
-    public ResponseEntity<VoteTo> makeVote(@AuthenticationPrincipal AuthorizedUser authorizedUser,
-                                           @RequestParam(value = "restaurantId") Integer restaurantId) {
-        Vote createdVote = voteService.addToday(new Vote(LocalDateTime.now()), restaurantId, authorizedUser.getId());
-        createdVote.setRestaurant(restaurantService.get(restaurantId));
-        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path(REST_URL + "/votes/today")
-                .build()
-                .toUri();
-        log.info("user with id = {} made vote for restaurant with id = {}", authorizedUser.getId(), restaurantId);
-        return ResponseEntity.created(uriOfNewResource).body(asTo(createdVote));
-    }
-
-    @GetMapping("/votes")
-    public List<VoteTo> getVotes(@AuthenticationPrincipal AuthorizedUser authorizedUser) {
-        return asListOfTo(voteService.getAll(authorizedUser.getId()));
-    }
-
-    @GetMapping("/votes/between")
+    @GetMapping("/restaurants/between")
     public List<VoteTo> getVotesBetween(@AuthenticationPrincipal AuthorizedUser authorizedUser,
                                         @RequestParam(value = "startDate", required = false) LocalDate startDate,
                                         @RequestParam(value = "endDate", required = false) LocalDate endDate) {
         return asListOfTo(voteService.getAllBetweenDates(adjustStartDate(startDate), adjustEndDate(endDate), authorizedUser.getId()));
     }
 
-    @GetMapping("/votes/today")
-    public VoteTo getTodayVote(@AuthenticationPrincipal AuthorizedUser authorizedUser) {
-        return asTo(voteService.getToday(authorizedUser.getId()));
+    @PostMapping(value = "/restaurants/today")
+    @Transactional
+    public ResponseEntity<VoteTo> makeVote(@AuthenticationPrincipal AuthorizedUser authorizedUser,
+                                           @RequestParam(value = "id") Integer id) {
+        Vote createdVote = voteService.addToday(new Vote(LocalDateTime.now()), id, authorizedUser.getId());
+        createdVote.setRestaurant(restaurantService.get(id));
+        URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path(REST_URL + "/today/restaurants")
+                .build()
+                .toUri();
+        log.info("user with id = {} made vote for restaurant with id = {}", authorizedUser.getId(), id);
+        return ResponseEntity.created(uriOfNewResource).body(asTo(createdVote));
     }
 
-    @PutMapping(value = "/votes/today")
+    @PutMapping(value = "/restaurants/today")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@AuthenticationPrincipal AuthorizedUser authorizedUser,
-                       @RequestParam(value = "restaurantId") Integer restaurantId) {
-        voteService.updateToday(new Vote(LocalDateTime.now()), restaurantId, authorizedUser.getId());
-        log.info("user with id = {} updated his vote for restaurant with id = {}", authorizedUser.getId(), restaurantId);
+                       @RequestParam(value = "id") Integer id) {
+        voteService.updateToday(new Vote(LocalDateTime.now()), id, authorizedUser.getId());
+        log.info("user with id = {} updated his vote for restaurant with id = {}", authorizedUser.getId(), id);
     }
+
 }

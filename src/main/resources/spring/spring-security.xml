@@ -9,8 +9,9 @@
     <http pattern="/rest/**" use-expressions="true" name="restSecurityFilterChain" create-session="stateless">
         <http-basic/>
         <intercept-url pattern="/rest/api-v1/management/**" access="hasRole('ROLE_ADMIN')"/>
-        <intercept-url pattern="/**" access="isAuthenticated()"/>
-        <intercept-url pattern="/index" access="isAnonymous()"/>
+        <intercept-url pattern="/rest/api-v1/votes/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/rest/api-v1/profile/**" access="isAuthenticated()"/>
+        <intercept-url pattern="/rest/api-v1/restaurants" access="isAnonymous()"/>
         <csrf disabled="true"/>
     </http>
 

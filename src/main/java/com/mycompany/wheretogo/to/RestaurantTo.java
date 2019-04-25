@@ -9,12 +9,16 @@ public class RestaurantTo extends AbstractBaseTo {
 
     private List<DishOfTheDay> dishesOfTheDay = new ArrayList<>();
 
-    private boolean elected;
+    private Boolean elected;
 
     public RestaurantTo() {
     }
 
-    public RestaurantTo(Integer id, String name, String dishName, Integer dishPrice, boolean elected) {
+    public RestaurantTo(Integer id, String name, String dishName, Integer dishPrice) {
+        this(id, name, dishName, dishPrice, null);
+    }
+
+    public RestaurantTo(Integer id, String name, String dishName, Integer dishPrice, Boolean elected) {
         super(id);
         this.name = name;
         addDishOfTheDay(dishName, dishPrice);
@@ -25,7 +29,7 @@ public class RestaurantTo extends AbstractBaseTo {
         dishesOfTheDay.add(new DishOfTheDay(dishName, dishPrice));
     }
 
-    public void setElected(boolean elected) {
+    public void setElected(Boolean elected) {
         this.elected = elected;
     }
 

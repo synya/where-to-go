@@ -5,23 +5,23 @@
 
 ### A voting system for deciding where to have lunch
 
-Each restaurant has id, name and set of dishes that cooked at the restaurant. Administrator makes the update of daily menu. Menus of the day consist of items each one with the dish, date and price. 
+Each restaurant has id, name and set of dishes that cooked at the restaurant. Administrator does the update of daily menu. Menus of the day consist of items each one with the dish, date and price. 
 
 Use following curl commands to test rest API
 
 ------------------------------------------------------
 
-### User's API
+### User's area API
 
 ------------------------------------------------------
 
 #### Restaurants
 
-##### Get all restaurants for voting
+##### Get all restaurants for today voting. No authentification for this request is needed
 
 The following `GET` request returns list of restaurants with their id, name and menu of the day which consists from list of dish names and their prices. Pay attention, that all prices are presented in cents of USD.  
  
-*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants"  --user user@gmail.com:userPassword`
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants"`
 
 ------------------------------------------------------
 
@@ -33,7 +33,7 @@ Each valid vote contains id, restaurant name and date/time when vote was made.
 
 The following `GET` request returns all user's votes were made.
 
-*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes" --user user@gmail.com:userPassword`
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/" --user user@gmail.com:userPassword`
 
 ##### Get all user's votes between certain dates 
 
@@ -41,33 +41,33 @@ The following `GET` request returns all user's votes were made between two dates
 
 The request accepts two following parameters: `startDate` and `endDate` both in `ISO_DATE` format  
 
-*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/between?startDate=2019-03-20&endDate=2019-03-21" --user user@gmail.com:userPassword`
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/between?startDate=2019-03-20&endDate=2019-03-21" --user user@gmail.com:userPassword`
 
 If parameters are empty the request will return all user's votes between 01.01.2000 and 01.01.3000
 
-*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/between?startDate=&endDate=" --user user@gmail.com:userPassword`
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/between?startDate=&endDate=" --user user@gmail.com:userPassword`
 
-##### Get today user's vote
+##### Get all restaurants for today voting with user's vote
 
 The following `GET` request returns either user's today vote information, or error message if no vote has been made today.
 
-*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/today" --user user@gmail.com:userPassword`
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/today" --user user@gmail.com:userPassword`
 
 ##### Make vote for a restaurant
 
 The following `POST` request stores user's vote for a restaurant.
 
-The request accepts one parameter: `restaurantId` - an id of the restaurant the user votes for.
+The request accepts one parameter: `id` - an id of the restaurant the user votes for.
 
-*   `curl -X POST "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/today?restaurantId=100003" --user user@gmail.com:userPassword`
+*   `curl -X POST "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/today?id=100003" --user user@gmail.com:userPassword`
 
-##### Update vote
+##### Update vote for another restaurant
 
-The following `PUT` request makes update of previously made vote.
+The following `PUT` request makes an update of previously made vote.
 
-The request accepts one parameter: `restaurantId` - an id of the restaurant the user votes for. The request will return error message if user change his opinion after 11:00.
+The request accepts one parameter: `id` - an id of the restaurant the user votes for. The request will return error message if user change his opinion after 11:00.
 
-*   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/restaurants/votes/today?restaurantId=100002" --user user@gmail.com:userPassword`
+*   `curl -X PUT "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/today?id=100002" --user user@gmail.com:userPassword`
 
 ------------------------------------------------------
 

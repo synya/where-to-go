@@ -21,11 +21,11 @@ public class MenuItemsUtil {
     }
 
     public static RestaurantsTo asRestaurantsTo(LocalDate localDate, List<MenuItem> menuItems) {
-        return new RestaurantsTo(localDate, new ArrayList<>(groupByRestaurantId(menuItems).values()));
+        return new RestaurantsTo(localDate, new ArrayList<>(groupByRestaurantId(menuItems, null).values()));
     }
 
     public static RestaurantsTo asRestaurantsToWithVote(LocalDate localDate, List<MenuItem> menuItems, @Nullable Vote vote) {
-        Map<Integer, RestaurantTo> linkedHashMap = groupByRestaurantId(menuItems);
+        Map<Integer, RestaurantTo> linkedHashMap = groupByRestaurantId(menuItems, false);
         if (vote != null) {
             linkedHashMap.computeIfPresent(vote.getRestaurant().getId(), (i, r) -> {
                 r.setElected(true);
@@ -42,13 +42,13 @@ public class MenuItemsUtil {
                 .collect(Collectors.toList());
     }
 
-    private static Map<Integer, RestaurantTo> groupByRestaurantId(List<MenuItem> menuItems) {
+    private static Map<Integer, RestaurantTo> groupByRestaurantId(List<MenuItem> menuItems, @Nullable Boolean elected) {
         Map<Integer, RestaurantTo> linkedHashMap = new LinkedHashMap<>();
         menuItems.forEach(mi -> {
             Integer restaurantId = mi.getDish().getRestaurant().getId();
             String restaurantName = mi.getDish().getRestaurant().getName();
             linkedHashMap.merge(restaurantId,
-                    new RestaurantTo(restaurantId, restaurantName, mi.getDish().getName(), mi.getPrice(), false),
+                    new RestaurantTo(restaurantId, restaurantName, mi.getDish().getName(), mi.getPrice(), elected),
                     (o, n) -> {
                         o.addDishOfTheDay(mi.getDish().getName(), mi.getPrice());
                         return o;
