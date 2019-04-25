@@ -95,7 +95,7 @@ The following `DELETE` request deletes user from service.
 
 ------------------------------------------------------
 
-### Administrators's API
+### Administrators's area API
 
 ------------------------------------------------------
 
