@@ -5,7 +5,7 @@
 
 ### A voting system for deciding where to have lunch
 
-Each restaurant has id, name and set of dishes that are cooked at the restaurant. Administrator does the update of daily menu. Daily menu of the day consist of items each one with the dish, date and price. 
+Each restaurant has id, name and set of dishes that are cooked at the restaurant. Administrator does the update of daily menu (each menu item contains dish and price) and user management. 
 
 Use following curl commands to test rest API
 
@@ -179,7 +179,7 @@ The following `GET` request returns all stored menus of the day.
 
 The following `GET` request returns all stored menus of the day between dates.
 
-*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily/between/?startDate=2019-03-20&endDate=2019-03-21" --user admin@gmail.com:adminPassword`
+*   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/management/restaurants/menus/daily/between?startDate=2019-03-20&endDate=2019-03-21" --user admin@gmail.com:adminPassword`
 
 ------------------------------------------------------
 
