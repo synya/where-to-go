@@ -41,8 +41,6 @@ public class VoteService {
     @Transactional
     public Vote addToday(Vote vote, int restaurantId, int userId) throws VotingRulesException {
         Assert.notNull(vote, "vote must not be null");
-        Assert.notNull(restaurantId, "restaurantId must not be null");
-        Assert.notNull(userId, "userId must not be null");
         if (!asSetOfRestaurantId(menuItemService.getAllToday()).contains(restaurantId)) {
             throw new VotingRulesException("Operation is not allowed - the applied restaurantId is not in today list of restaurants");
         }
@@ -57,21 +55,18 @@ public class VoteService {
     }
 
     public List<Vote> getAll(int userId) {
-        Assert.notNull(userId, "userId must not be null");
         return voteRepository.findAll(userId);
     }
 
     public List<Vote> getAllBetweenDates(LocalDate startDate, LocalDate endDate, int userId) {
         Assert.notNull(startDate, "startDate must not be null");
         Assert.notNull(endDate, "endDate must not be null");
-        Assert.notNull(userId, "userId must not be null");
         return voteRepository.findAllBetweenDates(startDate, endDate, userId);
     }
 
     @Transactional
     public void updateToday(Vote vote, int restaurantId, int userId) throws VotingRulesException, NotFoundException {
         Assert.notNull(vote, "vote must not be null");
-        Assert.notNull(userId, "userId must not be null");
         Vote previousVote = getToday(userId);
         checkNotFound(previousVote, "Not found today vote, nothing to update");
         if (vote.getTime().isAfter(ALLOWED_UPDATE_TIME_THRESHOLD)) {

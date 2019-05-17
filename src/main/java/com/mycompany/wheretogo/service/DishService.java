@@ -29,7 +29,6 @@ public class DishService {
     @Transactional
     public Dish add(Dish dish, int restaurantId) {
         Assert.notNull(dish, "dish must not be null");
-        Assert.notNull(restaurantId, "restaurantId must not be null");
         dish.setRestaurant(restaurantRepository.getOne(restaurantId));
         return dishRepository.save(dish);
     }
@@ -39,14 +38,12 @@ public class DishService {
     }
 
     public List<Dish> getAll(int restaurantId) {
-        Assert.notNull(restaurantId, "restaurantId must not be null");
         return dishRepository.findAll(restaurantId);
     }
 
     @Transactional
     public void update(Dish dish, int restaurantId) {
         Assert.notNull(dish, "dish must not be null");
-        Assert.notNull(restaurantId, "restaurantId must not be null");
         dish.setRestaurant(restaurantRepository.getOne(restaurantId));
         checkNotFoundWithId(dishRepository.save(dish), dish.getId());
     }
