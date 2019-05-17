@@ -2,6 +2,7 @@ package com.mycompany.wheretogo.web.user;
 
 import com.mycompany.wheretogo.TestUtil;
 import com.mycompany.wheretogo.model.Vote;
+import com.mycompany.wheretogo.service.MenuItemService;
 import com.mycompany.wheretogo.service.RestaurantService;
 import com.mycompany.wheretogo.service.VoteService;
 import com.mycompany.wheretogo.to.RestaurantsTo;
@@ -39,7 +40,7 @@ public class UserVoteRestControllerTest extends AbstractRestControllerTest {
     private VoteService voteService;
 
     @Autowired
-    private RestaurantService restaurantService;
+    private MenuItemService menuItemService;
 
     @Before
     public void setUp() throws Exception {
@@ -117,8 +118,8 @@ public class UserVoteRestControllerTest extends AbstractRestControllerTest {
 
     @Test
     public void testMakeVoteNotWithinTodayRestaurants() throws Exception {
-        restaurantService.deleteMenuItem(TODAY_RESTAURANTS_MENU_ITEMS_ID);
-        restaurantService.deleteMenuItem(TODAY_RESTAURANTS_MENU_ITEMS_ID + 1);
+        menuItemService.delete(TODAY_RESTAURANTS_MENU_ITEMS_ID);
+        menuItemService.delete(TODAY_RESTAURANTS_MENU_ITEMS_ID + 1);
         mockMvc.perform(post(REST_URL + "/restaurants/today?id=" + BURGER_KING_ID)
                 .with(userHttpBasic(USER)))
                 .andDo(print())

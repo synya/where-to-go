@@ -3,6 +3,8 @@ package com.mycompany.wheretogo.web.restaurant;
 import com.mycompany.wheretogo.model.Dish;
 import com.mycompany.wheretogo.model.MenuItem;
 import com.mycompany.wheretogo.model.Restaurant;
+import com.mycompany.wheretogo.service.DishService;
+import com.mycompany.wheretogo.service.MenuItemService;
 import com.mycompany.wheretogo.service.RestaurantService;
 import com.mycompany.wheretogo.to.RestaurantsTo;
 import com.mycompany.wheretogo.util.exception.IllegalRequestDataException;
@@ -34,6 +36,12 @@ public class RestaurantAdminRestController extends AbstractRestController {
 
     @Autowired
     private RestaurantService restaurantService;
+
+    @Autowired
+    private DishService dishService;
+
+    @Autowired
+    private MenuItemService menuItemService;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
@@ -73,7 +81,7 @@ public class RestaurantAdminRestController extends AbstractRestController {
     @PostMapping(value = "/{restaurantId}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<Dish> createDishWithLocation(@Valid @RequestBody Dish dish, @PathVariable int restaurantId) {
-        Dish created = restaurantService.addDish(dish, restaurantId);
+        Dish created = dishService.add(dish, restaurantId);
         created.setRestaurant(restaurantService.get(restaurantId));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{restaurantId}/dishes/{dishId}")
@@ -84,26 +92,26 @@ public class RestaurantAdminRestController extends AbstractRestController {
 
     @GetMapping("/{restaurantId}/dishes/{dishId}")
     public Dish getDish(@PathVariable int restaurantId, @PathVariable int dishId) {
-        return restaurantService.getDish(dishId);
+        return dishService.get(dishId);
     }
 
     @GetMapping("/{restaurantId}/dishes")
     public List<Dish> getAllDishes(@PathVariable int restaurantId) {
-        return restaurantService.getAllDishes(restaurantId);
+        return dishService.getAll(restaurantId);
     }
 
     @PutMapping(value = "/{restaurantId}/dishes/{dishId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void updateDish(@Valid @RequestBody Dish dish, @PathVariable int restaurantId, @PathVariable int dishId) {
         assureIdConsistent(dish, dishId);
-        restaurantService.updateDish(dish, restaurantId);
+        dishService.update(dish, restaurantId);
         log.info("updated dish with id = {} for restaurant with id = {}", dishId, restaurantId);
     }
 
     @DeleteMapping("/{restaurantId}/dishes/{dishId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteDish(@PathVariable int restaurantId, @PathVariable int dishId) {
-        restaurantService.deleteDish(dishId);
+        dishService.delete(dishId);
         log.info("deleted dish with id = {} for restaurant with id = {}", dishId, restaurantId);
     }
 
@@ -113,8 +121,8 @@ public class RestaurantAdminRestController extends AbstractRestController {
         if (price < 0 || price > 1_000_000_00) {
             throw new IllegalRequestDataException("price must be in range [0...100000000]");
         }
-        MenuItem created = restaurantService.addMenuItem(dishId, LocalDate.now(), price);
-        created.setDish(restaurantService.getDish(dishId));
+        MenuItem created = menuItemService.add(dishId, LocalDate.now(), price);
+        created.setDish(dishService.get(dishId));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/menus/daily/today/items/{menuItemId}")
                 .buildAndExpand(created.getId()).toUri();
@@ -124,37 +132,37 @@ public class RestaurantAdminRestController extends AbstractRestController {
 
     @GetMapping(value = "/menus/daily/today/items/{menuItemId}")
     public MenuItem getMenuItem(@PathVariable int menuItemId) {
-        return restaurantService.getMenuItem(menuItemId);
+        return menuItemService.get(menuItemId);
     }
 
     @GetMapping("/menus/daily/today/items")
     public List<MenuItem> getTodayMenuItems() {
-        return restaurantService.getAllTodayMenuItems();
+        return menuItemService.getAllToday();
     }
 
     @PutMapping(value = "/menus/daily/today/items/{menuItemId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void updateMenuItem(@Valid @RequestBody MenuItem menuItem, @PathVariable int menuItemId) {
         assureIdConsistent(menuItem, menuItemId);
-        restaurantService.updateMenuItem(menuItem);
+        menuItemService.update(menuItem);
         log.info("updated menu item with id = {}", menuItem.getId());
     }
 
     @DeleteMapping("/menus/daily/today/items/{menuItemId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMenuItem(@PathVariable int menuItemId) {
-        restaurantService.deleteMenuItem(menuItemId);
+        menuItemService.delete(menuItemId);
         log.info("deleted menu item with id = {}", menuItemId);
     }
 
     @GetMapping("/menus/daily")
     public List<RestaurantsTo> getAllMenus() {
-        return asListOfRestaurantsTo(restaurantService.getAllMenuItems());
+        return asListOfRestaurantsTo(menuItemService.getAll());
     }
 
     @GetMapping("/menus/daily/between")
     public List<RestaurantsTo> getAllMenusBetweenDates(@RequestParam(value = "startDate", required = false) LocalDate startDate,
                                                        @RequestParam(value = "endDate", required = false) LocalDate endDate) {
-        return asListOfRestaurantsTo(restaurantService.getAllMenuItemsBetweenDates(startDate, endDate));
+        return asListOfRestaurantsTo(menuItemService.getAllBetweenDates(startDate, endDate));
     }
 }

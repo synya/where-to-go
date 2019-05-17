@@ -2,6 +2,7 @@ package com.mycompany.wheretogo.web.user;
 
 import com.mycompany.wheretogo.AuthorizedUser;
 import com.mycompany.wheretogo.model.Vote;
+import com.mycompany.wheretogo.service.MenuItemService;
 import com.mycompany.wheretogo.service.RestaurantService;
 import com.mycompany.wheretogo.service.VoteService;
 import com.mycompany.wheretogo.to.RestaurantsTo;
@@ -41,6 +42,9 @@ public class UserVoteRestController extends AbstractRestController {
     private RestaurantService restaurantService;
 
     @Autowired
+    private MenuItemService menuItemService;
+
+    @Autowired
     private VoteService voteService;
 
     @GetMapping("/restaurants")
@@ -57,7 +61,7 @@ public class UserVoteRestController extends AbstractRestController {
         } catch (NotFoundException e) {
             vote = null;
         }
-        return asRestaurantsToWithVote(LocalDate.now(), restaurantService.getAllTodayMenuItems(), vote);
+        return asRestaurantsToWithVote(LocalDate.now(), menuItemService.getAllToday(), vote);
     }
 
     @GetMapping("/restaurants/between")

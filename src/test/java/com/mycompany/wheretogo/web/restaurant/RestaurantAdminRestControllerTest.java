@@ -4,6 +4,8 @@ import com.mycompany.wheretogo.TestUtil;
 import com.mycompany.wheretogo.model.Dish;
 import com.mycompany.wheretogo.model.MenuItem;
 import com.mycompany.wheretogo.model.Restaurant;
+import com.mycompany.wheretogo.service.DishService;
+import com.mycompany.wheretogo.service.MenuItemService;
 import com.mycompany.wheretogo.service.RestaurantService;
 import com.mycompany.wheretogo.to.RestaurantsTo;
 import com.mycompany.wheretogo.util.JpaUtil;
@@ -36,6 +38,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class RestaurantAdminRestControllerTest extends AbstractRestControllerTest {
     @Autowired
     private RestaurantService restaurantService;
+
+    @Autowired
+    private DishService dishService;
+
+    @Autowired
+    private MenuItemService menuItemService;
 
     @Autowired
     private CacheManager cacheManager;
@@ -203,7 +211,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
         Dish returnedDish = TestUtil.readFromJson(action, Dish.class);
         expectedDish.setId(returnedDish.getId());
         assertMatch(returnedDish, expectedDish);
-        assertMatch(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID), RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
+        assertMatch(dishService.getAll(RESTAURANT_ATEOTU_ID), RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
                 RESTAURANT_ATEOTU_DISH1, RESTAURANT_ATEOTU_DISH5, expectedDish, RESTAURANT_ATEOTU_DISH2);
     }
 
@@ -241,7 +249,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
         MenuItem returnedMenuItem = TestUtil.readFromJson(action, MenuItem.class);
         expectedMenuItem.setId(returnedMenuItem.getId());
         assertMatch(returnedMenuItem, expectedMenuItem);
-        assertMatch(restaurantService.getAllTodayMenuItems(), TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, expectedMenuItem,
+        assertMatch(menuItemService.getAllToday(), TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6, expectedMenuItem,
                 TODAY_MENU_ITEM4, TODAY_MENU_ITEM3, TODAY_MENU_ITEM5);
     }
 
@@ -299,7 +307,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .andExpect(status().isNoContent());
         updatedDish.setId(updatedDishId);
         updatedDish.setRestaurant(RESTAURANT_ATEOTU);
-        assertMatch(restaurantService.getDish(updatedDishId), updatedDish);
+        assertMatch(dishService.get(updatedDishId), updatedDish);
     }
 
     @Test
@@ -324,7 +332,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertMatch(restaurantService.getAllTodayMenuItems(), TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6,
+        assertMatch(menuItemService.getAllToday(), TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6,
                 TODAY_MENU_ITEM4, updatedMenuItem, TODAY_MENU_ITEM5);
     }
 
@@ -364,7 +372,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertMatch(restaurantService.getAllDishes(RESTAURANT_ATEOTU_ID), RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
+        assertMatch(dishService.getAll(RESTAURANT_ATEOTU_ID), RESTAURANT_ATEOTU_DISH4, RESTAURANT_ATEOTU_DISH3, RESTAURANT_ATEOTU_DISH6,
                 RESTAURANT_ATEOTU_DISH5, RESTAURANT_ATEOTU_DISH2);
 
     }
@@ -383,7 +391,7 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
                 .with(userHttpBasic(ADMIN)))
                 .andDo(print())
                 .andExpect(status().isNoContent());
-        assertMatch(restaurantService.getAllTodayMenuItems(), TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6,
+        assertMatch(menuItemService.getAllToday(), TODAY_MENU_ITEM2, TODAY_MENU_ITEM1, TODAY_MENU_ITEM6,
                 TODAY_MENU_ITEM4, TODAY_MENU_ITEM5);
 
     }

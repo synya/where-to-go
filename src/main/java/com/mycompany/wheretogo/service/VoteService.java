@@ -29,7 +29,7 @@ public class VoteService {
     private final VoteRepository voteRepository;
 
     @Autowired
-    private RestaurantService restaurantService;
+    private MenuItemService menuItemService;
 
     @Autowired
     public VoteService(UserRepository userRepository, VoteRepository voteRepository, RestaurantRepository restaurantRepository) {
@@ -43,7 +43,7 @@ public class VoteService {
         Assert.notNull(vote, "vote must not be null");
         Assert.notNull(restaurantId, "restaurantId must not be null");
         Assert.notNull(userId, "userId must not be null");
-        if (!asSetOfRestaurantId(restaurantService.getAllTodayMenuItems()).contains(restaurantId)) {
+        if (!asSetOfRestaurantId(menuItemService.getAllToday()).contains(restaurantId)) {
             throw new VotingRulesException("Operation is not allowed - the applied restaurantId is not in today list of restaurants");
         }
         if (!vote.getDate().equals(LocalDate.now())) {

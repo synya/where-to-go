@@ -24,6 +24,9 @@ public class VoteServiceTest extends AbstractServiceTest {
     @Autowired
     private RestaurantService restaurantService;
 
+    @Autowired
+    private MenuItemService menuItemService;
+
     @Test
     public void testAddVote() throws Exception {
         Vote addedVote = voteService.addToday(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
@@ -59,8 +62,8 @@ public class VoteServiceTest extends AbstractServiceTest {
 
     @Test(expected = VotingRulesException.class)
     public void testAddNotWithinTodayRestaurants() throws Exception {
-        restaurantService.deleteMenuItem(TODAY_RESTAURANTS_MENU_ITEMS_ID );
-        restaurantService.deleteMenuItem(TODAY_RESTAURANTS_MENU_ITEMS_ID + 1);
+        menuItemService.delete(TODAY_RESTAURANTS_MENU_ITEMS_ID );
+        menuItemService.delete(TODAY_RESTAURANTS_MENU_ITEMS_ID + 1);
         Vote vote = new Vote(LocalDate.of(2019, Month.MARCH, 19), LocalTime.now());
         voteService.addToday(vote, BURGER_KING_ID, USER_ID);
     }
