@@ -28,7 +28,7 @@ public class RestaurantService {
         return restaurantRepository.save(restaurant);
     }
 
-    public Restaurant get(Integer id) throws NotFoundException {
+    public Restaurant get(int id) throws NotFoundException {
         return checkNotFoundWithId(restaurantRepository.findById(id).orElse(null), id);
     }
 

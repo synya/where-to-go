@@ -39,7 +39,7 @@ public class VoteService {
     }
 
     @Transactional
-    public Vote addToday(Vote vote, Integer restaurantId, Integer userId) throws VotingRulesException {
+    public Vote addToday(Vote vote, int restaurantId, int userId) throws VotingRulesException {
         Assert.notNull(vote, "vote must not be null");
         Assert.notNull(restaurantId, "restaurantId must not be null");
         Assert.notNull(userId, "userId must not be null");
@@ -52,16 +52,16 @@ public class VoteService {
         return saveUserVote(vote, restaurantId, userId);
     }
 
-    public Vote getToday(Integer userId) {
+    public Vote getToday(int userId) {
         return checkNotFound(voteRepository.findByIdAndDate(userId, LocalDate.now()).orElse(null), ". No today vote was made");
     }
 
-    public List<Vote> getAll(Integer userId) {
+    public List<Vote> getAll(int userId) {
         Assert.notNull(userId, "userId must not be null");
         return voteRepository.findAll(userId);
     }
 
-    public List<Vote> getAllBetweenDates(LocalDate startDate, LocalDate endDate, Integer userId) {
+    public List<Vote> getAllBetweenDates(LocalDate startDate, LocalDate endDate, int userId) {
         Assert.notNull(startDate, "startDate must not be null");
         Assert.notNull(endDate, "endDate must not be null");
         Assert.notNull(userId, "userId must not be null");
@@ -69,7 +69,7 @@ public class VoteService {
     }
 
     @Transactional
-    public void updateToday(Vote vote, Integer restaurantId, Integer userId) throws VotingRulesException, NotFoundException {
+    public void updateToday(Vote vote, int restaurantId, int userId) throws VotingRulesException, NotFoundException {
         Assert.notNull(vote, "vote must not be null");
         Assert.notNull(userId, "userId must not be null");
         Vote previousVote = getToday(userId);
@@ -81,11 +81,11 @@ public class VoteService {
         saveUserVote(vote, restaurantId, userId);
     }
 
-    private Vote getUserVote(Integer id, Integer userId) {
-        return voteRepository.findById(id).filter(vote -> userId.equals(vote.getUser().getId())).orElse(null);
+    private Vote getUserVote(int id, int userId) {
+        return voteRepository.findById(id).filter(vote -> vote.getUser().getId() == userId).orElse(null);
     }
 
-    private Vote saveUserVote(Vote vote, Integer restaurantId, Integer userId) {
+    private Vote saveUserVote(Vote vote, int restaurantId, int userId) {
         if (!vote.isNew() && getUserVote(vote.getId(), userId) == null) {
             return null;
         }

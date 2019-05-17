@@ -27,24 +27,24 @@ public class DishService {
 
 
     @Transactional
-    public Dish add(Dish dish, Integer restaurantId) {
+    public Dish add(Dish dish, int restaurantId) {
         Assert.notNull(dish, "dish must not be null");
         Assert.notNull(restaurantId, "restaurantId must not be null");
         dish.setRestaurant(restaurantRepository.getOne(restaurantId));
         return dishRepository.save(dish);
     }
 
-    public Dish get(Integer id) throws NotFoundException {
+    public Dish get(int id) throws NotFoundException {
         return checkNotFoundWithId(dishRepository.findById(id).orElse(null), id);
     }
 
-    public List<Dish> getAll(Integer restaurantId) {
+    public List<Dish> getAll(int restaurantId) {
         Assert.notNull(restaurantId, "restaurantId must not be null");
         return dishRepository.findAll(restaurantId);
     }
 
     @Transactional
-    public void update(Dish dish, Integer restaurantId) {
+    public void update(Dish dish, int restaurantId) {
         Assert.notNull(dish, "dish must not be null");
         Assert.notNull(restaurantId, "restaurantId must not be null");
         dish.setRestaurant(restaurantRepository.getOne(restaurantId));

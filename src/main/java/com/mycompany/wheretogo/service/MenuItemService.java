@@ -30,14 +30,14 @@ public class MenuItemService {
 
     @CacheEvict(value = "todayMenuItems", allEntries = true)
     @Transactional
-    public MenuItem add(Integer dishId, LocalDate date, Integer price) {
+    public MenuItem add(int dishId, LocalDate date, int price) {
         Assert.notNull(dishId, "dishId must not be null");
         Assert.notNull(date, "date must not be null");
         Assert.notNull(date, "price must not be null");
         return menuItemRepository.save(new MenuItem(dishRepository.getOne(dishId), date, price));
     }
 
-    public MenuItem get(Integer id) throws NotFoundException {
+    public MenuItem get(int id) throws NotFoundException {
         return checkNotFoundWithId(menuItemRepository.findById(id).orElse(null), id);
     }
 

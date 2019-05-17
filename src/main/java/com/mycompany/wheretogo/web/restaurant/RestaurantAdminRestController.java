@@ -73,7 +73,7 @@ public class RestaurantAdminRestController extends AbstractRestController {
 
     @DeleteMapping("/{restaurantId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("restaurantId") Integer restaurantId) {
+    public void delete(@PathVariable("restaurantId") int restaurantId) {
         restaurantService.delete(restaurantId);
         log.info("deleted restaurant with id = {}", restaurantId);
     }
