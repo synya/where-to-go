@@ -16,7 +16,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Spring -->
         <spring.version>5.1.4.RELEASE</spring.version>
-        <spring-data-jpa.version>2.1.5.RELEASE</spring-data-jpa.version>
+        <spring-data-jpa.version>2.1.8.RELEASE</spring-data-jpa.version>
         <!-- HSQLDB -->
         <hsqldb.version>2.3.4</hsqldb.version>
         <!-- Hibernate -->
