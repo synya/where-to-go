@@ -68,12 +68,10 @@ public class VoteService {
     @Transactional
     public void updateToday(Vote vote, int restaurantId, int userId) throws VotingRulesException, NotFoundException {
         Assert.notNull(vote, "vote must not be null");
-        Vote previousVote = getToday(userId);
-        checkNotFound(previousVote, "Not found today vote, nothing to update");
         if (vote.getTime().isAfter(ALLOWED_UPDATE_TIME_THRESHOLD)) {
             throw new VotingRulesException("Operation is not allowed - it's too late to change the vote");
         }
-        vote.setId(previousVote.getId());
+        vote.setId(getToday(userId).getId());
         vote.setRestaurant(restaurantRepository.getOne(restaurantId));
         vote.setUser(userRepository.getOne(userId));
         voteRepository.save(vote);
