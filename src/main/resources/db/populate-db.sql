@@ -3,7 +3,7 @@ FROM user_roles;
 DELETE
 FROM users;
 DELETE
-FROM menus;
+FROM menu_items;
 DELETE
 FROM dishes;
 DELETE
@@ -39,7 +39,7 @@ VALUES (100002, 'Burger'),
        (100003, 'Peanuts'),
        (100003, 'Jynnan tonnyx');
 
-INSERT INTO menus (dish_id, date, price)
+INSERT INTO menu_items (dish_id, date, price)
 VALUES (100004, '2019-03-20', 1000),
        (100005, '2019-03-20', 200),
        (100006, '2019-03-20', 500),
@@ -53,7 +53,7 @@ VALUES (100004, '2019-03-20', 1000),
        (100014, '2019-03-21', 4560),
        (100015, '2019-03-21', 1000);
 
-INSERT INTO menus (dish_id, price)
+INSERT INTO menu_items (dish_id, price)
 VALUES (100007, 1500),
        (100004, 210),
        (100010, 560),

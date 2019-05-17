@@ -13,7 +13,7 @@ import java.time.LocalDate;
 
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
-@Table(name = "menus", uniqueConstraints = {@UniqueConstraint(columnNames = {"dish_id", "date"}, name = "menus_unique_dish_date_idx")})
+@Table(name = "menu_items", uniqueConstraints = {@UniqueConstraint(columnNames = {"dish_id", "date"}, name = "menu_items_unique_dish_date_idx")})
 public class MenuItem extends AbstractBaseEntity {
     @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @OneToOne(fetch = FetchType.EAGER)
