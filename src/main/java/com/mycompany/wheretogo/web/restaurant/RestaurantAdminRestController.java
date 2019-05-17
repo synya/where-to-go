@@ -26,6 +26,7 @@ import java.util.List;
 
 import static com.mycompany.wheretogo.util.MenuItemsUtil.asListOfRestaurantsTo;
 import static com.mycompany.wheretogo.util.ValidationUtil.assureIdConsistent;
+import static com.mycompany.wheretogo.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = RestaurantAdminRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -45,6 +46,7 @@ public class RestaurantAdminRestController extends AbstractRestController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Restaurant> createWithLocation(@Valid @RequestBody Restaurant restaurant) {
+        checkNew(restaurant);
         Restaurant created = restaurantService.add(restaurant);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{restaurantId}")
@@ -81,6 +83,7 @@ public class RestaurantAdminRestController extends AbstractRestController {
     @PostMapping(value = "/{restaurantId}/dishes", consumes = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     public ResponseEntity<Dish> createDishWithLocation(@Valid @RequestBody Dish dish, @PathVariable int restaurantId) {
+        checkNew(dish);
         Dish created = dishService.add(dish, restaurantId);
         created.setRestaurant(restaurantService.get(restaurantId));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()

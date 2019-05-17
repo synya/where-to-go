@@ -73,9 +73,9 @@ public class UserVoteRestController extends AbstractRestController {
 
     @PostMapping(value = "/restaurants/today")
     @Transactional
-    public ResponseEntity<VoteTo> makeVote(@AuthenticationPrincipal AuthorizedUser authorizedUser,
-                                           @RequestParam(value = "id") int id) {
-        Vote createdVote = voteService.addToday(new Vote(LocalDateTime.now()), id, authorizedUser.getId());
+    public ResponseEntity<VoteTo> vote(@AuthenticationPrincipal AuthorizedUser authorizedUser,
+                                       @RequestParam(value = "id") int id) {
+        Vote createdVote = voteService.addToday(id, authorizedUser.getId());
         createdVote.setRestaurant(restaurantService.get(id));
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/today/restaurants")

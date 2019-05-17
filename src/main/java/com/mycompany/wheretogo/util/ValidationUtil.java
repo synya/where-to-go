@@ -1,6 +1,7 @@
 package com.mycompany.wheretogo.util;
 
 import com.mycompany.wheretogo.HasId;
+import com.mycompany.wheretogo.util.exception.IllegalRequestDataException;
 import com.mycompany.wheretogo.util.exception.NotFoundException;
 
 public final class ValidationUtil {
@@ -27,11 +28,17 @@ public final class ValidationUtil {
         }
     }
 
+    public static void checkNew(HasId bean) {
+        if (!bean.isNew()) {
+            throw new IllegalRequestDataException(bean + " must be new (id=null)");
+        }
+    }
+
     public static void assureIdConsistent(HasId bean, int id) {
         if (bean.isNew()) {
             bean.setId(id);
         } else if (bean.getId() != id) {
-            throw new IllegalArgumentException(bean + " must be with id=" + id);
+            throw new IllegalRequestDataException(bean + " must be with id=" + id);
         }
     }
 

@@ -17,6 +17,7 @@ import java.net.URI;
 import java.util.List;
 
 import static com.mycompany.wheretogo.util.ValidationUtil.assureIdConsistent;
+import static com.mycompany.wheretogo.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = UserAdminRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -45,6 +46,7 @@ public class UserAdminRestController extends AbstractRestController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> createWithLocation(@Valid @RequestBody User user) {
+        checkNew(user);
         User created = userService.add(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")

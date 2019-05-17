@@ -17,8 +17,6 @@ public class VoteTestData {
             LocalDate.of(2019, Month.MARCH, 20), LocalTime.of(10, 0, 0));
     public static final Vote USER_VOTE2 = new Vote(VOTE_START_ID + 2, RESTAURANT_ATEOTU,
             LocalDate.of(2019, Month.MARCH, 21), LocalTime.of(8, 0, 0));
-    public static final Vote TODAY_USER_VOTE = new Vote(VOTE_START_ID + 4, RESTAURANT_ATEOTU,
-            LocalDate.now(), LocalTime.of(9, 30, 0));
 
     public static void assertMatch(Vote actual, Vote expected) {
         TestUtil.assertMatch(actual, expected, "user");

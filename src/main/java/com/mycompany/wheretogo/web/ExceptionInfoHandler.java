@@ -47,7 +47,7 @@ public class ExceptionInfoHandler {
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY) // 422
-    @ExceptionHandler({MethodArgumentNotValidException.class, IllegalRequestDataException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, IllegalRequestDataException.class, IllegalArgumentException.class})
     public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception e) {
         if (e instanceof MethodArgumentNotValidException) {
             return getBindingErrorInfo(req, ((MethodArgumentNotValidException) e).getBindingResult());

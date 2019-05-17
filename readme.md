@@ -52,7 +52,7 @@ The following `GET` request returns similar to previous list of restaurants with
 
 *   `curl -X GET "http://localhost:8080/where-to-go/rest/api-v1/votes/restaurants/today" --user user@gmail.com:userPassword`
 
-##### Make vote for a restaurant
+##### Vote for a restaurant
 
 The following `POST` request stores user's vote for a restaurant.
 

@@ -22,23 +22,19 @@ public class VoteServiceTest extends AbstractServiceTest {
     private VoteService voteService;
 
     @Autowired
-    private RestaurantService restaurantService;
-
-    @Autowired
     private MenuItemService menuItemService;
 
     @Test
     public void testAddVote() throws Exception {
-        Vote addedVote = voteService.addToday(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
-        addedVote.setId(addedVote.getId());
-        addedVote.setRestaurant(RESTAURANT_ATEOTU);
-        assertMatch(addedVote, TODAY_USER_VOTE);
-        assertMatch(voteService.getToday(USER_ID), TODAY_USER_VOTE);
+        Vote addedVote = voteService.addToday(RESTAURANT_ATEOTU_ID, USER_ID);
+        Vote expectedVote = new Vote(RESTAURANT_ATEOTU, addedVote.getDate(), addedVote.getTime());
+        expectedVote.setId(addedVote.getId());
+        assertMatch(voteService.getToday(USER_ID), expectedVote);
     }
 
     @Test
     public void testUpdateVote() throws Exception {
-        voteService.addToday(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
+        voteService.addToday(RESTAURANT_ATEOTU_ID, USER_ID);
         Vote updatedVote = voteService.getToday(USER_ID);
         updatedVote.setTime(LocalTime.of(10, 20));
         voteService.updateToday(updatedVote, BURGER_KING_ID, USER_ID);
@@ -48,30 +44,25 @@ public class VoteServiceTest extends AbstractServiceTest {
 
     @Test(expected = VotingRulesException.class)
     public void testUpdateVoteOutdated() throws Exception {
-        voteService.addToday(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
+        voteService.addToday(RESTAURANT_ATEOTU_ID, USER_ID);
         Vote updatedVote = voteService.getToday(USER_ID);
         updatedVote.setTime(LocalTime.of(11, 1));
         voteService.updateToday(updatedVote, BURGER_KING_ID, USER_ID);
     }
 
     @Test(expected = VotingRulesException.class)
-    public void testAddVoteOutdated() throws Exception {
-        Vote vote = new Vote(LocalDate.of(2019, Month.MARCH, 19), LocalTime.now());
-        voteService.addToday(vote, BURGER_KING_ID, USER_ID);
-    }
-
-    @Test(expected = VotingRulesException.class)
     public void testAddNotWithinTodayRestaurants() throws Exception {
-        menuItemService.delete(TODAY_RESTAURANTS_MENU_ITEMS_ID );
+        menuItemService.delete(TODAY_RESTAURANTS_MENU_ITEMS_ID);
         menuItemService.delete(TODAY_RESTAURANTS_MENU_ITEMS_ID + 1);
-        Vote vote = new Vote(LocalDate.of(2019, Month.MARCH, 19), LocalTime.now());
-        voteService.addToday(vote, BURGER_KING_ID, USER_ID);
+        voteService.addToday(BURGER_KING_ID, USER_ID);
     }
 
     @Test
     public void testGetToday() throws Exception {
-        voteService.addToday(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
-        assertMatch(voteService.getToday(USER_ID), TODAY_USER_VOTE);
+        Vote addedVote = voteService.addToday(RESTAURANT_ATEOTU_ID, USER_ID);
+        Vote expectedVote = new Vote(RESTAURANT_ATEOTU, addedVote.getDate(), addedVote.getTime());
+        expectedVote.setId(addedVote.getId());
+        assertMatch(voteService.getToday(USER_ID), expectedVote);
     }
 
     @Test(expected = NotFoundException.class)

@@ -12,7 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static com.mycompany.wheretogo.util.MenuItemsUtil.asSetOfRestaurantId;
@@ -39,15 +41,14 @@ public class VoteService {
     }
 
     @Transactional
-    public Vote addToday(Vote vote, int restaurantId, int userId) throws VotingRulesException {
-        Assert.notNull(vote, "vote must not be null");
+    public Vote addToday(int restaurantId, int userId) throws VotingRulesException {
         if (!asSetOfRestaurantId(menuItemService.getAllToday()).contains(restaurantId)) {
             throw new VotingRulesException("Operation is not allowed - the applied restaurantId is not in today list of restaurants");
         }
-        if (!vote.getDate().equals(LocalDate.now())) {
-            throw new VotingRulesException("Operation is not allowed - only today's votes applicable");
-        }
-        return saveUserVote(vote, restaurantId, userId);
+        Vote vote = new Vote(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS));
+        vote.setRestaurant(restaurantRepository.getOne(restaurantId));
+        vote.setUser(userRepository.getOne(userId));
+        return voteRepository.save(vote);
     }
 
     public Vote getToday(int userId) {
@@ -73,19 +74,8 @@ public class VoteService {
             throw new VotingRulesException("Operation is not allowed - it's too late to change the vote");
         }
         vote.setId(previousVote.getId());
-        saveUserVote(vote, restaurantId, userId);
-    }
-
-    private Vote getUserVote(int id, int userId) {
-        return voteRepository.findById(id).filter(vote -> vote.getUser().getId() == userId).orElse(null);
-    }
-
-    private Vote saveUserVote(Vote vote, int restaurantId, int userId) {
-        if (!vote.isNew() && getUserVote(vote.getId(), userId) == null) {
-            return null;
-        }
         vote.setRestaurant(restaurantRepository.getOne(restaurantId));
         vote.setUser(userRepository.getOne(userId));
-        return voteRepository.save(vote);
+        voteRepository.save(vote);
     }
 }

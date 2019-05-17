@@ -3,7 +3,6 @@ package com.mycompany.wheretogo.web.user;
 import com.mycompany.wheretogo.TestUtil;
 import com.mycompany.wheretogo.model.Vote;
 import com.mycompany.wheretogo.service.MenuItemService;
-import com.mycompany.wheretogo.service.RestaurantService;
 import com.mycompany.wheretogo.service.VoteService;
 import com.mycompany.wheretogo.to.RestaurantsTo;
 import com.mycompany.wheretogo.to.VoteTo;
@@ -24,7 +23,6 @@ import static com.mycompany.wheretogo.TestUtil.userHttpBasic;
 import static com.mycompany.wheretogo.UserTestData.USER;
 import static com.mycompany.wheretogo.UserTestData.USER_ID;
 import static com.mycompany.wheretogo.VoteTestData.*;
-import static com.mycompany.wheretogo.VoteTestData.TODAY_USER_VOTE;
 import static com.mycompany.wheretogo.util.MenuItemsUtil.asRestaurantsToWithVote;
 import static com.mycompany.wheretogo.util.VoteUtil.asListOfTo;
 import static com.mycompany.wheretogo.util.VoteUtil.asTo;
@@ -86,7 +84,7 @@ public class UserVoteRestControllerTest extends AbstractRestControllerTest {
 
     @Test
     public void testGetRestaurantsElected() throws Exception {
-        voteService.addToday(new Vote(TODAY_USER_VOTE.getDate(), TODAY_USER_VOTE.getTime()), RESTAURANT_ATEOTU_ID, USER_ID);
+        voteService.addToday(RESTAURANT_ATEOTU_ID, USER_ID);
         Vote vote = voteService.getToday(USER_ID);
         mockMvc.perform(get(REST_URL + "/restaurants/today")
                 .with(userHttpBasic(USER)))
@@ -107,7 +105,7 @@ public class UserVoteRestControllerTest extends AbstractRestControllerTest {
     }
 
     @Test
-    public void testMakeVote() throws Exception {
+    public void testVote() throws Exception {
         mockMvc.perform(post(REST_URL + "/restaurants/today?id=" + RESTAURANT_ATEOTU_ID)
                 .with(userHttpBasic(USER)))
                 .andDo(print())
@@ -117,7 +115,7 @@ public class UserVoteRestControllerTest extends AbstractRestControllerTest {
     }
 
     @Test
-    public void testMakeVoteNotWithinTodayRestaurants() throws Exception {
+    public void testVoteNotWithinTodayRestaurants() throws Exception {
         menuItemService.delete(TODAY_RESTAURANTS_MENU_ITEMS_ID);
         menuItemService.delete(TODAY_RESTAURANTS_MENU_ITEMS_ID + 1);
         mockMvc.perform(post(REST_URL + "/restaurants/today?id=" + BURGER_KING_ID)
