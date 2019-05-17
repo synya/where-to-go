@@ -45,12 +45,6 @@ public class RestaurantAdminRestControllerTest extends AbstractRestControllerTes
     @Autowired
     private MenuItemService menuItemService;
 
-    @Autowired
-    private CacheManager cacheManager;
-
-    @Autowired
-    private JpaUtil jpaUtil;
-
     @Before
     public void setUp() throws Exception {
         cacheManager.getCache("todayMenuItems").clear();

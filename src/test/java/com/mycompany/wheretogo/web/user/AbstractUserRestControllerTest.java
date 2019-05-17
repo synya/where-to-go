@@ -8,10 +8,4 @@ import org.springframework.beans.factory.annotation.Autowired;
 public abstract class AbstractUserRestControllerTest extends AbstractRestControllerTest {
     @Autowired
     protected UserService userService;
-
-    @Before
-    public void setUp() throws Exception {
-        cacheManager.getCache("users").clear();
-        jpaUtil.clear2ndLevelHibernateCache();
-    }
 }

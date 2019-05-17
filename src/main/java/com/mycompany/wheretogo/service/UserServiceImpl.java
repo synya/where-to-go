@@ -7,8 +7,6 @@ import com.mycompany.wheretogo.to.UserTo;
 import com.mycompany.wheretogo.util.UserUtil;
 import com.mycompany.wheretogo.util.exception.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -38,7 +36,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     @Override
     public User add(User user) {
         Assert.notNull(user, "user must not be null");
@@ -56,20 +53,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return checkNotFound(userRepository.findByEmail(email), "email=" + email);
     }
 
-    @Cacheable("users")
     @Override
     public List<User> getAll() {
         return userRepository.findAll(SORT_NAME_EMAIL);
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     @Override
     public void update(User user) {
         Assert.notNull(user, "user must not be null");
         checkNotFoundWithId(userRepository.save(prepareToSave(user, passwordEncoder)), user.getId());
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     @Override
     @Transactional
     public void update(UserTo userTo) {
@@ -77,7 +71,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.save(prepareToSave(user, passwordEncoder));
     }
 
-    @CacheEvict(value = "users", allEntries = true)
     @Override
     public void delete(int id) throws NotFoundException {
         checkNotFoundWithId(userRepository.delete(id) != 0, id);

@@ -1,8 +1,6 @@
 package com.mycompany.wheretogo.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.util.CollectionUtils;
 
 import javax.persistence.*;
@@ -15,7 +13,6 @@ import java.util.Collection;
 import java.util.EnumSet;
 import java.util.Set;
 
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "users_unique_email_idx")})
 public class User extends AbstractNamedEntity {
@@ -39,7 +36,6 @@ public class User extends AbstractNamedEntity {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private LocalDateTime registered = LocalDateTime.now();
 
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")

@@ -33,7 +33,6 @@ public abstract class AbstractRestControllerTest {
     @Autowired
     protected JpaUtil jpaUtil;
 
-
     private static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
 
     static {
