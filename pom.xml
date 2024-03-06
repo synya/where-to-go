@@ -30,7 +30,7 @@
         <!-- JSON -->
         <jackson-json.version>2.12.7.1</jackson-json.version>
         <!-- Logging -->
-        <logback.version>1.2.3</logback.version>
+        <logback.version>1.2.13</logback.version>
         <slf4j.version>1.7.25</slf4j.version>
         <!-- junit -->
         <junit.version>4.13.1</junit.version>
